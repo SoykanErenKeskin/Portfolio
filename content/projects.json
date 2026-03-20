@@ -1,173 +1,134 @@
 {
   "projects": [
     {
-      "id": "line-downtime-telemetry",
-      "slug": "line-downtime-telemetry",
-      "date": "2025-02-18",
-      "tech": ["Python", "SQL", "Pandas"],
-      "tools": ["PostgreSQL", "Grafana", "Git"],
-      "images": [
-        {
-          "src": "/images/placeholder.svg",
-          "alt": {
-            "en": "Downtime dashboard wireframe",
-            "tr": "Durma süresi panosu taslağı"
-          }
-        },
-        {
-          "src": "/images/placeholder.svg",
-          "alt": {
-            "en": "Event timeline excerpt",
-            "tr": "Olay zaman çizelgesi özeti"
-          }
-        }
-      ],
-      "links": {
-        "github": "https://github.com",
-        "live": "https://example.com"
-      },
+      "id": "order-tracking-system",
+      "slug": "order-tracking-system",
+      "date": "2026-03-19",
       "title": {
-        "en": "Line downtime telemetry",
-        "tr": "Hat duruş telemetrisi"
+        "tr": "Sipariş ve Operasyon Takip Sistemi",
+        "en": "Order & Operational Tracking System"
       },
       "shortDescription": {
-        "en": "Shop-floor event ingestion with IE-aligned KPIs and anomaly surfacing.",
-        "tr": "IE uyumlu KPI'lar ve anomali yüzeyi ile üretim hattı olay toplama."
+        "tr": "Siparişlerin ve rotaların yönetildiği operasyonel takip sistemi.",
+        "en": "An operational tracking system for managing orders and routes."
       },
       "summary": {
-        "en": "Unified downtime reasons, cycle variance, and shift-level loss trees in a single view.",
-        "tr": "Duruş nedenleri, çevrim sapması ve vardiya bazlı kayıp ağaçları tek görünümde."
+        "tr": "Depodan teslimata kadar olan süreci takip eden ve yönetim paneli üzerinden kontrol edilebilen bir sistem geliştirdim.",
+        "en": "Developed a system that tracks the process from warehouse to delivery with a centralized management panel."
       },
       "problem": {
-        "en": "Production data lived in PLC logs and manual reason codes. Root-cause meetings had no shared view of what happened where and when.",
-        "tr": "Üretim verisi PLC günlüklerinde ve manuel neden kodlarında dağınıktı. Kök neden toplantılarında neyin nerede ve ne zaman olduğuna dair ortak bir görünüm yoktu."
+        "tr": "Siparişlerin ve sürücülerin eş zamanlı takibi operasyonel karmaşıklığa yol açar.",
+        "en": "Tracking orders and drivers simultaneously creates operational complexity."
       },
       "approach": {
-        "en": "Normalized timestamps and reason codes against routing tables. Built aggregates per line and SKU family. Added drill-down from plant → line → station with preserved filter context.",
-        "tr": "Zaman damgaları ve neden kodlarını yönlendirme tablolarına göre normalize ettim. Hat ve SKU ailesi bazında özetler oluşturdum. Tesis → hat → istasyon geçişini filtre bağlamını koruyarak ekledim."
+        "tr": "Rol bazlı yapı kurarak sipariş atama, rota yönetimi ve takip süreçlerini merkezi hale getirdim.",
+        "en": "Implemented a role-based system to centralize assignment, routing, and tracking processes."
       },
       "outcome": {
-        "en": "Faster root-cause meetings. Engineering and operations now share a common vocabulary for downtime.",
-        "tr": "Daha hızlı kök neden toplantıları. Mühendislik ve operasyonlar duruş için ortak bir dil kullanıyor."
-      }
+        "tr": "Operasyonel süreç daha kontrol edilebilir ve izlenebilir hale getirildi.",
+        "en": "Improved visibility and control over operational processes."
+      },
+      "tech": ["React Native", "Supabase", "Firebase"],
+      "tools": ["SQL Editor", "Auth Systems"],
+      "images": []
     },
     {
-      "id": "demand-forecast-pipeline",
-      "slug": "demand-forecast-pipeline",
-      "date": "2024-11-03",
-      "tech": ["Python", "Pandas", "Scikit-learn", "SQL"],
-      "tools": ["Airflow", "Parquet", "pytest", "Git"],
-      "images": [
-        {
-          "src": "/images/placeholder.svg",
-          "alt": {
-            "en": "Forecast vs actual panel",
-            "tr": "Tahmin ve gerçekleşen paneli"
-          }
-        }
-      ],
-      "links": {
-        "github": "https://github.com"
-      },
+      "id": "route-optimizer",
+      "slug": "route-optimizer",
+      "date": "2025-02-01",
       "title": {
-        "en": "Demand forecast pipeline",
-        "tr": "Talep tahmin boru hattı"
+        "tr": "Kişilik Tabanlı Mekan Öneri ve Rota Sistemi",
+        "en": "Personality-Based Place Recommendation & Routing System"
       },
       "shortDescription": {
-        "en": "Batch scoring with backtesting hooks and inventory-aware error metrics.",
-        "tr": "Geri test kancaları ve envanter-duyarlı hata metrikleri ile toplu skorlama."
+        "tr": "Kullanıcı özelliklerine göre mekan öneren ve rota oluşturan veri odaklı sistem.",
+        "en": "A data-driven system that recommends places based on user characteristics and generates routes."
       },
       "summary": {
-        "en": "Replaced spreadsheet handoffs with versioned features, walk-forward validation, and scheduled refresh jobs.",
-        "tr": "Elektronik tablo aktarımlarını sürümlü özellikler, ileri doğru doğrulama ve planlı yenileme işleriyle değiştirdim."
+        "tr": "Bu projede kullanıcıların kişilik özellikleri ile mekan tercihleri arasındaki ilişkiyi analiz ederek öneri sistemi geliştirdim.",
+        "en": "This project explores the relationship between user personality traits and place preferences to build a recommendation system."
       },
       "problem": {
-        "en": "Forecasts were spreadsheet-based and hard to reproduce. No clear way to compare runs or track drift over time.",
-        "tr": "Tahminler elektronik tablo tabanlıydı ve yeniden üretmek zordu. Koşuları karşılaştırma veya zaman içinde sapmayı izleme yolu yoktu."
+        "tr": "Kullanıcıların tercihleri genellikle açık şekilde ifade edilmez ve bu durum doğru öneri yapılmasını zorlaştırır.",
+        "en": "User preferences are often implicit, making it difficult to generate accurate recommendations."
       },
       "approach": {
-        "en": "Lightweight feature store with Parquet partitions. Baselines first (seasonal naive, ETS), then gradient boosting. Metrics focus on bias and stock-out risk, not only MAPE. Drift indicators on categorical mix.",
-        "tr": "Parquet bölümleriyle hafif özellik deposu. Önce basit çizgiler (mevsimsel naive, ETS), ardından gradyan artırma. Metrikler sapma ve stok tükenmesi riskine odaklanıyor. Kategorik karışımda sapma göstergeleri."
+        "tr": "Veri oluşturma, temizleme ve analiz süreçlerinden sonra farklı makine öğrenmesi modelleri eğitildi ve performans metriklerine göre karşılaştırıldı.",
+        "en": "After data creation, preprocessing, and analysis, multiple machine learning models were trained and compared using performance metrics."
       },
       "outcome": {
-        "en": "Reproducible forecasts. Fewer emergency expedites.",
-        "tr": "Tekrarlanabilir tahminler. Daha az acil sevkiyat."
-      }
-    },
-    {
-      "id": "quality-vision-assist",
-      "slug": "quality-vision-assist",
-      "date": "2024-08-21",
-      "tech": ["PyTorch", "Python", "Scikit-learn"],
-      "tools": ["ONNX", "OpenCV", "CUDA", "Git"],
-      "images": [
-        {
-          "src": "/images/placeholder.svg",
-          "alt": {
-            "en": "Inspection overlay sample",
-            "tr": "Muayene katmanı örneği"
-          }
-        }
-      ],
-      "links": {
-        "live": "https://example.com"
+        "tr": "Kullanıcı özelliklerine göre anlamlı öneriler üretebilen ve en uygun model seçimi yapılmış bir sistem oluşturuldu.",
+        "en": "Built a system capable of generating meaningful recommendations and selecting the most suitable model."
       },
-      "title": {
-        "en": "Quality vision assist",
-        "tr": "Kalite görüntü yardımı"
-      },
-      "shortDescription": {
-        "en": "Edge-friendly defect hints with human-in-the-loop labeling.",
-        "tr": "İnsan döngülü etiketleme ile kenar dostu kusur ipuçları."
-      },
-      "summary": {
-        "en": "Constrained model paired with station calibration so false positives do not overwhelm operators.",
-        "tr": "Yanlış pozitiflerin operatörleri boğmaması için kısıtlı model istasyon kalibrasyonu ile eşleştirildi."
-      },
-      "problem": {
-        "en": "Inspection relied on manual checks. Consistency varied by operator. Some defect types were missed under load.",
-        "tr": "Muayene manuel kontrollere dayanıyordu. Tutarlılık operatöre göre değişiyordu. Bazı kusur türleri yük altında atlanıyordu."
-      },
-      "approach": {
-        "en": "Trained on class imbalance; hard-negative mining from rejected lots after consensus rules. Exported ONNX for plant PCs. UI shows heatmaps with confidence gates and override codes for traceability. Thresholds recomputed from rolling FNR/FPR targets.",
-        "tr": "Sınıf dengesizliği üzerinde eğitim; uzlaşma kurallarından sonra reddedilen partilerden zor negatif madenciliği. Fabrika PC'leri için ONNX dışa aktarıldı. Arayüz güven eşikleri ve izlenebilirlik için geçersiz kılma kodları ile ısı haritaları gösterir."
-      },
-      "outcome": {
-        "en": "Stable assistance without bypassing accountability. Operators still sign off; the model suggests, does not decide.",
-        "tr": "Hesap verebilirliği atlamadan kararlı yardım. Operatörler hâlâ onay veriyor; model önerir, karar vermez."
-      }
-    },
-    {
-      "id": "throughput-simulation-digital-twin",
-      "slug": "throughput-simulation-digital-twin",
-      "date": "2024-04-12",
-      "tech": ["Python", "Optimization"],
-      "tools": ["SimPy", "Jupyter", "Git"],
+      "tech": ["Python", "Scikit-learn", "Pandas"],
+      "tools": [],
       "images": [],
+      "featured": true
+    },
+    {
+      "id": "internet-cafe-feasibility",
+      "slug": "internet-cafe-feasibility",
+      "date": "2024-11-15",
       "title": {
-        "en": "Throughput simulation twin",
-        "tr": "Verimlilik simülasyon ikizi"
+        "tr": "İnternet Kafe Fizibilite ve Karar Analizi",
+        "en": "Internet Cafe Feasibility & Decision Analysis"
       },
       "shortDescription": {
-        "en": "Discrete-event model for buffer sizing under stochastic arrivals.",
-        "tr": "Stokastik varışlar altında tampon boyutlandırma için ayrık olay modeli."
+        "tr": "Pazar analizi, maliyet ve çok kriterli karar verme yöntemleri ile fizibilite çalışması.",
+        "en": "A feasibility study using market analysis, cost modeling, and multi-criteria decision methods."
       },
       "summary": {
-        "en": "Calibrated against six months of WIP scans. Scenarios exported as comparable CSV bundles.",
-        "tr": "Altı aylık WIP taramalarına kalibre edildi. Senaryolar karşılaştırılabilir CSV paketleri olarak dışa aktarıldı."
+        "tr": "Umuttepe bölgesinde internet kafe açılması üzerine kapsamlı bir fizibilite ve karar analizi gerçekleştirdim.",
+        "en": "Conducted a comprehensive feasibility and decision analysis for opening an internet cafe."
       },
       "problem": {
-        "en": "Buffer sizes were set by rule of thumb. Leadership wanted to reduce WIP but needed explicit risk assessment before changing physical layout.",
-        "tr": "Tampon boyutları genel kurala göre belirleniyordu. Yönetim WIP'i azaltmak istiyordu ama fiziksel yerleşimi değiştirmeden önce açık risk değerlendirmesi gerekiyordu."
+        "tr": "Doğru lokasyon, kapasite ve yatırım kararlarını belirlemek çok sayıda değişkene bağlıdır.",
+        "en": "Selecting the right location, capacity, and investment requires evaluating multiple variables."
       },
       "approach": {
-        "en": "Twin encodes routing probabilities from historical transitions, not static assumptions. Each run captures seed, parameters, and summary stats in a manifest. Used to test buffer reductions against service targets on the bottleneck.",
-        "tr": "İkiz geçiş olasılıklarını tarihsel geçişlerden kodlar, statik varsayımlardan değil. Her koşu tohum, parametre ve özet istatistikleri bir manifestte toplar. Darboğazda hizmet hedeflerine karşı tampon azaltımlarını test etmek için kullanıldı."
+        "tr": "Pazar analizi, anket verileri ve gri ilişkisel analiz gibi çok kriterli karar verme yöntemleri kullanıldı.",
+        "en": "Used market research, survey data, and multi-criteria decision-making methods such as grey relational analysis."
       },
       "outcome": {
-        "en": "Capital freed with explicit risk notes. Buffer reductions justified without violating service targets.",
-        "tr": "Açık risk notlarıyla sermaye serbest bırakıldı. Hizmet hedeflerini ihlal etmeden tampon azaltımları gerekçelendirildi."
-      }
+        "tr": "En uygun lokasyon ve yatırım yapısı belirlenerek uygulanabilir bir iş modeli oluşturuldu.",
+        "en": "Identified the optimal location and investment structure for a viable business model."
+      },
+      "tech": ["Excel", "Decision Analysis"],
+      "tools": ["Grey Relational Analysis"],
+      "images": []
+    },
+    {
+      "id": "banbury-fault-detection",
+      "slug": "banbury-fault-detection",
+      "date": "2025-12-17",
+      "title": {
+        "tr": "Banbury Arıza Tespiti ve Model Karşılaştırması",
+        "en": "Banbury Fault Detection & Model Comparison"
+      },
+      "shortDescription": {
+        "tr": "Farklı makine öğrenmesi modellerinin performansını karşılaştırarak arıza tespiti.",
+        "en": "Fault detection by comparing performance of multiple machine learning models."
+      },
+      "summary": {
+        "tr": "Üretim verilerini kullanarak arıza tespiti yapan farklı modelleri karşılaştırdım ve en uygun modeli belirledim.",
+        "en": "Compared different machine learning models for fault detection using production data."
+      },
+      "problem": {
+        "tr": "Hangi modelin daha doğru tahmin yaptığı belirsizdir ve yanlış model seçimi hatalı sonuçlara yol açar.",
+        "en": "Choosing the wrong model leads to inaccurate predictions in fault detection."
+      },
+      "approach": {
+        "tr": "Farklı algoritmalar eğitildi ve performans metriklerine göre karşılaştırıldı.",
+        "en": "Multiple algorithms were trained and evaluated using performance metrics."
+      },
+      "outcome": {
+        "tr": "En yüksek performans gösteren model belirlenerek daha güvenilir tahminler elde edildi.",
+        "en": "Identified the best-performing model for more reliable predictions."
+      },
+      "tech": ["Python", "Scikit-learn", "Pandas"],
+      "tools": [],
+      "images": [],
+      "featured": true
     }
   ]
 }

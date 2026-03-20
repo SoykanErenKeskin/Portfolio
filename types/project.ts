@@ -32,6 +32,8 @@ export type ProjectRecord = {
   outcome: LocalizedString;
   /** Legacy freeform detail; optional when problem/approach/outcome exist */
   detail?: LocalizedString;
+  /** Highlight in home/featured sections */
+  featured?: boolean;
 };
 
 export type ProjectsFile = {
