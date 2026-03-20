@@ -287,6 +287,14 @@
             "en": "Layout",
             "tr": "Yerleşim planı"
           }
+        },
+        {
+          "src": "/projects/internet-cafe-feasibility/video.mp4",
+          "alt": {
+            "en": "Project walkthrough",
+            "tr": "Proje tanıtımı"
+          },
+          "type": "video"
         }
       ]
     },
