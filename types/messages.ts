@@ -57,8 +57,17 @@ export type Messages = {
   };
   projectDetail: {
     back: string;
+    caseLabel: string;
+    metaDomain: string;
+    metaFocus: string;
+    metaStack: string;
+    metaTools: string;
+    metaStatus: string;
+    metaYear: string;
+    statusCompleted: string;
     problem: string;
     approach: string;
+    technicalStructure: string;
     outcome: string;
     stack: string;
     tools: string;
@@ -66,6 +75,12 @@ export type Messages = {
     github: string;
     live: string;
     gallery: string;
+    caseCover: string;
+    coverPlaceholder: string;
+    noImageAsset: string;
+    previousCase: string;
+    nextCase: string;
+    relatedRecords: string;
   };
   contact: {
     title: string;

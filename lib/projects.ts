@@ -14,6 +14,18 @@ export function getProjectById(id: string): ProjectRecord | undefined {
   return file.projects.find((p) => p.id === id);
 }
 
+export function getAdjacentProjects(
+  currentId: string
+): { prev: ProjectRecord | null; next: ProjectRecord | null } {
+  const sorted = getAllProjects();
+  const idx = sorted.findIndex((p) => p.id === currentId);
+  if (idx < 0) return { prev: null, next: null };
+  return {
+    prev: idx > 0 ? sorted[idx - 1] : null,
+    next: idx < sorted.length - 1 ? sorted[idx + 1] : null,
+  };
+}
+
 export function getLatestProjects(count: number): ProjectRecord[] {
   return getAllProjects().slice(0, count);
 }

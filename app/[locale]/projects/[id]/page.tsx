@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProjectCase } from "@/components/projects/project-case";
 import { getMessages } from "@/lib/i18n";
-import { getAllProjects, getProjectById } from "@/lib/projects";
+import {
+  getAllProjects,
+  getAdjacentProjects,
+  getProjectById,
+} from "@/lib/projects";
 import { isLocale } from "@/types/locale";
 import { locales } from "@/types/locale";
 
@@ -39,7 +43,16 @@ export default async function ProjectDetailPage({
   const project = getProjectById(id);
   if (!project) notFound();
 
+  const { prev, next } = getAdjacentProjects(id);
   const messages = getMessages(locale);
 
-  return <ProjectCase locale={locale} messages={messages} project={project} />;
+  return (
+    <ProjectCase
+      locale={locale}
+      messages={messages}
+      project={project}
+      prevProject={prev}
+      nextProject={next}
+    />
+  );
 }

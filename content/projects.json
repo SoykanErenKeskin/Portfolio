@@ -10,27 +10,83 @@
       },
       "shortDescription": {
         "tr": "Siparişlerin ve rotaların yönetildiği operasyonel takip sistemi.",
-        "en": "An operational tracking system for managing orders and routes."
+        "en": "Operational tracking for orders and routes with role-based assignment."
       },
       "summary": {
-        "tr": "Depodan teslimata kadar olan süreci takip eden ve yönetim paneli üzerinden kontrol edilebilen bir sistem geliştirdim.",
-        "en": "Developed a system that tracks the process from warehouse to delivery with a centralized management panel."
+        "tr": "Depodan teslimata kadar süreci tek panel üzerinden izlenebilir kılan mobil ve backend entegrasyonu.",
+        "en": "Mobile client and backend integration so warehouse-to-delivery status is visible from one control surface."
+      },
+      "domain": {
+        "tr": "Operasyon ve Lojistik",
+        "en": "Operations & Logistics"
+      },
+      "focus": {
+        "tr": "Rol tabanlı iş akışı, atama, takip",
+        "en": "Role-based workflow, assignment, tracking"
       },
       "problem": {
-        "tr": "Siparişlerin ve sürücülerin eş zamanlı takibi operasyonel karmaşıklığa yol açar.",
-        "en": "Tracking orders and drivers simultaneously creates operational complexity."
+        "tr": "Sipariş ve sürücü durumu farklı kanallarda kalınca atama kararları gecikiyor ve teslimat durumu net görünmüyordu. Aynı bilgiyi iki kez girmek hatayı artırıyordu.",
+        "en": "Order and driver state lived in separate channels, so assignment lagged and delivery status was opaque. Duplicate entry increased error rates."
       },
       "approach": {
-        "tr": "Rol bazlı yapı kurarak sipariş atama, rota yönetimi ve takip süreçlerini merkezi hale getirdim.",
-        "en": "Implemented a role-based system to centralize assignment, routing, and tracking processes."
+        "tr": "Rol bazlı yetkilendirme ile depo, sürücü ve yönetici akışlarını ayırdım. Sipariş yaşam döngüsü tek veri modelinde tutuldu; Supabase ile gerçek zamanlı güncelleme sağlandı.",
+        "en": "Separated warehouse, driver, and admin flows with role-based auth. Kept the order lifecycle in one data model; used Supabase for real-time updates."
       },
       "outcome": {
-        "tr": "Operasyonel süreç daha kontrol edilebilir ve izlenebilir hale getirildi.",
-        "en": "Improved visibility and control over operational processes."
+        "tr": "Atama ve rota kararları tek panelden izlenebilir; operasyon ekibi aynı kayıt üzerinden çalışıyor.",
+        "en": "Assignment and routing decisions are traceable from one panel; ops works off a single source of record."
       },
+      "technicalStructure": [
+        {
+          "key": "roles",
+          "label": { "tr": "Kullanıcı rolleri", "en": "User roles" },
+          "content": {
+            "tr": "Depo: sipariş oluşturma ve sürücü atama. Sürücü: atanmış rota ve durum güncelleme. Yönetici: tüm kayıtlar ve müdahale.",
+            "en": "Warehouse: create orders and assign drivers. Driver: assigned route and status updates. Admin: full records and override."
+          }
+        },
+        {
+          "key": "flow",
+          "label": { "tr": "Akış mantığı", "en": "Flow logic" },
+          "content": {
+            "tr": "Oluştur → ata → rota → teslimat durumu. Her adımda rol kontrolü; durum geçişleri denetlenebilir.",
+            "en": "Create → assign → route → delivery status. Role checks at each step; transitions are auditable."
+          }
+        },
+        {
+          "key": "data",
+          "label": { "tr": "Veri yapısı", "en": "Data structure" },
+          "content": {
+            "tr": "Sipariş, kullanıcı, rota ve teslimat tabloları ilişkisel şema; Firebase Auth ile kimlik, Supabase ile senkron.",
+            "en": "Relational schema for orders, users, routes, delivery; Firebase Auth for identity, Supabase for sync."
+          }
+        }
+      ],
       "tech": ["React Native", "Supabase", "Firebase"],
       "tools": ["SQL Editor", "Auth Systems"],
-      "images": []
+      "images": [
+        {
+          "src": "/projects/order-tracking-system/cover.jpg",
+          "alt": {
+            "en": "Order tracking — main control view",
+            "tr": "Sipariş takibi — ana kontrol görünümü"
+          }
+        },
+        {
+          "src": "/projects/order-tracking-system/fig-01.jpg",
+          "alt": {
+            "en": "App screenshot",
+            "tr": "Uygulama ekran görüntüsü"
+          }
+        },
+        {
+          "src": "/projects/order-tracking-system/fig-02.jpg",
+          "alt": {
+            "en": "App screenshot",
+            "tr": "Uygulama ekran görüntüsü"
+          }
+        }
+      ]
     },
     {
       "id": "route-optimizer",
@@ -41,28 +97,108 @@
         "en": "Personality-Based Place Recommendation & Routing System"
       },
       "shortDescription": {
-        "tr": "Kullanıcı özelliklerine göre mekan öneren ve rota oluşturan veri odaklı sistem.",
-        "en": "A data-driven system that recommends places based on user characteristics and generates routes."
+        "tr": "Kişilik ve mekan tercihi verisiyle öneri ve rota üreten deney.",
+        "en": "Recommendation and routing experiment from personality and place-preference data."
       },
       "summary": {
-        "tr": "Bu projede kullanıcıların kişilik özellikleri ile mekan tercihleri arasındaki ilişkiyi analiz ederek öneri sistemi geliştirdim.",
-        "en": "This project explores the relationship between user personality traits and place preferences to build a recommendation system."
+        "tr": "Anket verisiyle kişilik boyutlarını ve mekan etiketlerini eşleştirip sınıflandırıcıları aynı veri üzerinde kıyasladım.",
+        "en": "Survey data linked personality dimensions to place labels; classifiers were compared on the same feature matrix."
+      },
+      "domain": {
+        "tr": "Öneri Sistemleri",
+        "en": "Recommendation Systems"
+      },
+      "focus": {
+        "tr": "Model karşılaştırması, veri analizi",
+        "en": "Model comparison, data analysis"
       },
       "problem": {
-        "tr": "Kullanıcıların tercihleri genellikle açık şekilde ifade edilmez ve bu durum doğru öneri yapılmasını zorlaştırır.",
-        "en": "User preferences are often implicit, making it difficult to generate accurate recommendations."
+        "tr": "Tercihler çoğu zaman dolaylı; doğrudan skor yerine anket ve etiketlerden çıkarım gerekiyordu. Hangi sınıflandırıcının genelleme yapacağı önceden bilinmiyordu.",
+        "en": "Preferences are mostly implicit; inference had to come from surveys and labels rather than direct scores. Generalization of competing classifiers was unknown upfront."
       },
       "approach": {
-        "tr": "Veri oluşturma, temizleme ve analiz süreçlerinden sonra farklı makine öğrenmesi modelleri eğitildi ve performans metriklerine göre karşılaştırıldı.",
-        "en": "After data creation, preprocessing, and analysis, multiple machine learning models were trained and compared using performance metrics."
+        "tr": "Özellik matrisini sabit tutup eğitim/hold-out bölünmesini tekrarlanabilir yaptım. Metrikler: doğruluk, F1, confusion matrix; sınıf dengesizliği için weighted F1.",
+        "en": "Fixed the feature matrix and used a reproducible train/hold-out split. Metrics: accuracy, F1, confusion matrix; weighted F1 under class imbalance."
       },
       "outcome": {
-        "tr": "Kullanıcı özelliklerine göre anlamlı öneriler üretebilen ve en uygun model seçimi yapılmış bir sistem oluşturuldu.",
-        "en": "Built a system capable of generating meaningful recommendations and selecting the most suitable model."
+        "tr": "En iyi F1 veren model seçildi; özellik seti ve kodlama şeması dokümante edildi, tekrar çalıştırılabilir.",
+        "en": "Selected the top F1 model; feature set and encoding scheme documented for reruns."
+      },
+      "technicalStructure": [
+        {
+          "key": "data-prep",
+          "label": { "tr": "Veri hazırlama", "en": "Data preparation" },
+          "content": {
+            "tr": "Anketten kişilik ve mekan tercihi alanları çıkarıldı; eksik ve tutarsız kayıtlar elendi.",
+            "en": "Pulled personality and place-preference fields from surveys; dropped incomplete or inconsistent rows."
+          }
+        },
+        {
+          "key": "features",
+          "label": { "tr": "Özellik mantığı", "en": "Feature logic" },
+          "content": {
+            "tr": "Big Five benzeri boyutlar sayısallaştırıldı; mekan türleri one-hot veya ordinal kodlandı.",
+            "en": "Big-Five-like dimensions numerically encoded; venue types one-hot or ordinal encoded."
+          }
+        },
+        {
+          "key": "model-compare",
+          "label": { "tr": "Model karşılaştırması", "en": "Model comparison" },
+          "content": {
+            "tr": "Logistic Regression, Random Forest, Gradient Boosting aynı split üzerinde; hiperparametre araması sınırlı grid.",
+            "en": "Logistic Regression, Random Forest, Gradient Boosting on the same split; small grid search only."
+          }
+        },
+        {
+          "key": "evaluation",
+          "label": { "tr": "Değerlendirme metrikleri", "en": "Evaluation metrics" },
+          "content": {
+            "tr": "Accuracy, precision, recall, macro/micro F1; karar eşiği 0.5 varsayılan.",
+            "en": "Accuracy, precision, recall, macro/micro F1; default decision threshold 0.5."
+          }
+        }
+      ],
+      "dataTable": {
+        "title": {
+          "en": "Model comparison",
+          "tr": "Model karşılaştırması"
+        },
+        "columns": [
+          "Decision Trees",
+          "Multi Output Classifier",
+          "Multi Output Regressor",
+          "Classifier Chain",
+          "XGBoost",
+          "LightGBM"
+        ],
+        "columnGroups": [
+          { "label": "Decision Trees", "colspan": 1 },
+          { "label": "Random Forest", "colspan": 3 },
+          { "label": "Boosting Methods", "colspan": 2 }
+        ],
+        "rows": [
+          { "metric": "Mikro F-1", "scenario": "Standart Model", "values": ["0.6270", "0.6769", "0.6734", "0.6410", "0.6570", "0.6772"] },
+          { "metric": "Mikro F-1", "scenario": "Demography", "values": ["0.6599", "0.7247", "0.7229", "0.6938", "0.7086", "0.6807"] },
+          { "metric": "Mikro F-1", "scenario": "Hyperparameter", "values": ["-", "0.7311", "0.7288", "-", "0.7149", "0.7287"] },
+          { "metric": "Makro F-1", "scenario": "Standart Model", "values": ["0.5804", "0.5823", "0.6227", "0.5772", "0.6017", "0.6285"] },
+          { "metric": "Makro F-1", "scenario": "Demography", "values": ["0.6205", "0.6492", "0.6564", "0.6350", "0.6545", "0.6297"] },
+          { "metric": "Makro F-1", "scenario": "Hyperparameter", "values": ["-", "0.6529", "0.6495", "-", "0.6543", "0.6792"] },
+          { "metric": "Hamming Loss", "scenario": "Standart Model", "values": ["0.2812", "0.2211", "0.2326", "0.2402", "0.2454", "0.2297"] },
+          { "metric": "Hamming Loss", "scenario": "Demography", "values": ["0.2538", "0.1895", "0.1968", "0.2046", "0.2092", "0.2237"] },
+          { "metric": "Hamming Loss", "scenario": "Hyperparameter", "values": ["-", "0.1861", "0.1887", "-", "0.1994", "0.1956"] }
+        ]
       },
       "tech": ["Python", "Scikit-learn", "Pandas"],
       "tools": [],
-      "images": [],
+      "images": [
+        {
+          "src": "/projects/route-optimizer/cover.png",
+          "alt": {
+            "en": "Feature importance (RIASEC and demographic predictors)",
+            "tr": "Özellik önemi (RIASEC ve demografik tahmin ediciler)"
+          }
+        }
+      ],
       "featured": true
     },
     {
@@ -74,28 +210,85 @@
         "en": "Internet Cafe Feasibility & Decision Analysis"
       },
       "shortDescription": {
-        "tr": "Pazar analizi, maliyet ve çok kriterli karar verme yöntemleri ile fizibilite çalışması.",
-        "en": "A feasibility study using market analysis, cost modeling, and multi-criteria decision methods."
+        "tr": "Umuttepe için lokasyon ve yatırım kararına GRA tabanlı çok kriterli analiz.",
+        "en": "GRA-based multi-criteria analysis for location and investment in Umuttepe."
       },
       "summary": {
-        "tr": "Umuttepe bölgesinde internet kafe açılması üzerine kapsamlı bir fizibilite ve karar analizi gerçekleştirdim.",
-        "en": "Conducted a comprehensive feasibility and decision analysis for opening an internet cafe."
+        "tr": "Alternatif lokasyonları aynı kriter setiyle skorlayıp gri ilişkisel analiz ile sıraladım; maliyet ve talep verisi anketle desteklendi.",
+        "en": "Scored alternative locations on one criterion set; ranked via grey relational analysis with cost and demand supported by survey data."
+      },
+      "domain": {
+        "tr": "Fizibilite ve Karar Analizi",
+        "en": "Feasibility & Decision Analysis"
+      },
+      "focus": {
+        "tr": "Çok kriterli karar verme",
+        "en": "Multi-criteria decision making"
       },
       "problem": {
-        "tr": "Doğru lokasyon, kapasite ve yatırım kararlarını belirlemek çok sayıda değişkene bağlıdır.",
-        "en": "Selecting the right location, capacity, and investment requires evaluating multiple variables."
+        "tr": "Lokasyon, kapasite ve yatırım birbirine bağlı; kriterleri tek bir skorda birleştirmeden karşılaştırma yapılamazdı.",
+        "en": "Location, capacity, and investment are coupled; alternatives could not be compared without aggregating criteria into comparable scores."
       },
       "approach": {
-        "tr": "Pazar analizi, anket verileri ve gri ilişkisel analiz gibi çok kriterli karar verme yöntemleri kullanıldı.",
-        "en": "Used market research, survey data, and multi-criteria decision-making methods such as grey relational analysis."
+        "tr": "Kriter ağırlıkları önce sabit, sonra duyarlılık için hafif varyasyon. GRA referans dizisi ve normalize karşılaştırma matrisi Excel üzerinde.",
+        "en": "Criterion weights fixed first, then light sensitivity runs. GRA reference series and normalized comparison matrices in Excel."
       },
       "outcome": {
-        "tr": "En uygun lokasyon ve yatırım yapısı belirlenerek uygulanabilir bir iş modeli oluşturuldu.",
-        "en": "Identified the optimal location and investment structure for a viable business model."
+        "tr": "Baskın alternatif lokasyon ve kapasite bandı raporlandı; varsayımlar ve ağırlıklar şeffaf.",
+        "en": "Dominant location and capacity band reported; assumptions and weights explicit in the write-up."
       },
+      "technicalStructure": [
+        {
+          "key": "inputs",
+          "label": { "tr": "Girdiler", "en": "Inputs" },
+          "content": {
+            "tr": "Nüfus, öğrenci yoğunluğu, kira, rakip sayısı, anket talep göstergeleri.",
+            "en": "Population, student density, rent, competitor count, survey demand signals."
+          }
+        },
+        {
+          "key": "criteria",
+          "label": { "tr": "Kriterler", "en": "Criteria" },
+          "content": {
+            "tr": "Maliyet, erişim, talep, rekabet baskısı; her biri aynı ölçekte normalize.",
+            "en": "Cost, access, demand, competitive pressure; each normalized to a common scale."
+          }
+        },
+        {
+          "key": "method",
+          "label": { "tr": "Yöntem", "en": "Method" },
+          "content": {
+            "tr": "GRA: referans ideal vektör, gri katsayılar, sıralama. Ağırlıklar toplamı 1.",
+            "en": "GRA: reference ideal vector, grey coefficients, ranking. Weights sum to 1."
+          }
+        },
+        {
+          "key": "output",
+          "label": { "tr": "Karar çıktısı", "en": "Decision output" },
+          "content": {
+            "tr": "Sıralı alternatif listesi ve önerilen PC sayısı bandı.",
+            "en": "Ranked alternative list and recommended PC-count band."
+          }
+        }
+      ],
       "tech": ["Excel", "Decision Analysis"],
       "tools": ["Grey Relational Analysis"],
-      "images": []
+      "images": [
+        {
+          "src": "/projects/internet-cafe-feasibility/cover.jpg",
+          "alt": {
+            "en": "Criteria weighting and alternative matrix",
+            "tr": "Kriter ağırlıkları ve alternatif matrisi"
+          }
+        },
+        {
+          "src": "/projects/internet-cafe-feasibility/fig-01.jpg",
+          "alt": {
+            "en": "Layout",
+            "tr": "Yerleşim planı"
+          }
+        }
+      ]
     },
     {
       "id": "banbury-fault-detection",
@@ -106,28 +299,92 @@
         "en": "Banbury Fault Detection & Model Comparison"
       },
       "shortDescription": {
-        "tr": "Farklı makine öğrenmesi modellerinin performansını karşılaştırarak arıza tespiti.",
-        "en": "Fault detection by comparing performance of multiple machine learning models."
+        "tr": "Üretim sensör verisiyle arıza/normal sınıflandırması ve model seçimi.",
+        "en": "Fault vs normal classification on production sensor data with model selection."
       },
       "summary": {
-        "tr": "Üretim verilerini kullanarak arıza tespiti yapan farklı modelleri karşılaştırdım ve en uygun modeli belirledim.",
-        "en": "Compared different machine learning models for fault detection using production data."
+        "tr": "Aynı etiketli veri setinde birkaç sınıflandırıcıyı eğitip metrik ve ROC eğrileriyle seçim yaptım.",
+        "en": "Trained several classifiers on the same labeled set; selection used metrics and ROC behavior."
+      },
+      "domain": {
+        "tr": "Öngörücü Bakım",
+        "en": "Predictive Maintenance"
+      },
+      "focus": {
+        "tr": "Model karşılaştırması, arıza tespiti",
+        "en": "Model comparison, fault detection"
       },
       "problem": {
-        "tr": "Hangi modelin daha doğru tahmin yaptığı belirsizdir ve yanlış model seçimi hatalı sonuçlara yol açar.",
-        "en": "Choosing the wrong model leads to inaccurate predictions in fault detection."
+        "tr": "Sensör serileri gürültülü; arıza sınıfı seyrek. Yanlış model hem false alarm hem kaçırılan olay üretir.",
+        "en": "Sensor series are noisy; fault class is rare. A poor model both alarms falsely and misses events."
       },
       "approach": {
-        "tr": "Farklı algoritmalar eğitildi ve performans metriklerine göre karşılaştırıldı.",
-        "en": "Multiple algorithms were trained and evaluated using performance metrics."
+        "tr": "Zaman penceresi özellikleri (mean, std, slope) çıkarıldı. Stratified split; metrikler precision/recall/F1 ve ROC-AUC.",
+        "en": "Time-window features (mean, std, slope). Stratified split; precision/recall/F1 and ROC-AUC."
       },
       "outcome": {
-        "tr": "En yüksek performans gösteren model belirlenerek daha güvenilir tahminler elde edildi.",
-        "en": "Identified the best-performing model for more reliable predictions."
+        "tr": "En dengeli precision–recall profili veren model raporlandı; confusion matrix eklendi.",
+        "en": "Reported the model with the best precision–recall trade-off for this split; confusion matrix attached."
       },
+      "technicalStructure": [
+        {
+          "key": "data-prep",
+          "label": { "tr": "Veri hazırlama", "en": "Data preparation" },
+          "content": {
+            "tr": "Ham sensör serileri pencerelendi; etiketler üretim kayıtlarıyla hizalandı.",
+            "en": "Raw sensor streams windowed; labels aligned with production logs."
+          }
+        },
+        {
+          "key": "features",
+          "label": { "tr": "Özellik mantığı", "en": "Feature logic" },
+          "content": {
+            "tr": "Her pencere için istatistiksel özetler ve trend; özellik sayısı düşük tutuldu (overfitting sınırı).",
+            "en": "Per-window statistical summaries and trend; kept feature count low to limit overfitting."
+          }
+        },
+        {
+          "key": "model-compare",
+          "label": { "tr": "Model karşılaştırması", "en": "Model comparison" },
+          "content": {
+            "tr": "Logistic Regression, SVM, Random Forest, XGBoost; aynı CV stratejisi.",
+            "en": "Logistic Regression, SVM, Random Forest, XGBoost; same CV strategy."
+          }
+        },
+        {
+          "key": "evaluation",
+          "label": { "tr": "Değerlendirme metrikleri", "en": "Evaluation metrics" },
+          "content": {
+            "tr": "Confusion matrix, F1, ROC-AUC; azınlık sınıfına ağırlık düşünüldü.",
+            "en": "Confusion matrix, F1, ROC-AUC; minority class weighting considered."
+          }
+        }
+      ],
       "tech": ["Python", "Scikit-learn", "Pandas"],
       "tools": [],
-      "images": [],
+      "images": [
+        {
+          "src": "/projects/banbury-fault-detection/cover.jpg",
+          "alt": {
+            "en": "Confusion matrix — selected model",
+            "tr": "Confusion matrix — seçilen model"
+          }
+        },
+        {
+          "src": "/projects/banbury-fault-detection/cost-matrix.png",
+          "alt": {
+            "en": "Cost matrix — penalty for misclassification (Normal, Risk, Fault)",
+            "tr": "Maliyet matrisi — yanlış sınıflandırma cezası (Normal, Risk, Arıza)"
+          }
+        },
+        {
+          "src": "/projects/banbury-fault-detection/model-comparison.png",
+          "alt": {
+            "en": "Model comparison — Macro F1, Accuracy, Risk Precision, Fault Recall, Cost per Sample",
+            "tr": "Model karşılaştırması — Macro F1, Doğruluk, Risk Hassasiyeti, Arıza Duyarlılığı, Örnek Başına Maliyet"
+          }
+        }
+      ],
       "featured": true
     }
   ]
