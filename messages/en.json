@@ -1,0 +1,86 @@
+{
+  "meta": {
+    "title": "Portfolio — Systems & Data",
+    "description": "Data analysis, industrial engineering, ML, and operational systems."
+  },
+  "brand": {
+    "name": "Soykan Eren Keskin",
+    "tagline": "Data · Operations · ML"
+  },
+  "nav": {
+    "home": "Home",
+    "projects": "Projects",
+    "contact": "Contact"
+  },
+  "theme": {
+    "dark": "Dark",
+    "light": "Light"
+  },
+  "social": {
+    "github": "https://github.com/SoykanErenKeskin",
+    "linkedin": "https://www.linkedin.com/in/soykanerenkeskin",
+    "website": "https://thequarox.com",
+    "githubLabel": "GitHub",
+    "linkedinLabel": "LinkedIn",
+    "websiteLabel": "Web"
+  },
+  "home": {
+    "statusLine": "SYS.STATUS · ONLINE",
+    "valueProp": "I transform small, seemingly insignificant pieces of data into structured, decision-making-ready analyses.",
+    "supporting": "I work in data analysis, machine learning, optimization, and operations. I enjoy taking scattered or complex data and making it understandable; transforming complexity into a structure that supports clearer decisions. My interdisciplinary background allows me to approach problems from different perspectives.",
+    "systemsTitle": "Capability map",
+    "systemsSubtitle": "Analytical scope · work domains",
+    "systemsFigure": "FIG.01 — CAPABILITY MAP",
+    "systemsCategories": [
+      {
+        "key": "analytics",
+        "label": "Data analytics",
+        "items": ["Python", "Pandas", "SQL", "Data Visualization", "Statistical Analysis"]
+      },
+      {
+        "key": "ops",
+        "label": "Systems & operations",
+        "items": ["Process Mapping", "Optimization", "Multi-criteria Decision Making", "Operational Analysis", "Decision Support Thinking"]
+      },
+      {
+        "key": "ml",
+        "label": "Machine learning",
+        "items": ["Scikit-learn", "PyTorch", "Model Evaluation", "Basic Deep Learning", "Supervised Learning"]
+      }
+    ],
+    "latestTitle": "Latest projects",
+    "inspect": "View case →",
+    "fullRegistry": "Full registry →"
+  },
+  "projects": {
+    "title": "Project registry",
+    "subtitle": "Case records · filter by technology (OR)",
+    "filterLabel": "Active filters",
+    "clearFilters": "Clear",
+    "noMatches": "No records match the current filter set.",
+    "recordPrefix": "Log",
+    "openRecord": "Open log →"
+  },
+  "projectDetail": {
+    "back": "← Registry",
+    "problem": "Problem",
+    "approach": "Approach",
+    "outcome": "Outcome",
+    "stack": "Tech stack",
+    "tools": "Tools & environment",
+    "links": "External references",
+    "github": "Repository",
+    "live": "Live / demo",
+    "gallery": "Attachments"
+  },
+  "contact": {
+    "title": "Contact channel",
+    "subtitle": "Direct line",
+    "emailLabel": "Email",
+    "email": "soykanerenkeskin@gmail.com",
+    "channels": "Profiles"
+  },
+  "footer": {
+    "rights": "All systems nominal."
+  }
+}

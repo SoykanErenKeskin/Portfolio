@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="480" viewBox="0 0 800 480" role="img" aria-label="Placeholder">
+  <rect width="800" height="480" fill="#1a1a1f"/>
+  <rect x="1" y="1" width="798" height="478" fill="none" stroke="#3a3a44" stroke-width="2"/>
+  <g fill="none" stroke="#4a4a55" stroke-width="1.5">
+    <path d="M40 80h720M40 160h720M40 240h720M40 320h720M40 400h720"/>
+    <path d="M120 40v400M280 40v400M440 40v400M600 40v400"/>
+  </g>
+  <text x="400" y="244" text-anchor="middle" fill="#6a6a75" font-family="ui-monospace, monospace" font-size="14">ATTACHMENT</text>
+</svg>

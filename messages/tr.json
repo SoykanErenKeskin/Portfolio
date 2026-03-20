@@ -1,0 +1,86 @@
+{
+  "meta": {
+    "title": "Sistemler ve Veri",
+    "description": "Veri analizi, endüstri mühendisliği, ML ve operasyonel sistemler."
+  },
+  "brand": {
+    "name": "Soykan Eren Keskin",
+    "tagline": "Veri · Operasyon · ML"
+  },
+  "nav": {
+    "home": "Ana sayfa",
+    "projects": "Projeler",
+    "contact": "İletişim"
+  },
+  "theme": {
+    "dark": "Koyu",
+    "light": "Açık"
+  },
+  "social": {
+    "github": "https://github.com/SoykanErenKeskin",
+    "linkedin": "https://www.linkedin.com/in/soykanerenkeskin",
+    "website": "https://thequarox.com",
+    "githubLabel": "GitHub",
+    "linkedinLabel": "LinkedIn",
+    "websiteLabel": "Web"
+  },
+  "home": {
+    "statusLine": "SYS.DURUM · ÇEVRİMİÇİ",
+    "valueProp": "Küçük anlamsız verileri; yapılandırılmış, karar almaya hazır analizlere dönüştürüyorum.",
+    "supporting": "Veri analizi, makine öğrenmesi, optimizasyon ve operasyonlar üzerine çalışıyrum. Dağınık veya karmaşık veriyi alıp anlaşılır hale getirmeyi; karmaşıklığı, daha net kararları destekleyen bir yapıya dönüştürmeyi seviyorum. Arka planımın disiplinler arası olmasının getirdiği düşünce yapısıyla birlikte problemlere farklı düşünce tarzlarıyla bakabiliyorum.",
+    "systemsTitle": "Yetenek haritası",
+    "systemsSubtitle": "Analitik kapsam · çalışma alanları",
+    "systemsFigure": "ŞEK.01 — YETENEK HARİTASI",
+    "systemsCategories": [
+      {
+        "key": "analytics",
+        "label": "Veri analitiği",
+        "items": ["Python", "Pandas", "SQL", "Veri Görselleştirme", "İstatistiksel Analiz"]
+      },
+      {
+        "key": "ops",
+        "label": "Sistemler ve operasyonlar",
+        "items": ["Süreç Haritalama", "Optimizasyon", "Çok Kriterli Karar Verme", "Operasyonel Analiz", "Karar Desteği Düşüncesi"]
+      },
+      {
+        "key": "ml",
+        "label": "Makine öğrenmesi",
+        "items": ["Scikit-learn", "PyTorch", "Model Değerlendirme", "Temel Derin Öğrenme", "Denetimli Öğrenme"]
+      }
+    ],
+    "latestTitle": "Son projeler",
+    "inspect": "Vakayı görüntüle →",
+    "fullRegistry": "Tam liste →"
+  },
+  "projects": {
+    "title": "Proje kaydı",
+    "subtitle": "Vaka kayıtları · teknolojiye göre filtre",
+    "filterLabel": "Aktif filtreler",
+    "clearFilters": "Temizle",
+    "noMatches": "Seçili filtrelere uyan kayıt yok.",
+    "recordPrefix": "Log",
+    "openRecord": "Log'u aç →"
+  },
+  "projectDetail": {
+    "back": "← Kayıtlar",
+    "problem": "Problem",
+    "approach": "Yaklaşım",
+    "outcome": "Sonuç",
+    "stack": "Teknoloji yığını",
+    "tools": "Araçlar ve ortam",
+    "links": "Harici referanslar",
+    "github": "Depo",
+    "live": "Canlı / demo",
+    "gallery": "Ekler"
+  },
+  "contact": {
+    "title": "İletişim kanalları",
+    "subtitle": "Doğrudan hat",
+    "emailLabel": "E-posta",
+    "email": "soykanerenkeskin@gmail.com",
+    "channels": "Profiller"
+  },
+  "footer": {
+    "rights": "Tüm sistemler normal."
+  }
+}

@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --surface: 252 252 253;
+  --surface-raised: 255 255 255;
+  --border: 210 214 222;
+  --border-subtle: 232 234 240;
+  --ink: 18 20 28;
+  --ink-muted: 82 88 102;
+  --ink-faint: 130 136 150;
+  --accent: 72 108 220;
+  --accent-muted: 72 108 220;
+}
+
+.dark {
+  color-scheme: dark;
+  --surface: 12 13 18;
+  --surface-raised: 18 19 26;
+  --border: 48 50 58;
+  --border-subtle: 32 34 42;
+  --ink: 236 238 245;
+  --ink-muted: 158 162 178;
+  --ink-faint: 108 112 128;
+  --accent: 118 158 255;
+  --accent-muted: 118 158 255;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply min-h-screen bg-surface font-sans text-ink antialiased;
+}
+
+::selection {
+  @apply bg-accent/20 text-ink;
+}
+
+.focus-ring {
+  @apply outline-none ring-2 ring-accent/40 ring-offset-2 ring-offset-surface;
+}
+
+.panel-edge {
+  box-shadow:
+    inset 0 1px 0 0 rgb(var(--border-subtle) / 0.65),
+    0 0 0 1px rgb(var(--border) / 0.45);
+}
+
+@keyframes status-pulse {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0 2px rgb(34 197 94 / 0.5), 0 0 8px rgb(34 197 94 / 0.3);
+  }
+  50% {
+    opacity: 0.6;
+    box-shadow: 0 0 0 1px rgb(34 197 94 / 0.3), 0 0 4px rgb(34 197 94 / 0.15);
+  }
+}
+
+.status-indicator {
+  animation: status-pulse 2s ease-in-out infinite;
+}

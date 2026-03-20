@@ -1,0 +1,173 @@
+{
+  "projects": [
+    {
+      "id": "line-downtime-telemetry",
+      "slug": "line-downtime-telemetry",
+      "date": "2025-02-18",
+      "tech": ["Python", "SQL", "Pandas"],
+      "tools": ["PostgreSQL", "Grafana", "Git"],
+      "images": [
+        {
+          "src": "/images/placeholder.svg",
+          "alt": {
+            "en": "Downtime dashboard wireframe",
+            "tr": "Durma süresi panosu taslağı"
+          }
+        },
+        {
+          "src": "/images/placeholder.svg",
+          "alt": {
+            "en": "Event timeline excerpt",
+            "tr": "Olay zaman çizelgesi özeti"
+          }
+        }
+      ],
+      "links": {
+        "github": "https://github.com",
+        "live": "https://example.com"
+      },
+      "title": {
+        "en": "Line downtime telemetry",
+        "tr": "Hat duruş telemetrisi"
+      },
+      "shortDescription": {
+        "en": "Shop-floor event ingestion with IE-aligned KPIs and anomaly surfacing.",
+        "tr": "IE uyumlu KPI'lar ve anomali yüzeyi ile üretim hattı olay toplama."
+      },
+      "summary": {
+        "en": "Unified downtime reasons, cycle variance, and shift-level loss trees in a single view.",
+        "tr": "Duruş nedenleri, çevrim sapması ve vardiya bazlı kayıp ağaçları tek görünümde."
+      },
+      "problem": {
+        "en": "Production data lived in PLC logs and manual reason codes. Root-cause meetings had no shared view of what happened where and when.",
+        "tr": "Üretim verisi PLC günlüklerinde ve manuel neden kodlarında dağınıktı. Kök neden toplantılarında neyin nerede ve ne zaman olduğuna dair ortak bir görünüm yoktu."
+      },
+      "approach": {
+        "en": "Normalized timestamps and reason codes against routing tables. Built aggregates per line and SKU family. Added drill-down from plant → line → station with preserved filter context.",
+        "tr": "Zaman damgaları ve neden kodlarını yönlendirme tablolarına göre normalize ettim. Hat ve SKU ailesi bazında özetler oluşturdum. Tesis → hat → istasyon geçişini filtre bağlamını koruyarak ekledim."
+      },
+      "outcome": {
+        "en": "Faster root-cause meetings. Engineering and operations now share a common vocabulary for downtime.",
+        "tr": "Daha hızlı kök neden toplantıları. Mühendislik ve operasyonlar duruş için ortak bir dil kullanıyor."
+      }
+    },
+    {
+      "id": "demand-forecast-pipeline",
+      "slug": "demand-forecast-pipeline",
+      "date": "2024-11-03",
+      "tech": ["Python", "Pandas", "Scikit-learn", "SQL"],
+      "tools": ["Airflow", "Parquet", "pytest", "Git"],
+      "images": [
+        {
+          "src": "/images/placeholder.svg",
+          "alt": {
+            "en": "Forecast vs actual panel",
+            "tr": "Tahmin ve gerçekleşen paneli"
+          }
+        }
+      ],
+      "links": {
+        "github": "https://github.com"
+      },
+      "title": {
+        "en": "Demand forecast pipeline",
+        "tr": "Talep tahmin boru hattı"
+      },
+      "shortDescription": {
+        "en": "Batch scoring with backtesting hooks and inventory-aware error metrics.",
+        "tr": "Geri test kancaları ve envanter-duyarlı hata metrikleri ile toplu skorlama."
+      },
+      "summary": {
+        "en": "Replaced spreadsheet handoffs with versioned features, walk-forward validation, and scheduled refresh jobs.",
+        "tr": "Elektronik tablo aktarımlarını sürümlü özellikler, ileri doğru doğrulama ve planlı yenileme işleriyle değiştirdim."
+      },
+      "problem": {
+        "en": "Forecasts were spreadsheet-based and hard to reproduce. No clear way to compare runs or track drift over time.",
+        "tr": "Tahminler elektronik tablo tabanlıydı ve yeniden üretmek zordu. Koşuları karşılaştırma veya zaman içinde sapmayı izleme yolu yoktu."
+      },
+      "approach": {
+        "en": "Lightweight feature store with Parquet partitions. Baselines first (seasonal naive, ETS), then gradient boosting. Metrics focus on bias and stock-out risk, not only MAPE. Drift indicators on categorical mix.",
+        "tr": "Parquet bölümleriyle hafif özellik deposu. Önce basit çizgiler (mevsimsel naive, ETS), ardından gradyan artırma. Metrikler sapma ve stok tükenmesi riskine odaklanıyor. Kategorik karışımda sapma göstergeleri."
+      },
+      "outcome": {
+        "en": "Reproducible forecasts. Fewer emergency expedites.",
+        "tr": "Tekrarlanabilir tahminler. Daha az acil sevkiyat."
+      }
+    },
+    {
+      "id": "quality-vision-assist",
+      "slug": "quality-vision-assist",
+      "date": "2024-08-21",
+      "tech": ["PyTorch", "Python", "Scikit-learn"],
+      "tools": ["ONNX", "OpenCV", "CUDA", "Git"],
+      "images": [
+        {
+          "src": "/images/placeholder.svg",
+          "alt": {
+            "en": "Inspection overlay sample",
+            "tr": "Muayene katmanı örneği"
+          }
+        }
+      ],
+      "links": {
+        "live": "https://example.com"
+      },
+      "title": {
+        "en": "Quality vision assist",
+        "tr": "Kalite görüntü yardımı"
+      },
+      "shortDescription": {
+        "en": "Edge-friendly defect hints with human-in-the-loop labeling.",
+        "tr": "İnsan döngülü etiketleme ile kenar dostu kusur ipuçları."
+      },
+      "summary": {
+        "en": "Constrained model paired with station calibration so false positives do not overwhelm operators.",
+        "tr": "Yanlış pozitiflerin operatörleri boğmaması için kısıtlı model istasyon kalibrasyonu ile eşleştirildi."
+      },
+      "problem": {
+        "en": "Inspection relied on manual checks. Consistency varied by operator. Some defect types were missed under load.",
+        "tr": "Muayene manuel kontrollere dayanıyordu. Tutarlılık operatöre göre değişiyordu. Bazı kusur türleri yük altında atlanıyordu."
+      },
+      "approach": {
+        "en": "Trained on class imbalance; hard-negative mining from rejected lots after consensus rules. Exported ONNX for plant PCs. UI shows heatmaps with confidence gates and override codes for traceability. Thresholds recomputed from rolling FNR/FPR targets.",
+        "tr": "Sınıf dengesizliği üzerinde eğitim; uzlaşma kurallarından sonra reddedilen partilerden zor negatif madenciliği. Fabrika PC'leri için ONNX dışa aktarıldı. Arayüz güven eşikleri ve izlenebilirlik için geçersiz kılma kodları ile ısı haritaları gösterir."
+      },
+      "outcome": {
+        "en": "Stable assistance without bypassing accountability. Operators still sign off; the model suggests, does not decide.",
+        "tr": "Hesap verebilirliği atlamadan kararlı yardım. Operatörler hâlâ onay veriyor; model önerir, karar vermez."
+      }
+    },
+    {
+      "id": "throughput-simulation-digital-twin",
+      "slug": "throughput-simulation-digital-twin",
+      "date": "2024-04-12",
+      "tech": ["Python", "Optimization"],
+      "tools": ["SimPy", "Jupyter", "Git"],
+      "images": [],
+      "title": {
+        "en": "Throughput simulation twin",
+        "tr": "Verimlilik simülasyon ikizi"
+      },
+      "shortDescription": {
+        "en": "Discrete-event model for buffer sizing under stochastic arrivals.",
+        "tr": "Stokastik varışlar altında tampon boyutlandırma için ayrık olay modeli."
+      },
+      "summary": {
+        "en": "Calibrated against six months of WIP scans. Scenarios exported as comparable CSV bundles.",
+        "tr": "Altı aylık WIP taramalarına kalibre edildi. Senaryolar karşılaştırılabilir CSV paketleri olarak dışa aktarıldı."
+      },
+      "problem": {
+        "en": "Buffer sizes were set by rule of thumb. Leadership wanted to reduce WIP but needed explicit risk assessment before changing physical layout.",
+        "tr": "Tampon boyutları genel kurala göre belirleniyordu. Yönetim WIP'i azaltmak istiyordu ama fiziksel yerleşimi değiştirmeden önce açık risk değerlendirmesi gerekiyordu."
+      },
+      "approach": {
+        "en": "Twin encodes routing probabilities from historical transitions, not static assumptions. Each run captures seed, parameters, and summary stats in a manifest. Used to test buffer reductions against service targets on the bottleneck.",
+        "tr": "İkiz geçiş olasılıklarını tarihsel geçişlerden kodlar, statik varsayımlardan değil. Her koşu tohum, parametre ve özet istatistikleri bir manifestte toplar. Darboğazda hizmet hedeflerine karşı tampon azaltımlarını test etmek için kullanıldı."
+      },
+      "outcome": {
+        "en": "Capital freed with explicit risk notes. Buffer reductions justified without violating service targets.",
+        "tr": "Açık risk notlarıyla sermaye serbest bırakıldı. Hizmet hedeflerini ihlal etmeden tampon azaltımları gerekçelendirildi."
+      }
+    }
+  ]
+}
