@@ -1,16 +1,61 @@
-# Portfolio (systems / dashboard UI)
+Portfolio Website
 
-Next.js App Router, TypeScript, Tailwind. Content: `content/projects.json`, UI copy: `messages/en.json` & `messages/tr.json`.
+This project is a personal portfolio built with Next.js, TypeScript, and Tailwind CSS. It presents my work across data analysis, machine learning, and decision-oriented systems, with a focus on structured thinking and engineering-driven problem solving.
 
-## Scripts
+Overview
 
-- `npm run dev` — development
-- `npm run build` — production build
-- `npm run start` — serve production build
+The portfolio is designed as a system-oriented interface rather than a traditional landing page. It emphasizes clarity, analytical thinking, and technical breakdowns of projects.
 
-## Customize
+Each project is presented as a case study, including problem definition, approach, technical structure, and outcomes.
 
-- Brand, nav, social URLs, contact email: `messages/*.json`
-- Projects (all bilingual fields): `content/projects.json`
-- **Project images:** put files under `public/projects/<project-id>/` (same id as in JSON). First entry in `images[]` is the case cover; the rest render in **Supplementary figures**. Paths in JSON are public URLs, e.g. `/projects/order-tracking-system/cover.jpg`. Rename files or edit `src` / `alt` to match what you ship.
+Tech Stack
 
+- Next.js (App Router)
+- TypeScript
+- Tailwind CSS
+
+Features
+
+- Case-study based project pages
+- Technology-based filtering system
+- Structured project breakdown (Problem, Approach, Technical Structure, Outcome)
+- Light and dark mode support
+- Bilingual support (English and Turkish)
+- Static export support for deployment
+
+Project Structure
+
+- "app/" – Application routes and pages
+- "components/" – Reusable UI components
+- "data/" – Project data and content
+- "public/projects/" – Project images and assets
+
+Projects
+
+The portfolio includes projects focused on:
+
+- Data analysis and modeling
+- Machine learning and model comparison
+- Operational and tracking systems
+- Decision-making and optimization methods
+
+Each project is treated as a technical case, not just a visual showcase.
+
+Development
+
+To run the project locally:
+
+npm install
+npm run dev
+
+Build and Deployment
+
+For static hosting:
+
+npm run build
+
+This generates an "out/" directory which can be deployed to any static hosting service.
+
+Notes
+
+This project prioritizes structure, readability, and clarity over visual complexity. The goal is to reflect how problems are approached and solved, rather than only showcasing final outputs.
