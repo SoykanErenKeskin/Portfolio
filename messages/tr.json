@@ -28,7 +28,7 @@
   },
   "home": {
     "statusLine": "SYS.DURUM · ÇEVRİMİÇİ",
-    "valueProp": "Küçük anlamsız verileri; yapılandırılmış, karar almaya hazır analizlere dönüştürüyorum.",
+    "valueProp": "Küçük dağınık verileri; yapılandırılmış, karar almaya hazır analizlere dönüştürüyorum.",
     "supporting": "Veri analizi, makine öğrenmesi, optimizasyon ve operasyonlar üzerine çalışıyorum. Dağınık veya karmaşık veriyi alıp anlaşılır hale getirmeyi; karmaşıklığı, daha net kararları destekleyen bir yapıya dönüştürmeyi seviyorum. Arka planımın disiplinler arası olmasının getirdiği düşünce yapısıyla birlikte problemlere farklı düşünce tarzlarıyla bakabiliyorum.",
     "systemsTitle": "Yetenek haritası",
     "systemsSubtitle": "Analitik kapsam · çalışma alanları",
@@ -116,6 +116,9 @@
       "Teknik becerileri neler?",
       "Nasıl iletişime geçebilirim?"
     ],
-    "hint": "Projeler · Beceriler · İletişim"
+    "hint": "Projeler · Beceriler · İletişim",
+    "crisisLockedPlaceholder": "Bu sohbet güvenlik nedeniyle kapatıldı.",
+    "crisisCooldownHint": "Süre dolunca sohbet otomatik olarak açılacak.",
+    "crisisAdminReset": "Kilit ve kademeyi sıfırla"
   }
 }

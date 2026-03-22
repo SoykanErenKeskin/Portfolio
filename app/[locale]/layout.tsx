@@ -47,7 +47,7 @@ export default async function LocaleLayout({
         <SiteHeader locale={locale} messages={messages} isAdmin={!!session?.user} />
         <main className="flex-1">{children}</main>
         <SiteFooter locale={locale} messages={messages} />
-        <ChatWidget messages={messages.chat} />
+        <ChatWidget messages={messages.chat} isAdmin={!!session?.user} />
       </div>
     </ThemeProvider>
   );

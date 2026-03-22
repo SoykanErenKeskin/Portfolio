@@ -94,7 +94,7 @@ export default function AdminProfilePage() {
               type="text"
               value={data.name}
               onChange={(e) => setData({ ...data, name: e.target.value })}
-              className="admin-input-focus w-full rounded-lg border border-border bg-surface px-4 py-2.5 font-sans text-sm text-ink"
+              className="admin-input-focus min-h-[2.75rem] w-full rounded-lg border border-border bg-surface px-4 py-2 font-sans text-sm text-ink"
             />
           </div>
           <div>
@@ -105,7 +105,7 @@ export default function AdminProfilePage() {
               type="text"
               value={data.tagline}
               onChange={(e) => setData({ ...data, tagline: e.target.value })}
-              className="admin-input-focus w-full rounded-lg border border-border bg-surface px-4 py-2.5 font-sans text-sm text-ink"
+              className="admin-input-focus min-h-[2.75rem] w-full rounded-lg border border-border bg-surface px-4 py-2 font-sans text-sm text-ink"
             />
           </div>
         </div>
@@ -117,7 +117,7 @@ export default function AdminProfilePage() {
             rows={2}
             value={data.valueProp}
             onChange={(e) => setData({ ...data, valueProp: e.target.value })}
-            className="admin-input-focus w-full rounded-lg border border-border bg-surface px-4 py-2.5 font-sans text-sm text-ink"
+            className="admin-input-focus min-h-[3.5rem] w-full resize-y overflow-y-auto rounded-lg border border-border bg-surface px-4 py-2 font-sans text-sm leading-relaxed text-ink"
           />
         </div>
         <div>
@@ -128,7 +128,7 @@ export default function AdminProfilePage() {
             rows={4}
             value={data.supporting}
             onChange={(e) => setData({ ...data, supporting: e.target.value })}
-            className="admin-input-focus w-full rounded-lg border border-border bg-surface px-4 py-2.5 font-sans text-sm text-ink"
+            className="admin-input-focus min-h-[6rem] w-full resize-y overflow-y-auto rounded-lg border border-border bg-surface px-4 py-2 font-sans text-sm leading-relaxed text-ink"
           />
         </div>
         <div className="grid gap-6 sm:grid-cols-2">
@@ -140,7 +140,7 @@ export default function AdminProfilePage() {
               type="email"
               value={data.email}
               onChange={(e) => setData({ ...data, email: e.target.value })}
-              className="admin-input-focus w-full rounded-lg border border-border bg-surface px-4 py-2.5 font-sans text-sm text-ink"
+              className="admin-input-focus min-h-[2.75rem] w-full rounded-lg border border-border bg-surface px-4 py-2 font-sans text-sm text-ink"
             />
           </div>
           <div />
@@ -154,7 +154,7 @@ export default function AdminProfilePage() {
               type="url"
               value={data.github}
               onChange={(e) => setData({ ...data, github: e.target.value })}
-              className="admin-input-focus w-full rounded-lg border border-border bg-surface px-4 py-2.5 font-sans text-sm text-ink"
+              className="admin-input-focus min-h-[2.75rem] w-full rounded-lg border border-border bg-surface px-4 py-2 font-sans text-sm text-ink"
             />
           </div>
           <div>
@@ -165,7 +165,7 @@ export default function AdminProfilePage() {
               type="url"
               value={data.linkedin}
               onChange={(e) => setData({ ...data, linkedin: e.target.value })}
-              className="admin-input-focus w-full rounded-lg border border-border bg-surface px-4 py-2.5 font-sans text-sm text-ink"
+              className="admin-input-focus min-h-[2.75rem] w-full rounded-lg border border-border bg-surface px-4 py-2 font-sans text-sm text-ink"
             />
           </div>
           <div>
@@ -176,7 +176,7 @@ export default function AdminProfilePage() {
               type="url"
               value={data.website}
               onChange={(e) => setData({ ...data, website: e.target.value })}
-              className="admin-input-focus w-full rounded-lg border border-border bg-surface px-4 py-2.5 font-sans text-sm text-ink"
+              className="admin-input-focus min-h-[2.75rem] w-full rounded-lg border border-border bg-surface px-4 py-2 font-sans text-sm text-ink"
             />
           </div>
         </div>

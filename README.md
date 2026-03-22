@@ -41,6 +41,10 @@ The portfolio includes projects focused on:
 
 Each project is treated as a technical case, not just a visual showcase.
 
+Admin (CMS) & image uploads
+
+Project images in the admin panel are stored in **Supabase Storage** when `SUPABASE_UPLOAD_BUCKET` is set (recommended; especially on Vercel or if `public/uploads` fails locally). See **[docs/STORAGE_SETUP.md](docs/STORAGE_SETUP.md)** for bucket creation and `.env` variables.
+
 Development
 
 To run the project locally:

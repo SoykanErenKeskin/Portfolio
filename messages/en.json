@@ -116,6 +116,9 @@
       "What are his technical skills?",
       "How can I contact him?"
     ],
-    "hint": "Projects · Skills · Contact"
+    "hint": "Projects · Skills · Contact",
+    "crisisLockedPlaceholder": "Chat closed for safety.",
+    "crisisCooldownHint": "Unlocks automatically when the timer hits 0:00.",
+    "crisisAdminReset": "Reset lock & tier"
   }
 }

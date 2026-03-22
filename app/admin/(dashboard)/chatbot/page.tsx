@@ -159,7 +159,7 @@ export default function AdminChatbotPage() {
             value={systemPrompt}
             onChange={(e) => setSystemPrompt(e.target.value)}
             placeholder="You are a helpful assistant for a portfolio site. Your role is…"
-            className="admin-input-focus w-full rounded-lg border border-border bg-surface px-4 py-3 font-mono text-sm text-ink placeholder:text-ink-faint"
+            className="admin-input-focus min-h-[15rem] w-full resize-y overflow-y-auto rounded-lg border border-border bg-surface px-4 py-3 font-mono text-sm leading-relaxed text-ink placeholder:text-ink-faint"
           />
         </div>
 
@@ -182,7 +182,7 @@ export default function AdminChatbotPage() {
             value={rules}
             onChange={(e) => setRules(e.target.value)}
             placeholder="LANGUAGE: Reply in the same language as the user…"
-            className="admin-input-focus w-full resize-y rounded-lg border border-border bg-surface px-4 py-3 font-mono text-sm text-ink placeholder:text-ink-faint"
+            className="admin-input-focus min-h-[20rem] w-full resize-y overflow-y-auto rounded-lg border border-border bg-surface px-4 py-3 font-mono text-sm leading-relaxed text-ink placeholder:text-ink-faint"
           />
           <p className="mt-1.5 font-mono text-[10px] text-ink-faint">
             Boş bırakırsan varsayılan kurallar kullanılır.
@@ -208,7 +208,7 @@ export default function AdminChatbotPage() {
             value={chatbotData}
             onChange={(e) => setChatbotData(e.target.value)}
             placeholder="## COMPREHENSIVE PROFILE&#10;..."
-            className="admin-input-focus w-full rounded-lg border border-border bg-surface px-4 py-3 font-mono text-sm text-ink placeholder:text-ink-faint"
+            className="admin-input-focus min-h-[22rem] w-full resize-y overflow-y-auto rounded-lg border border-border bg-surface px-4 py-3 font-mono text-sm leading-relaxed text-ink placeholder:text-ink-faint"
           />
           <p className="mt-1.5 font-mono text-[10px] text-ink-faint">
             Comprehensive profile, education, experience, skills vb. Profile ve

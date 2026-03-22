@@ -28,6 +28,26 @@
   --accent-muted: 118 158 255;
 }
 
+/* Chat widget — scrollbars follow theme (variables switch with .dark on html) */
+.chat-scroll-themed {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--accent) / 0.5) rgb(var(--border-subtle) / 0.75);
+}
+.chat-scroll-themed::-webkit-scrollbar {
+  width: 8px;
+}
+.chat-scroll-themed::-webkit-scrollbar-track {
+  border-radius: 9999px;
+  background: rgb(var(--border-subtle) / 0.55);
+}
+.chat-scroll-themed::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background: rgb(var(--accent) / 0.42);
+}
+.chat-scroll-themed::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--accent) / 0.62);
+}
+
 html {
   scroll-behavior: smooth;
 }

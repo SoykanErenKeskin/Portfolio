@@ -225,14 +225,14 @@ export default function AdminFaqPage() {
             placeholder="Soru"
             value={newQ}
             onChange={(e) => setNewQ(e.target.value)}
-            className="admin-input-focus rounded-lg border border-border bg-surface px-4 py-2.5 font-sans text-sm text-ink placeholder:text-ink-faint"
+            className="admin-input-focus min-h-[2.75rem] w-full rounded-lg border border-border bg-surface px-4 py-2 font-sans text-sm text-ink placeholder:text-ink-faint"
           />
           <input
             type="text"
             placeholder="Cevap"
             value={newA}
             onChange={(e) => setNewA(e.target.value)}
-            className="admin-input-focus rounded-lg border border-border bg-surface px-4 py-2.5 font-sans text-sm text-ink placeholder:text-ink-faint"
+            className="admin-input-focus min-h-[2.75rem] w-full rounded-lg border border-border bg-surface px-4 py-2 font-sans text-sm text-ink placeholder:text-ink-faint"
           />
         </div>
         {translateError && (
@@ -449,13 +449,13 @@ function EditForm({
         type="text"
         value={q}
         onChange={(e) => setQ(e.target.value)}
-        className="admin-input-focus w-full rounded-lg border border-border bg-surface px-4 py-2 font-sans text-sm text-ink"
+        className="admin-input-focus min-h-[2.75rem] w-full rounded-lg border border-border bg-surface px-4 py-2 font-sans text-sm text-ink"
       />
       <textarea
         rows={3}
         value={a}
         onChange={(e) => setA(e.target.value)}
-        className="admin-input-focus w-full rounded-lg border border-border bg-surface px-4 py-2 font-sans text-sm text-ink"
+        className="admin-input-focus min-h-[4.5rem] w-full resize-y overflow-y-auto rounded-lg border border-border bg-surface px-4 py-2 font-sans text-sm leading-relaxed text-ink"
       />
       <div className="flex gap-2">
         <button

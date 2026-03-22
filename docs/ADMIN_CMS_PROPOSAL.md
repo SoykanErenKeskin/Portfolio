@@ -118,6 +118,7 @@ We will use a slightly flattened schema:
 | PATCH  | `/api/admin/projects/[id]`| Update project             |
 | DELETE | `/api/admin/projects/[id]`| Delete project             |
 | POST   | `/api/admin/upload`       | Image upload               |
+| GET    | `/api/admin/tags`         | Distinct tech & tool tags from DB (admin) |
 
 ### Components
 - `AdminLayout` – sidebar + header, auth check
@@ -131,7 +132,8 @@ We will use a slightly flattened schema:
 
 ## 4. Media Management
 
-- **Storage**: `public/uploads/projects/[projectId]/` – files served statically
+- **Storage**: `public/uploads/projects/[projectId]/` – files served statically (local dev). For serverless/production (e.g. Vercel), set `SUPABASE_UPLOAD_BUCKET` to a **public** Supabase Storage bucket name; uploads go there and the API returns the public URL.
+- **Tags API**: `GET /api/admin/tags` returns `{ tech, tools }` from all projects for the admin tag pickers.
 - **Upload API**: multipart/form-data, validate MIME (image/*, video/*), max size (e.g. 5MB)
 - **Video URL**: optional field for external video (YouTube, Vimeo, etc.)
 - **Images**: multiple per project, `sortOrder` for ordering

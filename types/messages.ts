@@ -106,6 +106,12 @@ export type Messages = {
     send: string;
     suggestions: string[];
     hint: string;
+    /** Shown when chat is locked after a safety response */
+    crisisLockedPlaceholder: string;
+    /** Shown beside the countdown ring */
+    crisisCooldownHint: string;
+    /** Admin-only: reset lock + strike tier */
+    crisisAdminReset: string;
   };
 };
 

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import type { ProjectRecord } from "@/types/project";
+import { cn } from "@/lib/utils";
 import { TagPicker } from "./tag-picker";
 
 type FormData = {
@@ -22,6 +23,50 @@ type FormData = {
   tools: string[];
   images: { src: string; alt: { en: string; tr: string }; type?: "image" | "video" }[];
   links: { github?: string; live?: string; videoUrl?: string };
+};
+
+const localizedKeys = [
+  "title",
+  "shortDescription",
+  "summary",
+  "domain",
+  "focus",
+  "problem",
+  "approach",
+  "outcome",
+] as const;
+
+const placeholders: Record<(typeof localizedKeys)[number], string> = {
+  title: "e.g. Order & Operational Tracking System — Project name, short and clear",
+  shortDescription: "e.g. A logistics app for warehouse-to-delivery tracking — 1–2 sentence summary shown in project list",
+  summary: "e.g. Full-stack mobile and backend system for real-time order and route management — Overview of what it does and who it's for",
+  domain: "e.g. Logistics, Operations — Domain / sector (optional)",
+  focus: "e.g. Real-time tracking, Role-based dashboards — Main focus areas, key features",
+  problem: "e.g. Manual order and route tracking led to errors and delays — The problem or need being solved",
+  approach: "e.g. React Native for mobile, Supabase backend, role-based access — Method used, architectural decisions",
+  outcome: "e.g. Improved operational visibility, reduced error rate — Results and learnings",
+};
+
+/** Rows sized so full placeholder is visible on narrow screens (wrapped text). */
+const placeholderRows: Record<(typeof localizedKeys)[number], number> = {
+  title: 3,
+  shortDescription: 4,
+  summary: 7,
+  domain: 3,
+  focus: 3,
+  problem: 7,
+  approach: 7,
+  outcome: 4,
+};
+
+/** Extra min-height so wrapped placeholders don’t clip (mobile). */
+const placeholderMinHeights: Partial<Record<(typeof localizedKeys)[number], string>> = {
+  summary: "min-h-[11rem]",
+  problem: "min-h-[11rem]",
+  approach: "min-h-[11rem]",
+  shortDescription: "min-h-[6rem]",
+  title: "min-h-[4.5rem]",
+  outcome: "min-h-[6rem]",
 };
 
 const emptyForm: FormData = {
@@ -86,17 +131,6 @@ export function ProjectForm({
   const [translating, setTranslating] = useState<string | null>(null);
 
   const isEdit = !!projectId;
-
-  const localizedKeys = [
-    "title",
-    "shortDescription",
-    "summary",
-    "domain",
-    "focus",
-    "problem",
-    "approach",
-    "outcome",
-  ] as const;
 
   const translateField = async (
     key: (typeof localizedKeys)[number],
@@ -266,14 +300,18 @@ export function ProjectForm({
             <label className="mb-1 block font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint">
               Slug
             </label>
-            <input
-              type="text"
+            <textarea
               value={data.slug}
-              onChange={(e) => update({ slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-") })}
-              placeholder="my-project"
+              onChange={(e) =>
+                update({
+                  slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"),
+                })
+              }
+              placeholder="order-tracking-app — lowercase, hyphens; used in URL"
               required
-              className="admin-input-focus w-full border border-border bg-surface px-3 py-2 font-sans text-sm text-ink"
+              rows={3}
               disabled={isEdit}
+              className="admin-input-focus min-h-[4.5rem] w-full resize-y overflow-y-auto border border-border bg-surface px-3 py-2 font-sans text-sm leading-relaxed text-ink placeholder:text-ink-faint"
             />
             {isEdit && (
               <p className="mt-1 font-mono text-[10px] text-ink-muted">Slug cannot be changed after creation.</p>
@@ -291,35 +329,102 @@ export function ProjectForm({
               className="admin-input-focus w-full border border-border bg-surface px-3 py-2 font-sans text-sm text-ink"
             />
           </div>
-          <div className="flex items-center gap-6">
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                checked={data.status === "DRAFT"}
-                onChange={() => update({ status: "DRAFT" })}
-                className="rounded-full"
-              />
-              <span className="text-sm">Draft</span>
-            </label>
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                checked={data.status === "PUBLISHED"}
-                onChange={() => update({ status: "PUBLISHED" })}
-                className="rounded-full"
-              />
-              <span className="text-sm">Published</span>
-            </label>
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint">
+                Status
+              </span>
+              <div className="flex gap-2">
+                <label
+                  className={cn(
+                    "flex w-28 cursor-pointer items-center justify-center gap-2 rounded-lg border px-3 py-2 font-mono text-[11px] uppercase tracking-wider transition",
+                    data.status === "DRAFT"
+                      ? "border-admin-violet bg-admin-violet/10 text-admin-violet"
+                      : "border-border text-ink-muted hover:border-admin-violet/40 hover:text-ink"
+                  )}
+                >
+                  <input
+                    type="radio"
+                    name="status"
+                    checked={data.status === "DRAFT"}
+                    onChange={() => update({ status: "DRAFT" })}
+                    className="sr-only"
+                  />
+                  <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border-2 border-current">
+                    {data.status === "DRAFT" && (
+                      <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                    )}
+                  </span>
+                  Draft
+                </label>
+                <label
+                  className={cn(
+                    "flex w-28 cursor-pointer items-center justify-center gap-2 rounded-lg border px-3 py-2 font-mono text-[11px] uppercase tracking-wider transition",
+                    data.status === "PUBLISHED"
+                      ? "border-admin-violet bg-admin-violet/10 text-admin-violet"
+                      : "border-border text-ink-muted hover:border-admin-violet/40 hover:text-ink"
+                  )}
+                >
+                  <input
+                    type="radio"
+                    name="status"
+                    checked={data.status === "PUBLISHED"}
+                    onChange={() => update({ status: "PUBLISHED" })}
+                    className="sr-only"
+                  />
+                  <span className="flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border-2 border-current">
+                    {data.status === "PUBLISHED" && (
+                      <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                    )}
+                  </span>
+                  Published
+                </label>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 border-t border-border-subtle pt-4">
+              <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint">
+                Display
+              </span>
+              <label
+                className={cn(
+                  "flex cursor-pointer items-center gap-2 rounded-md border py-1.5 pl-2 pr-3 font-sans text-sm transition",
+                  data.featured
+                    ? "border-admin-violet bg-admin-violet/10 text-admin-violet"
+                    : "border-border text-ink-muted hover:border-admin-violet/40 hover:text-ink"
+                )}
+              >
+                <input
+                  type="checkbox"
+                  checked={data.featured}
+                  onChange={(e) => update({ featured: e.target.checked })}
+                  className="sr-only"
+                />
+                <span
+                  className={cn(
+                    "flex h-4 w-4 shrink-0 items-center justify-center rounded border-2 transition",
+                    data.featured ? "border-current bg-current" : "border-current"
+                  )}
+                >
+                  {data.featured && (
+                    <svg
+                      className="h-2.5 w-2.5 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2.5}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  )}
+                </span>
+                Featured
+              </label>
+            </div>
           </div>
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={data.featured}
-              onChange={(e) => update({ featured: e.target.checked })}
-              className="rounded"
-            />
-            <span className="text-sm">Featured</span>
-          </label>
         </div>
       </section>
 
@@ -377,11 +482,15 @@ export function ProjectForm({
                 <textarea
                   value={(data[key] as { en: string; tr: string })[activeLocale]}
                   onChange={(e) => updateLocale(key, activeLocale, e.target.value)}
-                  rows={key === "problem" || key === "approach" || key === "outcome" || key === "summary" ? 4 : 2}
-                  className="admin-input-focus w-full border border-border bg-surface px-3 py-2 font-sans text-sm text-ink"
+                  placeholder={placeholders[key]}
+                  rows={placeholderRows[key]}
+                  className={cn(
+                    "admin-input-focus w-full resize-y overflow-y-auto border border-border bg-surface px-3 py-2 font-sans text-sm leading-relaxed text-ink placeholder:text-ink-faint",
+                    placeholderMinHeights[key]
+                  )}
                 />
               </div>
-              <div className="flex shrink-0 flex-col justify-end pb-1">
+              <div className="hidden shrink-0 flex-col justify-end pb-1 md:flex">
                 {activeLocale === "tr" ? (
                   <button
                     type="button"
@@ -424,14 +533,14 @@ export function ProjectForm({
             selected={data.tech}
             onChange={(tech) => update({ tech })}
             availableTags={availableTech}
-            placeholder="Seç veya yeni ekle…"
+            placeholder="Select or type to add…"
           />
           <TagPicker
             label="Tools"
             selected={data.tools}
             onChange={(tools) => update({ tools })}
             availableTags={availableTools}
-            placeholder="Seç veya yeni ekle…"
+            placeholder="Select or type to add…"
           />
         </div>
       </section>
@@ -446,36 +555,42 @@ export function ProjectForm({
             <label className="mb-1 block font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint">
               GitHub
             </label>
-            <input
-              type="url"
+            <textarea
               value={data.links?.github ?? ""}
-              onChange={(e) => update({ links: { ...data.links, github: e.target.value || undefined } })}
-              placeholder="https://github.com/..."
-              className="admin-input-focus w-full border border-border bg-surface px-3 py-2 font-sans text-sm text-ink"
+              onChange={(e) =>
+                update({ links: { ...data.links, github: e.target.value.trim() || undefined } })
+              }
+              placeholder="https://github.com/user/repo — Repository link (optional)"
+              rows={2}
+              className="admin-input-focus min-h-[3.5rem] w-full resize-none border border-border bg-surface px-3 py-2 font-sans text-sm leading-relaxed text-ink placeholder:text-ink-faint"
             />
           </div>
           <div>
             <label className="mb-1 block font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint">
               Live / Demo
             </label>
-            <input
-              type="url"
+            <textarea
               value={data.links?.live ?? ""}
-              onChange={(e) => update({ links: { ...data.links, live: e.target.value || undefined } })}
-              placeholder="https://..."
-              className="admin-input-focus w-full border border-border bg-surface px-3 py-2 font-sans text-sm text-ink"
+              onChange={(e) =>
+                update({ links: { ...data.links, live: e.target.value.trim() || undefined } })
+              }
+              placeholder="https://demo.example.com — Live site or demo link (optional)"
+              rows={2}
+              className="admin-input-focus min-h-[3.5rem] w-full resize-none border border-border bg-surface px-3 py-2 font-sans text-sm leading-relaxed text-ink placeholder:text-ink-faint"
             />
           </div>
           <div>
             <label className="mb-1 block font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint">
               Video URL (optional)
             </label>
-            <input
-              type="url"
+            <textarea
               value={data.links?.videoUrl ?? ""}
-              onChange={(e) => update({ links: { ...data.links, videoUrl: e.target.value || undefined } })}
-              placeholder="https://youtube.com/... or direct video URL"
-              className="admin-input-focus w-full border border-border bg-surface px-3 py-2 font-sans text-sm text-ink"
+              onChange={(e) =>
+                update({ links: { ...data.links, videoUrl: e.target.value.trim() || undefined } })
+              }
+              placeholder="https://youtube.com/watch?v=... — Intro video (optional)"
+              rows={2}
+              className="admin-input-focus min-h-[3.5rem] w-full resize-none border border-border bg-surface px-3 py-2 font-sans text-sm leading-relaxed text-ink placeholder:text-ink-faint"
             />
           </div>
         </div>
@@ -539,19 +654,24 @@ function AddImageInput({
     }
   };
   return (
-    <>
-      <input
-        type="text"
+    <div className="flex min-w-0 flex-1 flex-wrap items-end gap-2">
+      <textarea
         value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), submit())}
-        placeholder="Image or video URL"
-        className="admin-input-focus flex-1 border border-border bg-surface px-3 py-2 font-sans text-sm text-ink"
+        onChange={(e) => setValue(e.target.value.replace(/\n/g, ""))}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            submit();
+          }
+        }}
+        placeholder="https://... — Paste image or video URL"
+        rows={2}
+        className="admin-input-focus min-h-[3.5rem] min-w-[200px] flex-1 resize-none border border-border bg-surface px-3 py-2 font-sans text-sm leading-relaxed text-ink placeholder:text-ink-faint"
       />
-      <button type="button" onClick={submit} className="border border-border bg-surface-raised px-4 py-2 font-mono text-sm text-ink transition hover:border-admin-violet/40">
+      <button type="button" onClick={submit} className="shrink-0 border border-border bg-surface-raised px-4 py-2 font-mono text-sm text-ink transition hover:border-admin-violet/40">
         Add URL
       </button>
-    </>
+    </div>
   );
 }
 
@@ -568,6 +688,22 @@ function ImageList({
 }) {
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+  const [thumbLoadFailed, setThumbLoadFailed] = useState<Record<number, boolean>>({});
+
+  useEffect(() => {
+    if (!lightboxSrc) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightboxSrc(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [lightboxSrc]);
 
   const addImage = (src: string, alt = { en: "", tr: "" }, type: "image" | "video" = "image") => {
     if (!src.trim()) return;
@@ -588,7 +724,10 @@ function ImageList({
   };
 
   const uploadFiles = async (files: FileList | File[]) => {
-    const list = Array.from(files).filter((f) => f.type.startsWith("image/"));
+    const list = Array.from(files).filter((f) => {
+      if (f.type.startsWith("image/")) return true;
+      return /\.(jpe?g|png|gif|webp|svg|heic|heif)$/i.test(f.name);
+    });
     if (list.length === 0 || !canUpload || !uploadFolderId) return;
     setUploading(true);
     try {
@@ -596,16 +735,31 @@ function ImageList({
         const fd = new FormData();
         fd.append("file", file);
         fd.append("projectId", uploadFolderId);
-        const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-        const json = await res.json();
+        const res = await fetch("/api/admin/upload", {
+          method: "POST",
+          body: fd,
+          credentials: "same-origin",
+        });
+        const text = await res.text();
+        let json: { src?: string; error?: string } = {};
+        try {
+          json = text ? (JSON.parse(text) as typeof json) : {};
+        } catch {
+          alert(
+            `Yükleme başarısız / Upload failed (${res.status}): ${text.slice(0, 200)}`
+          );
+          continue;
+        }
         if (res.ok && json.src) {
           addImage(json.src);
         } else {
           alert(json.error ?? `Yükleme başarısız / Upload failed: ${file.name}`);
         }
       }
-    } catch {
-      alert("Yükleme hatası / Upload error");
+    } catch (e) {
+      alert(
+        e instanceof Error ? e.message : "Yükleme hatası / Upload error"
+      );
     } finally {
       setUploading(false);
     }
@@ -626,52 +780,154 @@ function ImageList({
     await uploadFiles(e.dataTransfer.files);
   };
 
+  const isVideoEntry = (img: FormData["images"][number]) =>
+    img.type === "video" || /\.(mp4|webm)(\?|$)/i.test(img.src);
+
   return (
     <div className="space-y-4">
+      {lightboxSrc && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Image preview"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm"
+          onClick={() => setLightboxSrc(null)}
+        >
+          <button
+            type="button"
+            className="absolute right-4 top-4 rounded border border-white/20 bg-surface/90 px-3 py-1.5 font-mono text-[11px] uppercase tracking-wider text-ink shadow-lg transition hover:bg-surface"
+            onClick={() => setLightboxSrc(null)}
+          >
+            Kapat / Close
+          </button>
+          <a
+            href={lightboxSrc}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute left-4 top-4 rounded border border-white/20 bg-surface/90 px-3 py-1.5 font-mono text-[11px] text-admin-violet shadow-lg transition hover:bg-surface"
+            onClick={(e) => e.stopPropagation()}
+          >
+            Yeni sekmede aç / Open
+          </a>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={lightboxSrc}
+            alt=""
+            className="max-h-[min(90vh,900px)] max-w-[min(96vw,1200px)] rounded border border-border-subtle object-contain shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
       {images.map((img, i) => (
-        <div key={i} className="flex items-start gap-4 border border-border bg-surface p-3">
-          <div className="h-16 w-24 shrink-0 overflow-hidden border border-border-subtle bg-surface-raised">
-            {img.type === "video" || img.src.match(/\.(mp4|webm)(\?|$)/i) ? (
-              <div className="flex h-full items-center justify-center font-mono text-[10px] text-ink-faint">Video</div>
-            ) : (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={img.src} alt="" className="h-full w-full object-cover" />
+        <div key={i} className="flex flex-col gap-3 border border-border bg-surface p-3 sm:flex-row sm:items-start sm:gap-4">
+          <div className="flex w-full shrink-0 flex-col gap-2 sm:w-auto sm:max-w-[240px]">
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-border-subtle bg-surface-raised sm:w-[220px]">
+              {isVideoEntry(img) ? (
+                <div className="flex h-full min-h-[120px] items-center justify-center font-mono text-xs text-ink-muted">
+                  Video
+                </div>
+              ) : thumbLoadFailed[i] ? (
+                <div className="flex h-full min-h-[120px] flex-col items-center justify-center gap-2 p-2 text-center font-mono text-[10px] text-ink-muted">
+                  Önizleme yüklenemedi
+                  <a
+                    href={img.src}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-admin-violet underline"
+                  >
+                    URL&apos;yi aç
+                  </a>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setLightboxSrc(img.src)}
+                  className="group relative h-full w-full min-h-[120px]"
+                  title="Tam boyut önizle / Full preview"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={img.src}
+                    alt=""
+                    className="h-full w-full object-contain transition group-hover:opacity-95"
+                    loading="lazy"
+                    onError={() =>
+                      setThumbLoadFailed((prev) => ({ ...prev, [i]: true }))
+                    }
+                  />
+                  <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/0 transition group-hover:bg-black/25">
+                    <span className="rounded bg-surface/95 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-ink opacity-0 shadow group-hover:opacity-100">
+                      Önizle
+                    </span>
+                  </span>
+                </button>
+              )}
+            </div>
+            {!isVideoEntry(img) && img.src.trim() && !thumbLoadFailed[i] && (
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => setLightboxSrc(img.src)}
+                  className="rounded border border-border-subtle px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-ink-muted transition hover:border-admin-violet/40 hover:text-admin-violet"
+                >
+                  Tam boyut
+                </button>
+                <a
+                  href={img.src}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded border border-border-subtle px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-admin-violet transition hover:border-admin-violet/40"
+                >
+                  Yeni sekme
+                </a>
+              </div>
+            )}
+            {isVideoEntry(img) && img.src.trim() && (
+              <a
+                href={img.src}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex w-fit rounded border border-border-subtle px-2 py-1 font-mono text-[10px] text-admin-violet"
+              >
+                Videoyu aç
+              </a>
             )}
           </div>
           <div className="min-w-0 flex-1">
-            <input
-              type="text"
+            <textarea
               value={img.src}
               onChange={(e) => {
                 const next = [...images];
                 next[i] = { ...next[i]!, src: e.target.value };
                 onChange(next);
+                setThumbLoadFailed((prev) => ({ ...prev, [i]: false }));
               }}
-              placeholder="Image URL"
-              className="admin-input-focus mb-2 w-full border border-border bg-surface px-2 py-1 font-sans text-sm text-ink"
+              placeholder="https://... — Image URL"
+              rows={2}
+              className="admin-input-focus mb-2 min-h-[3.25rem] w-full resize-none border border-border bg-surface px-2 py-1.5 font-sans text-sm leading-relaxed text-ink placeholder:text-ink-faint"
             />
-            <div className="flex gap-2">
-              <input
-                type="text"
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <textarea
                 value={img.alt.en}
                 onChange={(e) => {
                   const next = [...images];
                   next[i] = { ...next[i]!, alt: { ...next[i]!.alt, en: e.target.value } };
                   onChange(next);
                 }}
-                placeholder="Alt (EN)"
-                className="admin-input-focus w-32 border border-border bg-surface px-2 py-1 font-mono text-xs text-ink"
+                placeholder="Alt (EN) — short description for accessibility"
+                rows={2}
+                className="admin-input-focus min-h-[3.25rem] min-w-0 flex-1 resize-none border border-border bg-surface px-2 py-1.5 font-mono text-xs leading-relaxed text-ink placeholder:text-ink-faint sm:max-w-[50%]"
               />
-              <input
-                type="text"
+              <textarea
                 value={img.alt.tr}
                 onChange={(e) => {
                   const next = [...images];
                   next[i] = { ...next[i]!, alt: { ...next[i]!.alt, tr: e.target.value } };
                   onChange(next);
                 }}
-                placeholder="Alt (TR)"
-                className="admin-input-focus w-32 border border-border bg-surface px-2 py-1 font-mono text-xs text-ink"
+                placeholder="Alt (TR) — short description for accessibility"
+                rows={2}
+                className="admin-input-focus min-h-[3.25rem] min-w-0 flex-1 resize-none border border-border bg-surface px-2 py-1.5 font-mono text-xs leading-relaxed text-ink placeholder:text-ink-faint sm:max-w-[50%]"
               />
             </div>
           </div>
@@ -742,8 +998,10 @@ function ImageList({
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 border-t border-border pt-4">
-        <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint">veya URL / or URL:</span>
+      <div className="flex flex-col gap-2 border-t border-border pt-4 sm:flex-row sm:flex-wrap sm:items-start">
+        <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint">
+          veya URL / or URL:
+        </span>
         <AddImageInput onAdd={addImage} />
       </div>
     </div>
