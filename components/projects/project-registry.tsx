@@ -5,10 +5,7 @@ import { useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { formatRecordDate } from "@/lib/format";
 import { withLocale } from "@/lib/paths";
-import {
-  filterProjectsByTags,
-  getAllTechTags,
-} from "@/lib/projects";
+import { filterProjectsByTags } from "@/lib/projects";
 import { cn } from "@/lib/utils";
 import type { Locale } from "@/types/locale";
 import type { Messages } from "@/types/messages";
@@ -18,10 +15,12 @@ export function ProjectRegistry({
   locale,
   messages: m,
   projects,
+  allTags,
 }: {
   locale: Locale;
   messages: Messages;
   projects: ProjectRecord[];
+  allTags: string[];
 }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -36,8 +35,6 @@ export function ProjectRegistry({
     () => filterProjectsByTags(projects, activeTags),
     [projects, activeTags]
   );
-
-  const allTags = useMemo(() => getAllTechTags(), []);
 
   const toggleTag = (tag: string) => {
     const params = new URLSearchParams(searchParams.toString());

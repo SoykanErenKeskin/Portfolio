@@ -3,7 +3,9 @@ import type { Locale } from "./locale";
 export type NavMessages = {
   home: string;
   projects: string;
+  faq: string;
   contact: string;
+  dashboard: string;
 };
 
 export type SystemsCategory = {
@@ -89,8 +91,21 @@ export type Messages = {
     email: string;
     channels: string;
   };
+  faq: {
+    title: string;
+    subtitle: string;
+    noItems: string;
+    itemLabel: string;
+  };
   footer: {
     rights: string;
+  };
+  chat: {
+    title: string;
+    placeholder: string;
+    send: string;
+    suggestions: string[];
+    hint: string;
   };
 };
 

@@ -2,7 +2,7 @@ import { ValueBlock } from "@/components/home/value-block";
 import { LatestPreviews } from "@/components/home/latest-previews";
 import { SystemsMap } from "@/components/home/systems-map";
 import { getMessages } from "@/lib/i18n";
-import { getLatestProjects } from "@/lib/projects";
+import { getLatestProjects } from "@/lib/db/projects";
 import { isLocale } from "@/types/locale";
 import { notFound } from "next/navigation";
 
@@ -15,7 +15,7 @@ export default async function HomePage({
   if (!isLocale(locale)) notFound();
 
   const messages = getMessages(locale);
-  const latest = getLatestProjects(3);
+  const latest = await getLatestProjects(3);
 
   return (
     <>

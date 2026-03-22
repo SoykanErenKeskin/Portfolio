@@ -31,6 +31,9 @@ const config: Config = {
           muted: "rgb(var(--ink-muted) / <alpha-value>)",
           faint: "rgb(var(--ink-faint) / <alpha-value>)",
         },
+        "admin-violet": "rgb(var(--admin-violet, 139 92 246) / <alpha-value>)",
+        "admin-teal": "rgb(var(--admin-teal, 20 184 166) / <alpha-value>)",
+        "admin-amber": "rgb(var(--admin-amber, 245 158 11) / <alpha-value>)",
       },
       boxShadow: {
         panel: "0 0 0 1px rgb(var(--border) / 0.35), 0 8px 24px rgb(0 0 0 / 0.12)",

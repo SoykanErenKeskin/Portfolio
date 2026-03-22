@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "Sistemler ve Veri",
+    "title": "Soykan",
     "description": "Veri analizi, endüstri mühendisliği, ML ve operasyonel sistemler."
   },
   "brand": {
@@ -10,7 +10,9 @@
   "nav": {
     "home": "Ana sayfa",
     "projects": "Projeler",
-    "contact": "İletişim"
+    "faq": "SSS",
+    "contact": "İletişim",
+    "dashboard": "Dashboard"
   },
   "theme": {
     "dark": "Koyu",
@@ -19,7 +21,7 @@
   "social": {
     "github": "https://github.com/SoykanErenKeskin",
     "linkedin": "https://www.linkedin.com/in/soykanerenkeskin",
-    "website": "https://thequarox.com",
+    "website": "https://soykanerenkeskin.com",
     "githubLabel": "GitHub",
     "linkedinLabel": "LinkedIn",
     "websiteLabel": "Web"
@@ -95,7 +97,25 @@
     "email": "soykanerenkeskin@gmail.com",
     "channels": "Profiller"
   },
+  "faq": {
+    "title": "Sıkça sorulan sorular",
+    "subtitle": "Yaygın sorular",
+    "noItems": "Henüz SSS kaydı yok.",
+    "itemLabel": "S"
+  },
   "footer": {
     "rights": "Tüm sistemler normal."
+  },
+  "chat": {
+    "title": "Soykan'ın Portföyü Hakkında Sor",
+    "placeholder": "Bir soru sor…",
+    "send": "Gönder",
+    "suggestions": [
+      "Soykan kimdir?",
+      "Hangi projelerde çalıştı?",
+      "Teknik becerileri neler?",
+      "Nasıl iletişime geçebilirim?"
+    ],
+    "hint": "Projeler · Beceriler · İletişim"
   }
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { ThemeScript } from "@/components/theme/theme-script";
+import { Providers } from "@/components/providers";
 import "./globals.css";
 
 const inter = Inter({
@@ -47,7 +48,7 @@ export default function RootLayout({
         className={`${inter.variable} ${jetbrains.variable} min-h-screen font-sans antialiased`}
       >
         <ThemeScript />
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

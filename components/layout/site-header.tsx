@@ -9,15 +9,21 @@ import { cn } from "@/lib/utils";
 function NavLinks({
   locale,
   m,
+  isAdmin,
 }: {
   locale: Locale;
   m: Messages;
+  isAdmin?: boolean;
 }) {
   const items = [
     { href: withLocale(locale, "/"), label: m.nav.home },
     { href: withLocale(locale, "/projects"), label: m.nav.projects },
+    { href: withLocale(locale, "/faq"), label: m.nav.faq },
     { href: withLocale(locale, "/contact"), label: m.nav.contact },
+    ...(isAdmin ? [{ href: "/admin/dashboard", label: m.nav.dashboard }] : []),
   ];
+
+  const isDashboard = (href: string) => href === "/admin/dashboard";
 
   return (
     <nav className="hidden items-center gap-6 md:flex" aria-label="Primary">
@@ -25,7 +31,12 @@ function NavLinks({
         <Link
           key={item.href}
           href={item.href}
-          className="font-mono text-[12px] uppercase tracking-[0.12em] text-ink-muted transition hover:text-ink"
+          className={cn(
+            "font-mono text-[12px] uppercase tracking-[0.12em] transition",
+            isDashboard(item.href)
+              ? "rounded-lg bg-admin-violet/10 px-3 py-1.5 text-[11px] tracking-[0.14em] text-admin-violet hover:bg-admin-violet/20"
+              : "text-ink-muted hover:text-ink"
+          )}
         >
           {item.label}
         </Link>
@@ -61,9 +72,11 @@ function SocialRow({ m }: { m: Messages }) {
 export function SiteHeader({
   locale,
   messages: m,
+  isAdmin,
 }: {
   locale: Locale;
   messages: Messages;
+  isAdmin?: boolean;
 }) {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface/90 backdrop-blur-md">
@@ -80,7 +93,7 @@ export function SiteHeader({
                 {m.brand.tagline}
               </span>
             </Link>
-            <NavLinks locale={locale} m={m} />
+            <NavLinks locale={locale} m={m} isAdmin={isAdmin} />
           </div>
           <div className="flex flex-wrap items-center justify-between gap-3 sm:justify-end">
             <SocialRow m={m} />
@@ -90,17 +103,29 @@ export function SiteHeader({
             </div>
           </div>
         </div>
-        <MobileNav locale={locale} m={m} />
+        <MobileNav locale={locale} m={m} isAdmin={isAdmin} />
       </header>
   );
 }
 
-function MobileNav({ locale, m }: { locale: Locale; m: Messages }) {
+function MobileNav({
+  locale,
+  m,
+  isAdmin,
+}: {
+  locale: Locale;
+  m: Messages;
+  isAdmin?: boolean;
+}) {
   const items = [
     { href: withLocale(locale, "/"), label: m.nav.home },
     { href: withLocale(locale, "/projects"), label: m.nav.projects },
+    { href: withLocale(locale, "/faq"), label: m.nav.faq },
     { href: withLocale(locale, "/contact"), label: m.nav.contact },
+    ...(isAdmin ? [{ href: "/admin/dashboard", label: m.nav.dashboard }] : []),
   ];
+
+  const isDashboard = (href: string) => href === "/admin/dashboard";
 
   return (
     <div className="border-t border-border-subtle px-4 py-2 md:hidden">
@@ -110,8 +135,10 @@ function MobileNav({ locale, m }: { locale: Locale; m: Messages }) {
             key={item.href}
             href={item.href}
             className={cn(
-              "font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted",
-              "hover:text-ink"
+              "font-mono text-[11px] uppercase tracking-[0.14em]",
+              isDashboard(item.href)
+                ? "rounded-lg bg-admin-violet/10 px-3 py-1.5 text-admin-violet hover:bg-admin-violet/20"
+                : "text-ink-muted hover:text-ink"
             )}
           >
             {item.label}

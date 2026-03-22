@@ -1,43 +1,12 @@
+/**
+ * Public project data access.
+ * Uses database for persistence. For type helpers and filtering, see below.
+ */
 import type { ProjectRecord } from "@/types/project";
-import type { ProjectsFile } from "@/types/project";
-import data from "@/content/projects.json";
 
-const file = data as ProjectsFile;
+export { getAllProjects, getProjectById, getLatestProjects, getAdjacentProjects, getAllTechTags } from "./db/projects";
 
-export function getAllProjects(): ProjectRecord[] {
-  return [...file.projects].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
-}
-
-export function getProjectById(id: string): ProjectRecord | undefined {
-  return file.projects.find((p) => p.id === id);
-}
-
-export function getAdjacentProjects(
-  currentId: string
-): { prev: ProjectRecord | null; next: ProjectRecord | null } {
-  const sorted = getAllProjects();
-  const idx = sorted.findIndex((p) => p.id === currentId);
-  if (idx < 0) return { prev: null, next: null };
-  return {
-    prev: idx > 0 ? sorted[idx - 1] : null,
-    next: idx < sorted.length - 1 ? sorted[idx + 1] : null,
-  };
-}
-
-export function getLatestProjects(count: number): ProjectRecord[] {
-  return getAllProjects().slice(0, count);
-}
-
-export function getAllTechTags(): string[] {
-  const set = new Set<string>();
-  for (const p of file.projects) {
-    for (const t of p.tech) set.add(t);
-  }
-  return [...set].sort((a, b) => a.localeCompare(b));
-}
-
+/** Client-side filter by tech tags */
 export function filterProjectsByTags(
   projects: ProjectRecord[],
   tags: string[]

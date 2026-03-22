@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "Portfolio — Systems & Data",
+    "title": "Soykan",
     "description": "Data analysis, industrial engineering, ML, and operational systems."
   },
   "brand": {
@@ -10,7 +10,9 @@
   "nav": {
     "home": "Home",
     "projects": "Projects",
-    "contact": "Contact"
+    "faq": "FAQ",
+    "contact": "Contact",
+    "dashboard": "Dashboard"
   },
   "theme": {
     "dark": "Dark",
@@ -19,7 +21,7 @@
   "social": {
     "github": "https://github.com/SoykanErenKeskin",
     "linkedin": "https://www.linkedin.com/in/soykanerenkeskin",
-    "website": "https://thequarox.com",
+    "website": "https://soykanerenkeskin.com",
     "githubLabel": "GitHub",
     "linkedinLabel": "LinkedIn",
     "websiteLabel": "Web"
@@ -95,7 +97,25 @@
     "email": "soykanerenkeskin@gmail.com",
     "channels": "Profiles"
   },
+  "faq": {
+    "title": "Frequently asked questions",
+    "subtitle": "Common inquiries",
+    "noItems": "No FAQ items yet.",
+    "itemLabel": "Q"
+  },
   "footer": {
     "rights": "All systems nominal."
+  },
+  "chat": {
+    "title": "Ask about Soykan's Portfolio",
+    "placeholder": "Ask a question…",
+    "send": "Send",
+    "suggestions": [
+      "Who is Soykan?",
+      "What projects has he worked on?",
+      "What are his technical skills?",
+      "How can I contact him?"
+    ],
+    "hint": "Projects · Skills · Contact"
   }
 }

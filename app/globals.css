@@ -64,3 +64,168 @@ body {
 .status-indicator {
   animation: status-pulse 2s ease-in-out infinite;
 }
+
+/* Admin dashboard – more vibrant accents */
+.admin-vibrant {
+  --admin-accent: 72 108 220;
+  --admin-teal: 20 184 166;
+  --admin-amber: 245 158 11;
+  --admin-violet: 139 92 246;
+}
+
+.dark .admin-vibrant {
+  --admin-accent: 118 158 255;
+  --admin-teal: 45 212 191;
+  --admin-amber: 251 191 36;
+  --admin-violet: 167 139 250;
+}
+
+/* Admin form inputs */
+.admin-input-focus {
+  @apply outline-none transition-colors focus:border-ink focus:ring-0;
+}
+
+/* Login – moving dot pattern */
+@keyframes login-dots-drift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 24px 24px;
+  }
+}
+
+.login-dots-animate {
+  animation: login-dots-drift 6s linear infinite;
+}
+
+/* Login card – entrance + glow loop */
+@keyframes login-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes login-card-glow {
+  0%, 100% {
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25), 0 0 0 1px rgb(var(--border) / 0.1), 0 0 30px rgb(139 92 246 / 0.08);
+  }
+  50% {
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.2), 0 0 0 1px rgb(var(--border) / 0.1), 0 0 40px rgb(139 92 246 / 0.15);
+  }
+}
+
+.login-card-enter {
+  animation: login-card-enter 0.5s ease-out forwards;
+}
+
+.login-card-loop {
+  animation: login-card-glow 4s ease-in-out infinite;
+}
+
+/* Admin – wandering dots */
+@keyframes admin-dot-1 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(12px, -18px);
+  }
+  50% {
+    transform: translate(-8px, 14px);
+  }
+  75% {
+    transform: translate(16px, 8px);
+  }
+}
+
+@keyframes admin-dot-2 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(-14px, -10px);
+  }
+  66% {
+    transform: translate(10px, 20px);
+  }
+}
+
+@keyframes admin-dot-3 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(20px, 6px);
+  }
+  60% {
+    transform: translate(-12px, -16px);
+  }
+  80% {
+    transform: translate(-6px, 12px);
+  }
+}
+
+@keyframes admin-dot-4 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-18px, 8px);
+  }
+}
+
+@keyframes admin-dot-5 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(8px, 16px);
+  }
+  75% {
+    transform: translate(-16px, -8px);
+  }
+}
+
+@keyframes admin-dot-6 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  40% {
+    transform: translate(14px, -12px);
+  }
+  80% {
+    transform: translate(-10px, -6px);
+  }
+}
+
+.admin-dot-wander {
+  position: absolute;
+  border-radius: 50%;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.admin-dot-a1 {
+  animation: admin-dot-1 12s ease-in-out infinite;
+}
+.admin-dot-a2 {
+  animation: admin-dot-2 15s ease-in-out infinite 1s;
+}
+.admin-dot-a3 {
+  animation: admin-dot-3 18s ease-in-out infinite 2s;
+}
+.admin-dot-a4 {
+  animation: admin-dot-4 14s ease-in-out infinite 3s;
+}
+.admin-dot-a5 {
+  animation: admin-dot-5 16s ease-in-out infinite 0.5s;
+}
+.admin-dot-a6 {
+  animation: admin-dot-6 13s ease-in-out infinite 4s;
+}

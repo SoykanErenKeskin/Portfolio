@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { ProjectRegistry } from "@/components/projects/project-registry";
 import { RegistryFallback } from "@/components/projects/registry-fallback";
 import { getMessages } from "@/lib/i18n";
-import { getAllProjects } from "@/lib/projects";
+import { getAllProjects, getAllTechTags } from "@/lib/projects";
 import { isLocale } from "@/types/locale";
 
 export default async function ProjectsPage({
@@ -15,7 +15,10 @@ export default async function ProjectsPage({
   if (!isLocale(locale)) notFound();
 
   const messages = getMessages(locale);
-  const projects = getAllProjects();
+  const [projects, allTags] = await Promise.all([
+    getAllProjects({ publishedOnly: true }),
+    getAllTechTags(),
+  ]);
 
   return (
     <Suspense fallback={<RegistryFallback />}>
@@ -23,6 +26,7 @@ export default async function ProjectsPage({
         locale={locale}
         messages={messages}
         projects={projects}
+        allTags={allTags}
       />
     </Suspense>
   );

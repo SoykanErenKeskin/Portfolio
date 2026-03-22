@@ -13,6 +13,7 @@ export type TechnicalBlock = {
 export type ProjectLinks = {
   github?: string;
   live?: string;
+  videoUrl?: string;
 };
 
 export type ProjectImage = {

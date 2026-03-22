@@ -3,19 +3,10 @@ import { notFound } from "next/navigation";
 import { ProjectCase } from "@/components/projects/project-case";
 import { getMessages } from "@/lib/i18n";
 import {
-  getAllProjects,
+  getPublishedProjectById,
   getAdjacentProjects,
-  getProjectById,
-} from "@/lib/projects";
+} from "@/lib/db/projects";
 import { isLocale } from "@/types/locale";
-import { locales } from "@/types/locale";
-
-export function generateStaticParams() {
-  const projects = getAllProjects();
-  return locales.flatMap((locale) =>
-    projects.map((p) => ({ locale, id: p.id }))
-  );
-}
 
 export async function generateMetadata({
   params,
@@ -24,7 +15,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, id } = await params;
   if (!isLocale(locale)) return {};
-  const project = getProjectById(id);
+  const project = await getPublishedProjectById(id);
   if (!project) return {};
   return {
     title: project.title[locale],
@@ -40,10 +31,10 @@ export default async function ProjectDetailPage({
   const { locale, id } = await params;
   if (!isLocale(locale)) notFound();
 
-  const project = getProjectById(id);
+  const project = await getPublishedProjectById(id);
   if (!project) notFound();
 
-  const { prev, next } = getAdjacentProjects(id);
+  const { prev, next } = await getAdjacentProjects(id);
   const messages = getMessages(locale);
 
   return (
