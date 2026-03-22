@@ -49,3 +49,7 @@ prisma/dev.db
 prisma/*.db
 
 /lib/generated/prisma
+
+# Supabase (migration temp, local state)
+supabase/.temp/
+supabase/.branches/

@@ -35,6 +35,7 @@ export type Messages = {
     githubLabel: string;
     linkedinLabel: string;
     websiteLabel: string;
+    resumeLabel: string;
   };
   home: {
     statusLine: string;
@@ -47,6 +48,15 @@ export type Messages = {
     latestTitle: string;
     inspect: string;
     fullRegistry: string;
+    learningTimeline: {
+      title: string;
+      subtitle: string;
+      figure: string;
+      levelBasic: string;
+      levelIntermediate: string;
+      levelAdvanced: string;
+      noItems: string;
+    };
   };
   projects: {
     title: string;
@@ -90,6 +100,7 @@ export type Messages = {
     emailLabel: string;
     email: string;
     channels: string;
+    resumeLabel: string;
   };
   faq: {
     title: string;

@@ -9,6 +9,8 @@
     "lint": "next lint",
     "db:seed": "npx tsx scripts/seed-supabase.ts",
     "db:seed-profile-faq": "npx tsx scripts/seed-profile-faq.ts",
+    "db:seed-learning-timeline": "npx tsx scripts/seed-learning-timeline.ts",
+    "db:seed-capability-map": "npx tsx scripts/seed-capability-map.ts",
     "db:import": "npx tsx scripts/migrate-projects.ts"
   },
   "dependencies": {
@@ -16,6 +18,7 @@
     "bcryptjs": "^3.0.3",
     "next": "^15.1.0",
     "next-auth": "^5.0.0-beta.30",
+    "pdf-lib": "^1.17.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "zod": "^4.3.6"

@@ -46,6 +46,23 @@ function NavLinks({
   );
 }
 
+function DocIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 12 14"
+      className="h-2.5 w-2.5 shrink-0"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="square"
+    >
+      <path d="M7 1H2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V5L7 1Z" />
+      <path d="M7 1v4h4" />
+    </svg>
+  );
+}
+
 function SocialRow({ m }: { m: Messages }) {
   const links = [
     { href: m.social.github, label: m.social.githubLabel },
@@ -54,7 +71,7 @@ function SocialRow({ m }: { m: Messages }) {
   ];
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-3">
       {links.map((s) => (
         <a
           key={s.href}
@@ -74,10 +91,12 @@ export function SiteHeader({
   locale,
   messages: m,
   isAdmin,
+  resumeUrl,
 }: {
   locale: Locale;
   messages: Messages;
   isAdmin?: boolean;
+  resumeUrl?: string | null;
 }) {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-surface/90 backdrop-blur-md">
@@ -113,6 +132,17 @@ export function SiteHeader({
             <div className="flex flex-wrap items-center justify-between gap-3 sm:justify-end">
               <SocialRow m={m} />
               <div className="flex items-center gap-2">
+                {resumeUrl && (
+                  <a
+                    href={resumeUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 border border-border bg-surface-raised px-2 py-1 font-mono text-[11px] uppercase tracking-wide text-ink-muted transition hover:border-accent/40 hover:text-ink"
+                  >
+                    <DocIcon />
+                    {m.social.resumeLabel}
+                  </a>
+                )}
                 <LocaleToggle active={locale} />
                 <ThemeToggle labels={{ dark: m.theme.dark, light: m.theme.light }} />
               </div>

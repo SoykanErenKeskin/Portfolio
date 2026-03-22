@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
 type ProfileData = {
@@ -12,12 +12,16 @@ type ProfileData = {
   github: string;
   linkedin: string;
   website: string;
+  resumeUrl: string | null;
 };
 
 export default function AdminProfilePage() {
   const [data, setData] = useState<ProfileData | null>(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [resumeUploading, setResumeUploading] = useState(false);
+  const [resumeMessage, setResumeMessage] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetch("/api/admin/profile")
@@ -145,6 +149,80 @@ export default function AdminProfilePage() {
           </div>
           <div />
         </div>
+        <div className="rounded-xl border border-border bg-surface-raised p-5">
+          <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-admin-violet">
+            Resume (PDF)
+          </h3>
+          <p className="mt-1 font-sans text-sm text-ink-muted">
+            Users can download or view this PDF on the site. Max 5MB.
+          </p>
+          <div className="mt-4 flex flex-wrap items-center gap-4">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".pdf,application/pdf"
+              className="hidden"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                setResumeUploading(true);
+                setResumeMessage(null);
+                try {
+                  const fd = new FormData();
+                  fd.append("file", file);
+                  const res = await fetch("/api/admin/resume", {
+                    method: "POST",
+                    body: fd,
+                  });
+                  const json = await res.json();
+                  if (!res.ok) throw new Error(json.error || "Upload failed");
+                  setData((d) => (d ? { ...d, resumeUrl: json.url } : null));
+                  setResumeMessage("Resume uploaded.");
+                } catch (err) {
+                  setResumeMessage(err instanceof Error ? err.message : "Upload failed.");
+                } finally {
+                  setResumeUploading(false);
+                  e.target.value = "";
+                }
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={resumeUploading}
+              className="rounded-lg border border-admin-violet/50 bg-admin-violet/10 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-admin-violet transition hover:bg-admin-violet/20 disabled:opacity-50"
+            >
+              {resumeUploading ? "Uploading…" : "Upload PDF"}
+            </button>
+            {data?.resumeUrl && (
+              <>
+                <a
+                  href={data.resumeUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-mono text-[11px] text-accent underline-offset-2 hover:underline"
+                >
+                  View current PDF
+                </a>
+                <span className="font-mono text-[10px] text-ink-faint">
+                  (Re-upload to replace)
+                </span>
+              </>
+            )}
+          </div>
+          {resumeMessage && (
+            <p
+              className={`mt-3 font-mono text-xs ${
+                resumeMessage.includes("failed") || resumeMessage.includes("Error")
+                  ? "text-red-600 dark:text-red-400"
+                  : "text-emerald-600 dark:text-emerald-400"
+              }`}
+            >
+              {resumeMessage}
+            </p>
+          )}
+        </div>
+
         <div className="grid gap-6 sm:grid-cols-3">
           <div>
             <label className="mb-1.5 block font-mono text-[10px] uppercase tracking-[0.16em] text-ink-faint">

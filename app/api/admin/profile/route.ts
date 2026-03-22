@@ -22,6 +22,7 @@ export async function GET() {
       github: "",
       linkedin: "",
       website: "",
+      resumeUrl: null as string | null,
     });
   }
   return NextResponse.json({
@@ -33,6 +34,9 @@ export async function GET() {
     github: profile.github ?? "",
     linkedin: profile.linkedin ?? "",
     website: profile.website ?? "",
+    resumeUrl: (profile as { resume_url?: string }).resume_url?.trim()
+      ? "/api/resume"
+      : null,
   });
 }
 

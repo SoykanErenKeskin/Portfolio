@@ -24,7 +24,8 @@
     "website": "https://soykanerenkeskin.com",
     "githubLabel": "GitHub",
     "linkedinLabel": "LinkedIn",
-    "websiteLabel": "Web"
+    "websiteLabel": "Web",
+    "resumeLabel": "Özgeçmiş"
   },
   "home": {
     "statusLine": "SYS.DURUM · ÇEVRİMİÇİ",
@@ -52,7 +53,16 @@
     ],
     "latestTitle": "Son projeler",
     "inspect": "Vakayı görüntüle →",
-    "fullRegistry": "Tam liste →"
+    "fullRegistry": "Tam liste →",
+    "learningTimeline": {
+      "title": "Öğrenme zaman çizelgesi",
+      "subtitle": "Hangi teknoloji ve aracı ne zaman öğrendim",
+      "figure": "ŞEK.02 — ÖĞRENME ZAMAN ÇİZELGESİ",
+      "levelBasic": "Temel",
+      "levelIntermediate": "Orta",
+      "levelAdvanced": "İleri",
+      "noItems": "Henüz öğrenme kaydı yok."
+    }
   },
   "projects": {
     "title": "Proje kaydı",
@@ -95,7 +105,8 @@
     "subtitle": "Doğrudan hat",
     "emailLabel": "E-posta",
     "email": "soykanerenkeskin@gmail.com",
-    "channels": "Profiller"
+    "channels": "Profiller",
+    "resumeLabel": "Özgeçmiş İndir"
   },
   "faq": {
     "title": "Sıkça sorulan sorular",

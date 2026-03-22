@@ -35,6 +35,7 @@
 }
 .chat-scroll-themed::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 .chat-scroll-themed::-webkit-scrollbar-track {
   border-radius: 9999px;

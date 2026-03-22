@@ -7,6 +7,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { getMessages } from "@/lib/i18n";
+import { getResumeUrl } from "@/lib/db/resume";
 import { locales, isLocale } from "@/types/locale";
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -35,16 +36,22 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
-  const [messages, session] = await Promise.all([
+  const [messages, session, resumeUrl] = await Promise.all([
     getMessages(locale),
     auth(),
+    getResumeUrl(),
   ]);
 
   return (
     <ThemeProvider>
       <LocaleHtml locale={locale} />
       <div className="flex min-h-screen flex-col">
-        <SiteHeader locale={locale} messages={messages} isAdmin={!!session?.user} />
+        <SiteHeader
+          locale={locale}
+          messages={messages}
+          isAdmin={!!session?.user}
+          resumeUrl={resumeUrl}
+        />
         <main className="flex-1">{children}</main>
         <SiteFooter locale={locale} messages={messages} />
         <ChatWidget messages={messages.chat} isAdmin={!!session?.user} />

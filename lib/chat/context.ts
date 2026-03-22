@@ -2,6 +2,7 @@ import { profile } from "@/data/profile";
 import type { ProjectRecord } from "@/types/project";
 import type { ProfileRow } from "@/lib/db/profile";
 import type { FaqRow } from "@/lib/db/faq";
+import type { LearningEntry } from "@/lib/db/learning-timeline";
 
 /** DATA bölümü için varsayılan metin – comprehensiveContext + ek detaylar */
 export function getDefaultProfileData(): string {
@@ -76,6 +77,20 @@ function buildFaqSection(faq: FaqRow[]): string {
     .join("\n\n");
 }
 
+function buildLearningTimelineSection(entries: LearningEntry[]): string {
+  if (entries.length === 0) return "";
+  const byYear = entries.reduce<Record<number, string[]>>((acc, e) => {
+    if (!acc[e.year]) acc[e.year] = [];
+    acc[e.year].push(`${e.toolEn} (${e.level})`);
+    return acc;
+  }, {});
+  const lines = Object.keys(byYear)
+    .map(Number)
+    .sort((a, b) => a - b)
+    .map((y) => `${y}: ${(byYear[y] ?? []).join(", ")}`);
+  return ["## LEARNING TIMELINE (when tech/tools were learned)", ...lines].join("\n");
+}
+
 function buildProjectsText(projects: ProjectRecord[]): string {
   if (projects.length === 0) return "No projects on file.";
   return projects
@@ -102,17 +117,19 @@ function buildProjectsText(projects: ProjectRecord[]): string {
     .join("\n\n");
 }
 
-/** Chatbot için DATA + profil + FAQ + projeler context metnini üretir */
+/** Chatbot için DATA + profil + FAQ + projeler + learning timeline context metnini üretir */
 export function getChatContext(
   projects: ProjectRecord[],
   profiles: ProfileRow[],
   faq: FaqRow[],
-  dataOverride?: string | null
+  dataOverride?: string | null,
+  learningTimeline?: LearningEntry[]
 ): string {
   const dataSection = dataOverride?.trim() || getDefaultProfileData();
   const profileSection = buildProfileSection(profiles);
   const faqSection = buildFaqSection(faq);
   const projectsText = buildProjectsText(projects);
+  const learningSection = buildLearningTimelineSection(learningTimeline ?? []);
 
   const parts = [
     "=== PORTFOLIO DATA (use only this to answer) ===",
@@ -122,6 +139,7 @@ export function getChatContext(
     profileSection,
   ];
   if (faqSection) parts.push("", faqSection);
+  if (learningSection) parts.push("", learningSection);
   parts.push("", "=== PROJECTS ===", projectsText);
 
   return parts.join("\n");

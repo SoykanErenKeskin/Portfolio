@@ -24,12 +24,13 @@
     "website": "https://soykanerenkeskin.com",
     "githubLabel": "GitHub",
     "linkedinLabel": "LinkedIn",
-    "websiteLabel": "Web"
+    "websiteLabel": "Web",
+    "resumeLabel": "Resume"
   },
   "home": {
     "statusLine": "SYS.STATUS · ONLINE",
     "valueProp": "I transform small, seemingly insignificant pieces of data into structured, decision-making-ready analyses.",
-    "supporting": "I work in data analysis, machine learning, optimization, and operations. I enjoy taking scattered or complex data and making it understandable; transforming complexity into a structure that supports clearer decisions. My interdisciplinary background allows me to approach problems from different perspectives.",
+    "supporting": "I work in data analysis, machine learning, optimization and operations. I enjoy taking scattered or complex data and making it understandable; transforming complexity into a structure that supports clearer decisions. My interdisciplinary background allows me to approach problems from different perspectives.",
     "systemsTitle": "Capability map",
     "systemsSubtitle": "Analytical scope · work domains",
     "systemsFigure": "FIG.01 — CAPABILITY MAP",
@@ -52,7 +53,16 @@
     ],
     "latestTitle": "Latest projects",
     "inspect": "View case →",
-    "fullRegistry": "Full registry →"
+    "fullRegistry": "Full registry →",
+    "learningTimeline": {
+      "title": "Learning timeline",
+      "subtitle": "When I learned each tech and tool",
+      "figure": "FIG.02 — LEARNING TIMELINE",
+      "levelBasic": "Basic",
+      "levelIntermediate": "Intermediate",
+      "levelAdvanced": "Advanced",
+      "noItems": "No learning entries yet."
+    }
   },
   "projects": {
     "title": "Project registry",
@@ -95,7 +105,8 @@
     "subtitle": "Direct line",
     "emailLabel": "Email",
     "email": "soykanerenkeskin@gmail.com",
-    "channels": "Profiles"
+    "channels": "Profiles",
+    "resumeLabel": "Download Resume"
   },
   "faq": {
     "title": "Frequently asked questions",

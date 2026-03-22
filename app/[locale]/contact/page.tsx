@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getMessages } from "@/lib/i18n";
+import { getResumeUrl } from "@/lib/db/resume";
 import { isLocale } from "@/types/locale";
 
 export default async function ContactPage({
@@ -10,7 +11,7 @@ export default async function ContactPage({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
-  const m = getMessages(locale);
+  const [m, resumeUrl] = await Promise.all([getMessages(locale), getResumeUrl()]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 md:py-16">
@@ -67,6 +68,24 @@ export default async function ContactPage({
             </a>
           </div>
         </section>
+
+        {resumeUrl && (
+          <section className="border border-border bg-surface-raised p-5 md:col-span-2">
+            <h2 className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-faint">
+              {m.contact.resumeLabel}
+            </h2>
+            <div className="mt-3 flex flex-wrap gap-3">
+              <a
+                href={resumeUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg border border-accent/50 bg-accent/10 px-4 py-2 font-mono text-sm text-accent transition hover:bg-accent/20"
+              >
+                {m.contact.resumeLabel}
+              </a>
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import { getChatContext } from "./context";
 import type { ProjectRecord } from "@/types/project";
 import type { ProfileRow } from "@/lib/db/profile";
 import type { FaqRow } from "@/lib/db/faq";
+import type { LearningEntry } from "@/lib/db/learning-timeline";
 
 /** Varsayılan kurallar – admin panelde "Varsayılanı yükle" ile kullanılır */
 export const DEFAULT_CHATBOT_RULES = `
@@ -10,6 +11,8 @@ GROUNDING: Only use the provided portfolio data. Never invent facts. If informat
 STYLE: Professional, concise, natural. No long lists or report-style answers. Occasionally use **bold** for keywords (skills, project names, tools, key concepts) to improve readability – not every sentence, but 1–3 per reply when it fits.
 LENGTH: Keep replies under ~400 words. Never cut mid-sentence.
 EMOJI: Use occasionally and only when natural.
+
+EXPERIENCE/INTERNSHIP: When describing work experience or internships, focus on the **role** and **responsibilities** (what was done, skills used). Do not mention or repeat company names unless explicitly asked. Keep it about the position and achievements.
 
 NO REASONING EXPOSURE: Never show your thinking or analysis process. Do not write:
 - Bullet-point breakdowns of methodology or approach
@@ -53,9 +56,16 @@ export function buildSystemPrompt(
   profiles: ProfileRow[],
   faq: FaqRow[],
   rulesOverride?: string | null,
-  dataOverride?: string | null
+  dataOverride?: string | null,
+  learningTimeline?: LearningEntry[]
 ): string {
-  const context = getChatContext(projects, profiles, faq, dataOverride);
+  const context = getChatContext(
+    projects,
+    profiles,
+    faq,
+    dataOverride,
+    learningTimeline
+  );
   const rules = (rulesOverride?.trim() || DEFAULT_CHATBOT_RULES).trim();
 
   const parts: string[] = [

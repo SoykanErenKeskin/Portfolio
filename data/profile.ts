@@ -19,7 +19,7 @@ export const profile = {
   ],
 
   experience: [
-    "Production Planning Intern at Özka Lastik – workflow analysis, bottleneck identification, process improvement proposals.",
+    "Production Planning Intern – workflow analysis, bottleneck identification, process improvement proposals.",
   ],
 
   skills: {
@@ -74,7 +74,7 @@ In addition to his academic background, Soykan actively develops software and da
 
 His Erasmus Exchange experience at Universidad de Malaga played an important role in shaping his perspective. It enhanced his ability to adapt quickly, collaborate in multicultural environments, and communicate effectively across different contexts. This experience contributes to his flexibility and openness in both technical and professional settings.
 
-Soykan has also gained practical industry experience through his role as a Production Planning Intern at Özka Lastik ve Kauçuk Sanayi Ticaret A.Ş. During this period, he worked on analyzing production workflows, identifying inefficiencies, and contributing to process improvement initiatives. He focused on bottleneck detection and operational optimization, supporting productivity improvements in a real manufacturing environment.
+Soykan has gained practical industry experience as a Production Planning Intern. During this period, he worked on analyzing production workflows, identifying inefficiencies, and contributing to process improvement initiatives. He focused on bottleneck detection and operational optimization, supporting productivity improvements in a real manufacturing environment.
 
 From a technical perspective, Soykan has experience with multiple programming languages and tools, including JavaScript, Python, Java, and C#, as well as industry-related tools such as SAP, Power BI, AutoCAD, EasyEDA, and Altium. This combination allows him to operate both in software environments and engineering-driven systems.
 

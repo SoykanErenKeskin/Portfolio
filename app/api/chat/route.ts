@@ -4,6 +4,7 @@ import { buildSystemPrompt } from "@/lib/chat/build-prompt";
 import { getAllProjects } from "@/lib/db/projects";
 import { getProfilesForChatbot } from "@/lib/db/profile";
 import { getFaqForChatbot } from "@/lib/db/faq";
+import { getLearningTimeline } from "@/lib/db/learning-timeline";
 import { classifyCrisisFromUserText } from "@/lib/chat/crisis-classifier";
 import {
   containsSensitiveUserContent,
@@ -112,11 +113,13 @@ export async function POST(request: NextRequest) {
       projects,
       profiles,
       faq,
+      learningTimeline,
     ] = await Promise.all([
       getChatbotPrompt(),
       getAllProjects({ publishedOnly: true }),
       getProfilesForChatbot(),
       getFaqForChatbot(),
+      getLearningTimeline(),
     ]);
 
     const systemPrompt = buildSystemPrompt(
@@ -125,7 +128,8 @@ export async function POST(request: NextRequest) {
       profiles,
       faq,
       rules,
-      chatbotData
+      chatbotData,
+      learningTimeline
     );
     const apiMessages: Message[] = [
       { role: "system", content: systemPrompt },
@@ -208,7 +212,7 @@ export async function POST(request: NextRequest) {
     const data = (await res.json()) as {
       choices?: Array<{ message?: { content?: string } }>;
     };
-    let content =
+    const content =
       data.choices?.[0]?.message?.content?.trim() || "Sorry, I couldn't generate a response.";
 
     /** Main model must use CRISIS_GATE (first line) — replace with fixed template, never show model prose */

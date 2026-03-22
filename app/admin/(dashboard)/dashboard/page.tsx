@@ -13,6 +13,16 @@ const NAV_CARDS = [
     desc: "Manage frequently asked questions",
   },
   {
+    href: "/admin/capability-map",
+    label: "Capability map",
+    desc: "Categories with labels (EN/TR) and items",
+  },
+  {
+    href: "/admin/learning-timeline",
+    label: "Learning timeline",
+    desc: "Tech/tools with year and level",
+  },
+  {
     href: "/admin/chatbot",
     label: "Chatbot",
     desc: "Edit AI system prompt",

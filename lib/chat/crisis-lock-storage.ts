@@ -5,9 +5,9 @@ const STORAGE_KEY = "portfolio.chat.crisisLock.v1";
 const STRIKES_KEY = "portfolio.chat.crisisStrikes.v1";
 
 /** 1st crisis lock on this device */
-export const CRISIS_LOCK_DURATION_FIRST_MS = 30_000;
+export const CRISIS_LOCK_DURATION_FIRST_MS = 3 * 30_000;
 /** 2nd crisis lock */
-export const CRISIS_LOCK_DURATION_SECOND_MS = 3 * 60_000;
+export const CRISIS_LOCK_DURATION_SECOND_MS = 10 * 60_000;
 /** 3rd and further crisis locks */
 export const CRISIS_LOCK_DURATION_THIRD_PLUS_MS = 30 * 60_000;
 

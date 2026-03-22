@@ -1,7 +1,25 @@
 import type { Messages } from "@/types/messages";
+import type { LearningEntry } from "@/lib/db/learning-timeline";
+import type { CapabilityCategory } from "@/lib/db/capability-map";
+import { LearningTimeline } from "./learning-timeline";
 import { cn } from "@/lib/utils";
 
-export function SystemsMap({ messages: m }: { messages: Messages }) {
+type SystemsMapProps = {
+  messages: Messages;
+  learningTimeline: LearningEntry[];
+  capabilityMap?: CapabilityCategory[];
+  locale: "en" | "tr";
+};
+
+export function SystemsMap({ messages: m, learningTimeline, capabilityMap, locale }: SystemsMapProps) {
+  const categories =
+    capabilityMap && capabilityMap.length > 0
+      ? capabilityMap.map((cat) => ({
+          key: cat.key,
+          label: locale === "tr" ? (cat.labelTr || cat.labelEn) : (cat.labelEn || cat.labelTr),
+          items: locale === "tr" ? (cat.itemsTr.length ? cat.itemsTr : cat.itemsEn) : (cat.itemsEn.length ? cat.itemsEn : cat.itemsTr),
+        }))
+      : m.home.systemsCategories;
   return (
     <section className="border-b border-border bg-surface-raised/40">
       <div className="mx-auto max-w-6xl px-4 py-12 md:py-16">
@@ -20,7 +38,7 @@ export function SystemsMap({ messages: m }: { messages: Messages }) {
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
-          {m.home.systemsCategories.map((cat, i) => (
+          {categories.map((cat, i) => (
             <div
               key={cat.key}
               className={cn(
@@ -50,6 +68,8 @@ export function SystemsMap({ messages: m }: { messages: Messages }) {
             </div>
           ))}
         </div>
+
+        <LearningTimeline messages={m} items={learningTimeline} locale={locale} />
       </div>
     </section>
   );

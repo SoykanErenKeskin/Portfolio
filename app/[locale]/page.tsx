@@ -3,6 +3,8 @@ import { LatestPreviews } from "@/components/home/latest-previews";
 import { SystemsMap } from "@/components/home/systems-map";
 import { getMessages } from "@/lib/i18n";
 import { getLatestProjects } from "@/lib/db/projects";
+import { getLearningTimeline } from "@/lib/db/learning-timeline";
+import { getCapabilityMap } from "@/lib/db/capability-map";
 import { isLocale } from "@/types/locale";
 import { notFound } from "next/navigation";
 
@@ -14,13 +16,22 @@ export default async function HomePage({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
-  const messages = getMessages(locale);
-  const latest = await getLatestProjects(3);
+  const [messages, latest, learningTimeline, capabilityMap] = await Promise.all([
+    getMessages(locale),
+    getLatestProjects(3),
+    getLearningTimeline(),
+    getCapabilityMap(),
+  ]);
 
   return (
     <>
       <ValueBlock messages={messages} />
-      <SystemsMap messages={messages} />
+      <SystemsMap
+        messages={messages}
+        learningTimeline={learningTimeline}
+        capabilityMap={capabilityMap}
+        locale={locale as "en" | "tr"}
+      />
       <LatestPreviews
         locale={locale}
         messages={messages}
