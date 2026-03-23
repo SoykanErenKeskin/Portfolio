@@ -22,16 +22,6 @@ export function AdminProjectList() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleDelete = async (id: string, title: string) => {
-    if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
-    const res = await fetch(`/api/admin/projects/${id}`, { method: "DELETE" });
-    if (res.ok) {
-      setProjects((prev) => prev.filter((p) => p.id !== id));
-    } else {
-      alert("Failed to delete");
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex items-center gap-2 rounded-xl border border-admin-violet/20 bg-admin-violet/5 px-4 py-6">
@@ -115,17 +105,10 @@ export function AdminProjectList() {
               <td className="px-4 py-3 text-right">
                 <Link
                   href={`/admin/projects/${p.id}`}
-                  className="mr-3 rounded px-2 py-1 font-mono text-[11px] text-admin-violet transition hover:bg-admin-violet/15"
+                  className="rounded px-2 py-1 font-mono text-[11px] text-admin-violet transition hover:bg-admin-violet/15"
                 >
                   Edit
                 </Link>
-                <button
-                  type="button"
-                  onClick={() => handleDelete(p.id, p.title.en || p.title.tr || p.slug || p.id)}
-                  className="rounded px-2 py-1 font-mono text-[11px] text-ink-muted transition hover:bg-red-500/15 hover:text-red-500"
-                >
-                  Delete
-                </button>
               </td>
             </tr>
           ))}

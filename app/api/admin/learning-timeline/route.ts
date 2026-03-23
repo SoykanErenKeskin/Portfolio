@@ -51,6 +51,21 @@ export async function POST(request: NextRequest) {
     ? data.level
     : "intermediate";
 
+  const toolEn = (data.toolEn ?? "").trim();
+  const { data: existing } = await supabase
+    .from("learning_timeline")
+    .select("id")
+    .eq("tool_en", toolEn)
+    .eq("level", level)
+    .limit(1)
+    .maybeSingle();
+  if (existing) {
+    return NextResponse.json(
+      { error: "Same tool at this level already exists" },
+      { status: 409 }
+    );
+  }
+
   const { data: maxRow } = await supabase
     .from("learning_timeline")
     .select("sort_order")
@@ -64,7 +79,7 @@ export async function POST(request: NextRequest) {
   const { data: item, error } = await supabase
     .from("learning_timeline")
     .insert({
-      tool_en: (data.toolEn ?? "").trim(),
+      tool_en: toolEn,
       tool_tr: (data.toolTr ?? "").trim(),
       year: data.year,
       level,

@@ -242,7 +242,7 @@ export default function AdminCapabilityMapPage() {
                 <button
                   type="button"
                   onClick={() => addItemToForm("en")}
-                  className="rounded border border-border px-2 py-1 font-mono text-[10px] text-ink-muted hover:bg-surface-raised"
+                  className="rounded border border-border px-2 py-1 font-mono text-[10px] text-ink-muted transition hover:bg-admin-violet/10 hover:text-admin-violet"
                 >
                   + Add
                 </button>
@@ -282,7 +282,7 @@ export default function AdminCapabilityMapPage() {
                 <button
                   type="button"
                   onClick={() => addItemToForm("tr")}
-                  className="rounded border border-border px-2 py-1 font-mono text-[10px] text-ink-muted hover:bg-surface-raised"
+                  className="rounded border border-border px-2 py-1 font-mono text-[10px] text-ink-muted transition hover:bg-admin-violet/10 hover:text-admin-violet"
                 >
                   + Add
                 </button>
@@ -482,7 +482,7 @@ function EditCategoryRow({
               <button
                 type="button"
                 onClick={() => addItem("en")}
-                className="rounded border border-border px-2 py-1 font-mono text-[10px] text-ink-muted hover:bg-surface-raised"
+                className="rounded border border-border px-2 py-1 font-mono text-[10px] text-ink-muted transition hover:bg-admin-violet/10 hover:text-admin-violet"
               >
                 + Add
               </button>
@@ -522,7 +522,7 @@ function EditCategoryRow({
               <button
                 type="button"
                 onClick={() => addItem("tr")}
-                className="rounded border border-border px-2 py-1 font-mono text-[10px] text-ink-muted hover:bg-surface-raised"
+                className="rounded border border-border px-2 py-1 font-mono text-[10px] text-ink-muted transition hover:bg-admin-violet/10 hover:text-admin-violet"
               >
                 + Add
               </button>
@@ -541,7 +541,7 @@ function EditCategoryRow({
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-lg border border-border px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-ink-muted hover:border-admin-violet/50"
+          className="rounded-lg border border-border px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-ink-muted transition hover:border-admin-violet/50 hover:bg-admin-violet/10 hover:text-admin-violet"
         >
           Cancel
         </button>

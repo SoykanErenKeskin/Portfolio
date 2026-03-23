@@ -116,6 +116,7 @@ export type Messages = {
     placeholder: string;
     send: string;
     suggestions: string[];
+    resumeDirectAnswer: string;
     hint: string;
     /** Shown when chat is locked after a safety response */
     crisisLockedPlaceholder: string;

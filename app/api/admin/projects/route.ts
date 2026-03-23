@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/api/auth";
 import { createProjectSchema } from "@/lib/api/project-schema";
 import { supabase } from "@/lib/db/supabase";
 import { dbToProjectRecord } from "@/lib/db/projects";
+import { syncTechToolsFromProject } from "@/lib/db/tech-tools";
 
 export async function GET() {
   const err = await requireAdmin();
@@ -163,6 +164,10 @@ export async function POST(request: NextRequest) {
 
   if (!full) {
     return NextResponse.json({ error: "Project created but fetch failed" }, { status: 500 });
+  }
+
+  if (data.status === "PUBLISHED" && (data.tech.length > 0 || data.tools.length > 0)) {
+    await syncTechToolsFromProject(data.tech, data.tools);
   }
 
   const record = dbToProjectRecord(full as Parameters<typeof dbToProjectRecord>[0]);

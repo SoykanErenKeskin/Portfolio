@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/api/auth";
 import { updateProjectSchema } from "@/lib/api/project-schema";
 import { supabase } from "@/lib/db/supabase";
 import { dbToProjectRecord, getProjectForAdmin } from "@/lib/db/projects";
+import { syncTechToolsFromProject } from "@/lib/db/tech-tools";
 
 async function findExisting(id: string) {
   const { data: bySlug } = await supabase
@@ -182,6 +183,14 @@ export async function PATCH(
 
   if (!full) {
     return NextResponse.json({ error: "Project not found" }, { status: 404 });
+  }
+
+  if ((full.status as string) === "PUBLISHED") {
+    const tech = (full as { project_tech?: { tag: string }[] }).project_tech?.map((t) => t.tag) ?? [];
+    const tools = (full as { project_tool?: { tool: string }[] }).project_tool?.map((t) => t.tool) ?? [];
+    if (tech.length > 0 || tools.length > 0) {
+      await syncTechToolsFromProject(tech, tools);
+    }
   }
 
   const record = dbToProjectRecord(

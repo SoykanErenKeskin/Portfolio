@@ -106,6 +106,97 @@ body {
   @apply outline-none transition-colors focus:border-ink focus:ring-0;
 }
 
+/* Admin select – violet dropdown arrow instead of gray */
+.admin-vibrant select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgb(139,92,246)'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  padding-right: 2.25rem;
+}
+.dark .admin-vibrant select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgb(167,139,250)'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+}
+
+/* Admin select option – violet highlight on hover (Firefox, limited support) */
+.admin-vibrant select option:hover,
+.admin-vibrant select option:focus {
+  background: rgb(var(--admin-violet) / 0.15);
+}
+.admin-vibrant select option:checked {
+  background: rgb(var(--admin-violet) / 0.2);
+}
+
+/* Admin number input – violet spinners on the input, transparent clickable buttons */
+.admin-vibrant input[type="number"] {
+  accent-color: rgb(var(--admin-violet));
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 12 28'%3E%3Cpath stroke='rgb(139,92,246)' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 8 L6 3 L10 8'/%3E%3Cpath stroke='rgb(139,92,246)' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 20 L6 25 L10 20'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 0.65rem 1.1rem;
+  padding-right: 1.5rem;
+}
+.dark .admin-vibrant input[type="number"] {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 12 28'%3E%3Cpath stroke='rgb(167,139,250)' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 8 L6 3 L10 8'/%3E%3Cpath stroke='rgb(167,139,250)' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 20 L6 25 L10 20'/%3E%3C/svg%3E");
+}
+/* WebKit: hide default arrows, keep buttons transparent and clickable */
+.admin-vibrant input[type="number"]::-webkit-outer-spin-button,
+.admin-vibrant input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  width: 1.5rem;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Pending badge – shimmer + pulse */
+@keyframes pending-shimmer {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+@keyframes pending-pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+.pending-badge {
+  background: linear-gradient(
+    90deg,
+    rgb(251 191 36 / 0.15) 0%,
+    rgb(251 191 36 / 0.35) 25%,
+    rgb(251 191 36 / 0.2) 50%,
+    rgb(251 191 36 / 0.35) 75%,
+    rgb(251 191 36 / 0.15) 100%
+  );
+  background-size: 200% 100%;
+  animation: pending-shimmer 4s ease-in-out infinite;
+}
+.dark .pending-badge {
+  background: linear-gradient(
+    90deg,
+    rgb(251 191 36 / 0.12) 0%,
+    rgb(251 191 36 / 0.25) 25%,
+    rgb(251 191 36 / 0.15) 50%,
+    rgb(251 191 36 / 0.25) 75%,
+    rgb(251 191 36 / 0.12) 100%
+  );
+  background-size: 200% 100%;
+  animation: pending-shimmer 4s ease-in-out infinite;
+}
+.pending-icon {
+  animation: pending-pulse-soft 2.5s ease-in-out infinite;
+}
+
 /* Login – moving dot pattern */
 @keyframes login-dots-drift {
   0% {

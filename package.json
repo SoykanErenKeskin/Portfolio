@@ -11,6 +11,7 @@
     "db:seed-profile-faq": "npx tsx scripts/seed-profile-faq.ts",
     "db:seed-learning-timeline": "npx tsx scripts/seed-learning-timeline.ts",
     "db:seed-capability-map": "npx tsx scripts/seed-capability-map.ts",
+    "db:seed-tech-tools": "npx tsx scripts/seed-tech-tools.ts",
     "db:import": "npx tsx scripts/migrate-projects.ts"
   },
   "dependencies": {

@@ -125,8 +125,10 @@
       "Soykan kimdir?",
       "Hangi projelerde çalıştı?",
       "Teknik becerileri neler?",
-      "Nasıl iletişime geçebilirim?"
+      "Nasıl iletişime geçebilirim?",
+      "Özgeçmişini görebilir miyim?"
     ],
+    "resumeDirectAnswer": "İşte Soykan'ın özgeçmişi. PDF olarak indirebilirsiniz:",
     "hint": "Projeler · Beceriler · İletişim",
     "crisisLockedPlaceholder": "Bu sohbet güvenlik nedeniyle kapatıldı.",
     "crisisCooldownHint": "Süre dolunca sohbet otomatik olarak açılacak.",

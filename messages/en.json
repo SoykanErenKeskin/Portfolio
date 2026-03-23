@@ -125,8 +125,10 @@
       "Who is Soykan?",
       "What projects has he worked on?",
       "What are his technical skills?",
-      "How can I contact him?"
+      "How can I contact him?",
+      "Can I see his resume?"
     ],
+    "resumeDirectAnswer": "Here's Soykan's resume. You can download it as PDF:",
     "hint": "Projects · Skills · Contact",
     "crisisLockedPlaceholder": "Chat closed for safety.",
     "crisisCooldownHint": "Unlocks automatically when the timer hits 0:00.",

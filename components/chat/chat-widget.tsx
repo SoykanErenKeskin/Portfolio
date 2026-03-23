@@ -33,6 +33,7 @@ type ChatMessages = {
   placeholder: string;
   send: string;
   suggestions: string[];
+  resumeDirectAnswer: string;
   hint: string;
   crisisLockedPlaceholder: string;
   /** Shown next to the countdown ring (no {seconds} — time is in the dial) */
@@ -47,11 +48,15 @@ type ChatMessageItem = {
   crisisLang?: CrisisLang;
 };
 
+const RESUME_SUGGESTION_INDEX = 4;
+
 export function ChatWidget({
   messages,
+  resumeUrl = null,
   isAdmin = false,
 }: {
   messages: ChatMessages;
+  resumeUrl?: string | null;
   /** Logged-in site admin — can reset lock + strike tier via UI */
   isAdmin?: boolean;
 }) {
@@ -206,7 +211,26 @@ export function ChatWidget({
 
   const cooldownHint = chatLocked ? messages.crisisCooldownHint : undefined;
 
-  const handleSuggestionClick = (q: string) => sendMessage(q);
+  const handleSuggestionClick = useCallback(
+    (q: string) => {
+      const isResumeSuggestion =
+        messages.suggestions[RESUME_SUGGESTION_INDEX] === q && resumeUrl;
+      if (isResumeSuggestion) {
+        const fullUrl =
+          typeof window !== "undefined"
+            ? `${window.location.origin}${resumeUrl}`
+            : resumeUrl;
+        const directAnswer = `${messages.resumeDirectAnswer} ${fullUrl}`;
+        setChatMessages([
+          { role: "user", content: q },
+          { role: "assistant", content: directAnswer },
+        ]);
+        return;
+      }
+      sendMessage(q);
+    },
+    [messages.suggestions, messages.resumeDirectAnswer, resumeUrl, sendMessage]
+  );
 
   const panelCrisis = chatLocked && open;
 

@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import type { ProjectRecord } from "@/types/project";
 import { cn } from "@/lib/utils";
 import { TagPicker } from "./tag-picker";
+import { AdminDatePicker } from "./admin-date-picker";
 
 type FormData = {
   slug: string;
@@ -129,8 +131,12 @@ export function ProjectForm({
   const [availableTech, setAvailableTech] = useState<string[]>([]);
   const [availableTools, setAvailableTools] = useState<string[]>([]);
   const [translating, setTranslating] = useState<string | null>(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteConfirmInput, setDeleteConfirmInput] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
   const isEdit = !!projectId;
+  const projectDisplayName = (data.title?.en || data.title?.tr || data.slug || "").trim();
 
   const translateField = async (
     key: (typeof localizedKeys)[number],
@@ -282,6 +288,41 @@ export function ProjectForm({
     }
   };
 
+  useEffect(() => {
+    if (!deleteModalOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setDeleteModalOpen(false);
+        setDeleteConfirmInput("");
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [deleteModalOpen]);
+
+  const handleDelete = async () => {
+    if (deleteConfirmInput.trim() !== projectDisplayName) return;
+    if (!projectId) return;
+    setDeleting(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/admin/projects/${projectId}`, { method: "DELETE" });
+      if (res.ok) {
+        router.push("/admin/dashboard");
+        router.refresh();
+      } else {
+        const json = await res.json().catch(() => ({}));
+        setError(json.error ?? "Silme işlemi başarısız.");
+      }
+    } catch {
+      setError("Silme işlemi başarısız.");
+    } finally {
+      setDeleting(false);
+      setDeleteModalOpen(false);
+      setDeleteConfirmInput("");
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       {error && (
@@ -321,12 +362,10 @@ export function ProjectForm({
             <label className="mb-1 block font-mono text-[10px] uppercase tracking-[0.12em] text-ink-faint">
               Date
             </label>
-            <input
-              type="date"
+            <AdminDatePicker
               value={data.date}
-              onChange={(e) => update({ date: e.target.value })}
+              onChange={(date) => update({ date })}
               required
-              className="admin-input-focus w-full border border-border bg-surface px-3 py-2 font-sans text-sm text-ink"
             />
           </div>
           <div className="space-y-4">
@@ -620,22 +659,93 @@ export function ProjectForm({
         />
       </section>
 
-      <div className="flex gap-4">
-        <button
-          type="submit"
-          disabled={saving}
-          className="border border-border bg-surface-raised px-6 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink transition hover:border-admin-violet/40 hover:text-admin-violet disabled:opacity-50"
-        >
-          {saving ? "Saving..." : isEdit ? "Update project" : "Create project"}
-        </button>
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="border border-border-subtle px-6 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted transition hover:border-admin-violet/40 hover:text-ink"
-        >
-          Cancel
-        </button>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        {isEdit ? (
+          <button
+            type="button"
+            onClick={() => setDeleteModalOpen(true)}
+            className="rounded-lg border border-red-500/30 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-red-600 transition hover:bg-red-500/10 dark:text-red-400"
+          >
+            Delete project
+          </button>
+        ) : (
+          <div />
+        )}
+        <div className="flex gap-4">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="rounded-lg border border-border-subtle px-6 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted transition hover:border-admin-violet/40 hover:text-ink"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={saving}
+            className="rounded-lg border border-admin-violet bg-admin-violet px-6 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-white transition hover:bg-admin-violet/90 disabled:opacity-50"
+          >
+            {saving ? "Saving..." : isEdit ? "Update project" : "Create project"}
+          </button>
+        </div>
       </div>
+
+      {deleteModalOpen &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+            style={{ top: 0, left: 0, right: 0, bottom: 0, minHeight: "100dvh" }}
+            onClick={(e: React.MouseEvent) =>
+              e.target === e.currentTarget && setDeleteModalOpen(false)
+            }
+          >
+            <div
+              className="w-full max-w-md rounded-xl border border-red-500/30 bg-surface-raised p-6 shadow-xl"
+              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+            >
+              <h3 className="font-mono text-sm font-medium uppercase tracking-wider text-red-600 dark:text-red-400">
+                Projeyi sil
+              </h3>
+              <p className="mt-2 font-sans text-sm text-ink-muted">
+                Silmek için proje adını aynen yazın:{" "}
+                <strong className="text-ink">{projectDisplayName}</strong>
+              </p>
+              <input
+                type="text"
+                value={deleteConfirmInput}
+                onChange={(e) => setDeleteConfirmInput(e.target.value)}
+                placeholder={projectDisplayName}
+                className="admin-input-focus mt-4 w-full rounded-lg border border-border bg-surface px-3 py-2 font-sans text-sm text-ink placeholder:text-ink-faint"
+                autoFocus
+              />
+              <div className="mt-6 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDeleteModalOpen(false);
+                    setDeleteConfirmInput("");
+                  }}
+                  className="rounded-lg border border-border px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-ink-muted transition hover:bg-surface"
+                >
+                  İptal
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={
+                    deleteConfirmInput.trim() !== projectDisplayName ||
+                    deleting ||
+                    !projectDisplayName
+                  }
+                  className="rounded-lg border border-red-500/50 bg-red-600 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-red-600 dark:hover:bg-red-500"
+                >
+                  {deleting ? "Siliniyor…" : "Sil"}
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
     </form>
   );
 }
