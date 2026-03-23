@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
   let formData: FormData;
   try {
     formData = await request.formData();
-  } catch (e) {
+  } catch {
     return NextResponse.json(
       { error: "Invalid or too large upload body. Max 5MB." },
       { status: 400 }

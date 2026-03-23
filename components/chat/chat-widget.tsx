@@ -13,7 +13,6 @@ import { useParams } from "next/navigation";
 import { ChatMessageList } from "./chat-message-list";
 import { ChatInput } from "./chat-input";
 import {
-  detectCrisisLanguage,
   getCrisisResponseText,
   type CrisisLang,
 } from "@/lib/chat/sensitive-content";
