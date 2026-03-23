@@ -70,8 +70,8 @@ export function LearningTimeline({ messages: m, items, locale }: LearningTimelin
                 <div className="h-4 w-px flex-shrink-0 bg-border sm:h-5" aria-hidden />
               </div>
 
-              {/* Milestone cards: grid for consistent alignment */}
-              <div className="grid w-full grid-cols-3 gap-3 pl-5 pr-8 sm:grid-cols-4 sm:pl-6 sm:pr-10">
+              {/* Milestone cards: single horizontal row */}
+              <div className="flex flex-nowrap gap-3 pl-5 pr-8 sm:pl-6 sm:pr-10">
                 {(byYear[year] ?? []).map((item) => {
                   const toolName =
                     locale === "tr" && item.toolTr
@@ -82,14 +82,14 @@ export function LearningTimeline({ messages: m, items, locale }: LearningTimelin
                     <div
                       key={item.id}
                       className={cn(
-                        "group relative flex min-h-[7rem] min-w-0 flex-col justify-between overflow-hidden rounded-xl border border-border/80 bg-surface px-4 py-4 shadow-sm transition-all duration-200 hover:border-accent/40 hover:shadow-md hover:shadow-accent/5",
+                        "group relative flex w-[180px] min-h-[7rem] shrink-0 flex-col justify-between overflow-hidden rounded-xl border border-border/80 bg-surface px-4 py-4 shadow-sm transition-all duration-200 hover:border-accent/40 hover:shadow-md hover:shadow-accent/5",
                         "before:pointer-events-none before:absolute before:inset-0 before:bg-[linear-gradient(135deg,rgb(var(--accent)_/_0.04),transparent_50%)] before:opacity-0 before:transition-opacity before:duration-200 group-hover:before:opacity-100",
                         item.level === "advanced" && "border-l-2 border-l-emerald-500/50",
                         item.level === "intermediate" && "border-l-2 border-l-amber-500/50",
                         item.level === "basic" && "border-l-2 border-l-slate-500/40"
                       )}
                     >
-                      <span className="relative break-words font-mono text-[12px] font-medium leading-snug text-ink">
+                      <span className="relative min-w-0 break-words font-mono text-[12px] font-medium leading-snug text-ink">
                         {toolName}
                       </span>
                       <span

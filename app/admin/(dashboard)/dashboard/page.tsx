@@ -87,9 +87,9 @@ export default function AdminDashboardPage() {
           <Link
             key={card.href}
             href={card.href}
-            className="flex h-full flex-row items-center gap-4 rounded-xl border border-border bg-surface-raised p-5 transition hover:border-admin-violet/30 hover:bg-admin-violet/5"
+            className="group relative flex h-full flex-row items-center gap-4 overflow-hidden rounded-xl border border-border bg-surface-raised p-5 transition duration-300 hover:scale-[1.02] hover:border-admin-violet/40 hover:shadow-[0_0_40px_-8px_rgba(139,92,246,0.4)] before:absolute before:left-0 before:top-0 before:h-full before:w-1 before:bg-admin-violet before:opacity-0 before:content-[''] before:transition-opacity before:duration-300 hover:before:opacity-100 after:absolute after:right-0 after:top-0 after:h-full after:w-1 after:bg-admin-violet after:opacity-0 after:content-[''] after:transition-opacity after:duration-300 hover:after:opacity-100"
           >
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-admin-violet/10">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-admin-violet/10 transition-colors duration-300 group-hover:bg-admin-violet/20">
               {card.icon}
             </div>
             <div className="min-w-0 flex-1">
