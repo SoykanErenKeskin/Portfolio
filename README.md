@@ -45,6 +45,15 @@ Admin (CMS) & image uploads
 
 Project images in the admin panel are stored in **Supabase Storage** when `SUPABASE_UPLOAD_BUCKET` is set (recommended; especially on Vercel or if `public/uploads` fails locally). See **[docs/STORAGE_SETUP.md](docs/STORAGE_SETUP.md)** for bucket creation and `.env` variables.
 
+GitHub activity (home page)
+
+The **Learning timeline** section can show a contribution heatmap and activity summary from your GitHub account. Set in `.env` (server-only, never commit):
+
+- **`GITHUB_TOKEN`** — Personal access token (classic: `read:user` is enough; fine-grained: read access to user metadata). Required for the GraphQL API to return contribution data reliably.
+- **`GITHUB_USERNAME`** — Optional. If omitted, the username is parsed from `social.github` in [messages/en.json](messages/en.json) / [messages/tr.json](messages/tr.json).
+
+Without `GITHUB_TOKEN`, the GitHub block is omitted.
+
 Development
 
 To run the project locally:

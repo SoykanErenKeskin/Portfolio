@@ -57,6 +57,19 @@ export type Messages = {
       levelAdvanced: string;
       noItems: string;
     };
+    githubActivity: {
+      title: string;
+      subtitle: string;
+      figure: string;
+      totalContributions: string;
+      less: string;
+      more: string;
+      activityOverviewTitle: string;
+      activityContributedTo: string;
+      activityAndOther: string;
+      viewProfile: string;
+      cellTooltip: string;
+    };
   };
   projects: {
     title: string;

@@ -62,6 +62,19 @@
       "levelIntermediate": "Intermediate",
       "levelAdvanced": "Advanced",
       "noItems": "No learning entries yet."
+    },
+    "githubActivity": {
+      "title": "GitHub activity",
+      "subtitle": "Contribution graph · last 12 months",
+      "figure": "FIG.03 — GITHUB",
+      "totalContributions": "{count} contributions in the last year",
+      "less": "Less",
+      "more": "More",
+      "activityOverviewTitle": "Activity overview",
+      "activityContributedTo": "Contributed to",
+      "activityAndOther": "and {count} other repositories",
+      "viewProfile": "View profile on GitHub",
+      "cellTooltip": "{date} · {count} contributions"
     }
   },
   "projects": {

@@ -1,7 +1,9 @@
 import type { Messages } from "@/types/messages";
 import type { LearningEntry } from "@/lib/db/learning-timeline";
 import type { CapabilityCategory } from "@/lib/db/capability-map";
+import type { GitHubContributionsData } from "@/lib/github/contributions";
 import { LearningTimeline } from "./learning-timeline";
+import { GitHubContributions } from "./github-contributions";
 import { cn } from "@/lib/utils";
 
 type SystemsMapProps = {
@@ -9,9 +11,18 @@ type SystemsMapProps = {
   learningTimeline: LearningEntry[];
   capabilityMap?: CapabilityCategory[];
   locale: "en" | "tr";
+  githubData: GitHubContributionsData | null;
+  githubProfileUrl: string;
 };
 
-export function SystemsMap({ messages: m, learningTimeline, capabilityMap, locale }: SystemsMapProps) {
+export function SystemsMap({
+  messages: m,
+  learningTimeline,
+  capabilityMap,
+  locale,
+  githubData,
+  githubProfileUrl,
+}: SystemsMapProps) {
   const categories =
     capabilityMap && capabilityMap.length > 0
       ? capabilityMap.map((cat) => ({
@@ -70,6 +81,14 @@ export function SystemsMap({ messages: m, learningTimeline, capabilityMap, local
         </div>
 
         <LearningTimeline messages={m} items={learningTimeline} locale={locale} />
+        {githubData ? (
+          <GitHubContributions
+            data={githubData}
+            messages={m}
+            locale={locale}
+            profileUrl={githubProfileUrl}
+          />
+        ) : null}
       </div>
     </section>
   );

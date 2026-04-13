@@ -62,6 +62,19 @@
       "levelIntermediate": "Orta",
       "levelAdvanced": "İleri",
       "noItems": "Henüz öğrenme kaydı yok."
+    },
+    "githubActivity": {
+      "title": "GitHub aktivitesi",
+      "subtitle": "Katkı grafiği · son 12 ay",
+      "figure": "ŞEK.03 — GITHUB",
+      "totalContributions": "Son yılda {count} katkı",
+      "less": "Az",
+      "more": "Çok",
+      "activityOverviewTitle": "Aktivite özeti",
+      "activityContributedTo": "Katkıda bulunulanlar:",
+      "activityAndOther": "ve {count} depo daha",
+      "viewProfile": "GitHub profilini aç",
+      "cellTooltip": "{date} · {count} katkı"
     }
   },
   "projects": {
