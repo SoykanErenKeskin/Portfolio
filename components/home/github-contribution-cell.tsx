@@ -45,9 +45,9 @@ export function GitHubContributionCell({ className, tooltip }: GitHubContributio
         className={cn(
           "aspect-square w-full min-h-0 cursor-default rounded-sm border border-border/40 outline-none",
           "transition-[transform,box-shadow,border-color] duration-200 ease-out",
-          "hover:z-20 hover:scale-110 hover:border-emerald-500/45",
-          "hover:shadow-[0_4px_14px_-2px_rgb(0_0_0_/_0.35),0_0_0_1px_rgb(16_185_129_/_0.25),0_0_20px_2px_rgb(52_211_153_/_0.28)]",
-          "dark:hover:shadow-[0_4px_18px_-2px_rgb(0_0_0_/_0.55),0_0_0_1px_rgb(52_211_153_/_0.35),0_0_24px_4px_rgb(52_211_153_/_0.22)]",
+          "md:hover:z-20 md:hover:scale-110 md:hover:border-emerald-500/45",
+          "md:hover:shadow-[0_4px_14px_-2px_rgb(0_0_0_/_0.35),0_0_0_1px_rgb(16_185_129_/_0.25),0_0_20px_2px_rgb(52_211_153_/_0.28)]",
+          "dark:md:hover:shadow-[0_4px_18px_-2px_rgb(0_0_0_/_0.55),0_0_0_1px_rgb(52_211_153_/_0.35),0_0_24px_4px_rgb(52_211_153_/_0.22)]",
           "focus-visible:z-20 focus-visible:scale-110 focus-visible:border-emerald-500/45 focus-visible:ring-2 focus-visible:ring-accent/45",
           "focus-visible:shadow-[0_4px_14px_-2px_rgb(0_0_0_/_0.35),0_0_18px_2px_rgb(52_211_153_/_0.25)]",
           className
@@ -55,7 +55,11 @@ export function GitHubContributionCell({ className, tooltip }: GitHubContributio
       />
       {open ? (
         <div
-          className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-1.5 w-max max-w-[min(100vw-2rem,20rem)] -translate-x-1/2"
+          className={cn(
+            "pointer-events-none absolute left-1/2 z-50 w-max -translate-x-1/2",
+            "top-full mt-1.5 max-w-[min(90vw,20rem)]",
+            "md:bottom-full md:top-auto md:mb-1.5 md:mt-0 md:max-w-[min(100vw-2rem,20rem)]"
+          )}
           role="tooltip"
         >
           <div className="rounded-lg border border-border bg-surface-raised px-2.5 py-1.5 font-mono text-[10px] leading-snug tracking-wide text-ink shadow-panel ring-1 ring-border/20">
