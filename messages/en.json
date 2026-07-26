@@ -132,7 +132,7 @@
   },
   "chat": {
     "title": "Ask about Soykan's Portfolio",
-    "placeholder": "Ask a question…",
+    "placeholder": "Ask about projects, skills, contact…",
     "send": "Send",
     "suggestions": [
       "Who is Soykan?",
@@ -142,7 +142,7 @@
       "Can I see his resume?"
     ],
     "resumeDirectAnswer": "Here's Soykan's resume. You can download it as PDF:",
-    "hint": "Projects · Skills · Contact",
+    "hint": "Try a prompt · or type your own",
     "crisisLockedPlaceholder": "Chat closed for safety.",
     "crisisCooldownHint": "Unlocks automatically when the timer hits 0:00.",
     "crisisAdminReset": "Reset lock & tier"

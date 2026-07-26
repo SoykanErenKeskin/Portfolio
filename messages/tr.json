@@ -132,7 +132,7 @@
   },
   "chat": {
     "title": "Soykan'ın Portföyü Hakkında Sor",
-    "placeholder": "Bir soru sor…",
+    "placeholder": "Proje, beceri, iletişim… sor",
     "send": "Gönder",
     "suggestions": [
       "Soykan kimdir?",
@@ -142,7 +142,7 @@
       "Özgeçmişini görebilir miyim?"
     ],
     "resumeDirectAnswer": "İşte Soykan'ın özgeçmişi. PDF olarak indirebilirsiniz:",
-    "hint": "Projeler · Beceriler · İletişim",
+    "hint": "Hazır soru seç · veya kendin yaz",
     "crisisLockedPlaceholder": "Bu sohbet güvenlik nedeniyle kapatıldı.",
     "crisisCooldownHint": "Süre dolunca sohbet otomatik olarak açılacak.",
     "crisisAdminReset": "Kilit ve kademeyi sıfırla"

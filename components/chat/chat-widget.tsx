@@ -13,6 +13,8 @@ import { useParams } from "next/navigation";
 import { ChatMessageList } from "./chat-message-list";
 import { ChatInput } from "./chat-input";
 import {
+  containsSensitiveUserContent,
+  detectCrisisLanguage,
   getCrisisResponseText,
   type CrisisLang,
 } from "@/lib/chat/sensitive-content";
@@ -25,6 +27,11 @@ import {
   resetCrisisSafetyState,
   saveCrisisLock,
 } from "@/lib/chat/crisis-lock-storage";
+import {
+  matchScriptedReply,
+  replyForSuggestionIndex,
+  scriptedReplyDelayMs,
+} from "@/lib/chat/scripted-replies";
 import { isLocale } from "@/types/locale";
 
 type ChatMessages = {
@@ -35,7 +42,6 @@ type ChatMessages = {
   resumeDirectAnswer: string;
   hint: string;
   crisisLockedPlaceholder: string;
-  /** Shown next to the countdown ring (no {seconds} — time is in the dial) */
   crisisCooldownHint: string;
   crisisAdminReset: string;
 };
@@ -47,7 +53,11 @@ type ChatMessageItem = {
   crisisLang?: CrisisLang;
 };
 
-const RESUME_SUGGESTION_INDEX = 4;
+function sleep(ms: number) {
+  return new Promise<void>((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
+}
 
 export function ChatWidget({
   messages,
@@ -56,7 +66,6 @@ export function ChatWidget({
 }: {
   messages: ChatMessages;
   resumeUrl?: string | null;
-  /** Logged-in site admin — can reset lock + strike tier via UI */
   isAdmin?: boolean;
 }) {
   const params = useParams();
@@ -69,16 +78,11 @@ export function ChatWidget({
   const [chatMessages, setChatMessages] = useState<ChatMessageItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [chatLocked, setChatLocked] = useState(false);
-  /** Absolute time (ms) when crisis cooldown ends; persisted in localStorage */
   const [lockUntilMs, setLockUntilMs] = useState<number | null>(null);
-  /** Full lock window for progress ring (restored from storage when possible) */
   const [lockDurationMs, setLockDurationMs] = useState(CRISIS_LOCK_DURATION_FIRST_MS);
-  /** Smooth countdown + ring */
   const [remainingMs, setRemainingMs] = useState(0);
-  /** Prevents double submit before React state updates (parallel requests). */
   const sendingRef = useRef(false);
 
-  /** Restore lock after refresh (same browser). */
   useEffect(() => {
     const data = loadCrisisLock();
     if (!data) return;
@@ -88,7 +92,6 @@ export function ChatWidget({
     setLockDurationMs(data.durationMs ?? CRISIS_LOCK_DURATION_FIRST_MS);
   }, []);
 
-  /** Smooth countdown + auto-unlock when cooldown ends (layout effect avoids 0:00 flash) */
   useLayoutEffect(() => {
     if (!lockUntilMs) {
       setRemainingMs(0);
@@ -110,8 +113,43 @@ export function ChatWidget({
     return () => window.clearInterval(id);
   }, [lockUntilMs]);
 
+  const absoluteResumeUrl = useMemo(() => {
+    if (!resumeUrl) return null;
+    if (typeof window === "undefined") return resumeUrl;
+    if (resumeUrl.startsWith("http")) return resumeUrl;
+    return `${window.location.origin}${resumeUrl}`;
+  }, [resumeUrl]);
+
+  const applyCrisis = useCallback(
+    (userText: string, prev: ChatMessageItem[]) => {
+      const lang = detectCrisisLanguage(userText, siteLocale);
+      const fixedContent = getCrisisResponseText(lang);
+      let nextMessages: ChatMessageItem[] = [];
+      flushSync(() => {
+        nextMessages = [
+          ...prev,
+          {
+            role: "assistant",
+            content: fixedContent,
+            crisis: true,
+            crisisLang: lang,
+          },
+        ];
+        setChatMessages(nextMessages);
+      });
+      const durationMs = getNextCrisisLockDurationMs();
+      const until = Date.now() + durationMs;
+      saveCrisisLock({ until, messages: nextMessages, durationMs });
+      recordCrisisStrikeAfterLock();
+      setChatLocked(true);
+      setLockUntilMs(until);
+      setLockDurationMs(durationMs);
+    },
+    [siteLocale]
+  );
+
   const sendMessage = useCallback(
-    async (text: string) => {
+    async (text: string, suggestionIndex?: number) => {
       if (sendingRef.current) return;
 
       const stored = loadCrisisLock();
@@ -128,76 +166,57 @@ export function ChatWidget({
       if (chatLocked) return;
 
       const userMsg: ChatMessageItem = { role: "user", content: text };
+      const thread = [...chatMessages, userMsg];
 
       sendingRef.current = true;
-      setChatMessages((prev) => [...prev, userMsg]);
+      setChatMessages(thread);
       setIsLoading(true);
 
       try {
-        const res = await fetch("/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            messages: [...chatMessages, userMsg].map((m) => ({
-              role: m.role,
-              content: m.content,
-            })),
-            locale: siteLocale,
-          }),
-        });
-
-        const data = (await res.json()) as {
-          message?: string;
-          error?: string;
-          crisis?: boolean;
-          crisisLang?: CrisisLang;
-        };
-
-        if (data.crisis) {
-          const lang: CrisisLang =
-            data.crisisLang === "tr" || data.crisisLang === "en"
-              ? data.crisisLang
-              : siteLocale;
-          /** Always show the built-in template — never trust server `message` (could be confused with main LLM). */
-          const fixedContent = getCrisisResponseText(lang);
-          let nextMessages: ChatMessageItem[] = [];
-          flushSync(() => {
-            setChatMessages((prev) => {
-              nextMessages = [
-                ...prev,
-                {
-                  role: "assistant",
-                  content: fixedContent,
-                  crisis: true,
-                  crisisLang: lang,
-                },
-              ];
-              return nextMessages;
-            });
-          });
-          const durationMs = getNextCrisisLockDurationMs();
-          const until = Date.now() + durationMs;
-          saveCrisisLock({ until, messages: nextMessages, durationMs });
-          recordCrisisStrikeAfterLock();
-          setChatLocked(true);
-          setLockUntilMs(until);
-          setLockDurationMs(durationMs);
+        if (containsSensitiveUserContent(text)) {
+          applyCrisis(text, thread);
           return;
         }
 
-        const content = data.message || data.error || "Something went wrong.";
-        setChatMessages((prev) => [...prev, { role: "assistant", content }]);
+        const seed = thread
+          .filter((m) => m.role === "user")
+          .map((m) => m.content)
+          .join("|");
+
+        const matched =
+          typeof suggestionIndex === "number"
+            ? replyForSuggestionIndex(suggestionIndex, siteLocale, {
+                resumeUrl: absoluteResumeUrl,
+                conversationSeed: seed,
+              })
+            : matchScriptedReply(text, siteLocale, {
+                resumeUrl: absoluteResumeUrl,
+                conversationSeed: seed,
+              });
+
+        await sleep(scriptedReplyDelayMs(matched.content.length));
+
+        setChatMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: matched.content },
+        ]);
       } catch {
         setChatMessages((prev) => [
           ...prev,
-          { role: "assistant", content: "Connection error. Please try again." },
+          {
+            role: "assistant",
+            content:
+              siteLocale === "tr"
+                ? "Bir şey ters gitti. Biraz sonra tekrar dener misin?"
+                : "Something went wrong. Mind trying again in a moment?",
+          },
         ]);
       } finally {
         sendingRef.current = false;
         setIsLoading(false);
       }
     },
-    [chatMessages, chatLocked, siteLocale]
+    [chatMessages, chatLocked, siteLocale, absoluteResumeUrl, applyCrisis]
   );
 
   const handleAdminResetCrisis = useCallback(() => {
@@ -211,31 +230,16 @@ export function ChatWidget({
   const cooldownHint = chatLocked ? messages.crisisCooldownHint : undefined;
 
   const handleSuggestionClick = useCallback(
-    (q: string) => {
-      const isResumeSuggestion =
-        messages.suggestions[RESUME_SUGGESTION_INDEX] === q && resumeUrl;
-      if (isResumeSuggestion) {
-        const fullUrl =
-          typeof window !== "undefined"
-            ? `${window.location.origin}${resumeUrl}`
-            : resumeUrl;
-        const directAnswer = `${messages.resumeDirectAnswer} ${fullUrl}`;
-        setChatMessages([
-          { role: "user", content: q },
-          { role: "assistant", content: directAnswer },
-        ]);
-        return;
-      }
-      sendMessage(q);
+    (q: string, index: number) => {
+      void sendMessage(q, index);
     },
-    [messages.suggestions, messages.resumeDirectAnswer, resumeUrl, sendMessage]
+    [sendMessage]
   );
 
   const panelCrisis = chatLocked && open;
 
   return (
     <>
-      {/* Floating button */}
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -260,7 +264,6 @@ export function ChatWidget({
         </svg>
       </button>
 
-      {/* Panel */}
       {open && (
         <div
           className={`fixed bottom-24 right-6 z-50 flex h-[480px] w-[380px] max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-2xl ${
@@ -308,7 +311,7 @@ export function ChatWidget({
                   <button
                     key={i}
                     type="button"
-                    onClick={() => handleSuggestionClick(s)}
+                    onClick={() => handleSuggestionClick(s, i)}
                     className="group flex items-center gap-3 rounded-lg border border-border/40 bg-surface-raised/60 px-3.5 py-2.5 text-left text-[13px] text-ink transition hover:border-accent/50 hover:bg-accent/5"
                   >
                     <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-accent/10 font-mono text-[10px] font-medium text-accent">
