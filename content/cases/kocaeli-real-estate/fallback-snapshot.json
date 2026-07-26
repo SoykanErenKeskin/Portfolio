@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "snapshotVersion": "fallback-reference-v1",
+  "source": "fallback-reference",
+  "generatedAt": "2026-07-26T00:00:00.000Z",
+  "publishedAt": null,
+  "dataAsOf": "2026-07-26",
+  "model": {
+    "experimentId": "full_v24",
+    "scope": "kocaeli_global",
+    "status": "in_active_development"
+  },
+  "globalMetrics": {
+    "r2": 0.652324,
+    "mape": 0.117628,
+    "varianceRatio": 0.631573,
+    "evaluationRows": 6667,
+    "leakagePass": true
+  },
+  "referenceMetrics": {
+    "experimentId": "duplex_largehome_global",
+    "label": "V24 safe selected / duplex_largehome_global",
+    "r2": 0.635866,
+    "mape": 0.120037,
+    "varianceRatio": 0.618481
+  },
+  "deltaVsReference": {
+    "r2": 0.01646,
+    "mape": -0.00241,
+    "varianceRatioImproved": true
+  },
+  "dataset": {
+    "saleTotal": 6979,
+    "rentalTotal": 3573,
+    "scopeNote": "full-run inventory totals",
+    "counties": [
+      { "county": "Başiskele", "sale": 1758, "rental": 648 },
+      { "county": "İzmit", "sale": 2424, "rental": 1347 },
+      { "county": "Gölcük", "sale": 1200, "rental": 935 },
+      { "county": "Kartepe", "sale": 1012, "rental": 407 },
+      { "county": "Karamürsel", "sale": 335, "rental": 188 }
+    ],
+    "countyBreakdownScope": "approximate-reference",
+    "countyCoverageNote": {
+      "en": "County rows sum to 6,729 sale and 3,525 rental — below full-run totals (6,979 / 3,573). Treat as an approximate/reference distribution, not the same inventory scope.",
+      "tr": "İlçe satırları 6.729 satış ve 3.525 kira toplar — full-run toplamlarının (6.979 / 3.573) altında. Aynı envanter kapsamı değil; yaklaşık/referans dağılım olarak okuyun."
+    }
+  },
+  "countyEvaluation": [
+    { "county": "İzmit", "r2": 0.682681, "mape": 0.129376 },
+    { "county": "Gölcük", "r2": 0.670027, "mape": 0.118001 },
+    { "county": "Başiskele", "r2": 0.511732, "mape": 0.102983 },
+    { "county": "Karamürsel", "r2": 0.578453, "mape": 0.158589 },
+    { "county": "Kartepe", "r2": 0.550115, "mape": 0.10138 }
+  ],
+  "audit": {
+    "severeMergeWarnings": 0,
+    "possibleBadMerges": 12,
+    "possibleBadMergesNote": "non-blocking manual review"
+  },
+  "actualVsPredictedDensity": null
+}

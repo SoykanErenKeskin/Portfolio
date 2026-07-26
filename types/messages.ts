@@ -107,6 +107,22 @@ export type Messages = {
     nextCase: string;
     relatedRecords: string;
   };
+  kocaeliCase: {
+    dataAsOf: string;
+    referenceData: string;
+    liveSnapshot: string;
+    approximateDistribution: string;
+    viewRepository: string;
+    contact: string;
+    densityEmpty: string;
+    illustrativeTotalValue: string;
+    unitPriceNote: string;
+    sale: string;
+    rental: string;
+    perfectPrediction: string;
+    cellCount: string;
+    cellDensity: string;
+  };
   contact: {
     title: string;
     subtitle: string;

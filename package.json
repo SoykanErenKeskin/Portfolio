@@ -12,7 +12,8 @@
     "db:seed-learning-timeline": "npx tsx scripts/seed-learning-timeline.ts",
     "db:seed-capability-map": "npx tsx scripts/seed-capability-map.ts",
     "db:seed-tech-tools": "npx tsx scripts/seed-tech-tools.ts",
-    "db:import": "npx tsx scripts/migrate-projects.ts"
+    "db:import": "npx tsx scripts/migrate-projects.ts",
+    "test:kocaeli-snapshot": "npx tsx scripts/verify-kocaeli-snapshot.ts && npx tsx scripts/verify-kocaeli-snapshot-publish.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.99.3",
@@ -22,6 +23,7 @@
     "pdf-lib": "^1.17.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "server-only": "^0.0.1",
     "zod": "^4.3.6"
   },
   "devDependencies": {

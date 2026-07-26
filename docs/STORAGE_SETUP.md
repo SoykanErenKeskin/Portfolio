@@ -63,3 +63,9 @@ npm run dev
 
 - Proje **OneDrive dışında** veya yazma izni sorunsuz bir dizinde olmalı
 - **Production’da** (Vercel vb.) genelde **Storage zorunlu**
+
+---
+
+## Related: case snapshot publish
+
+Kocaeli public-safe snapshots use a separate **private** bucket (`portfolio-snapshots`). See [KOCAELI_SNAPSHOT_PUBLISH.md](./KOCAELI_SNAPSHOT_PUBLISH.md).

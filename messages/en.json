@@ -113,6 +113,22 @@
     "nextCase": "Next case",
     "relatedRecords": "Related records"
   },
+  "kocaeliCase": {
+    "dataAsOf": "Data as of",
+    "referenceData": "Reference data",
+    "liveSnapshot": "Live snapshot",
+    "approximateDistribution": "Approximate / reference distribution",
+    "viewRepository": "View repository",
+    "contact": "Contact",
+    "densityEmpty": "Aggregate density bins are not yet in the public snapshot. Verified metrics on this page remain available.",
+    "illustrativeTotalValue": "Illustrative example — total property value",
+    "unitPriceNote": "Model target: unit_price_gross (TL/m²)",
+    "sale": "Sale",
+    "rental": "Rental",
+    "perfectPrediction": "Perfect prediction (y = x)",
+    "cellCount": "Count",
+    "cellDensity": "Density"
+  },
   "contact": {
     "title": "Contact channel",
     "subtitle": "Direct line",

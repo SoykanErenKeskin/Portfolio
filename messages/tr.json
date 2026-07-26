@@ -113,6 +113,22 @@
     "nextCase": "Sonraki vaka",
     "relatedRecords": "İlişkili kayıtlar"
   },
+  "kocaeliCase": {
+    "dataAsOf": "Veri tarihi",
+    "referenceData": "Referans veri",
+    "liveSnapshot": "Canlı snapshot",
+    "approximateDistribution": "Yaklaşık / referans dağılım",
+    "viewRepository": "Depoyu görüntüle",
+    "contact": "İletişim",
+    "densityEmpty": "Aggregate yoğunluk hücreleri henüz public snapshot içinde yok. Bu sayfadaki doğrulanmış metrikler görüntülenmeye devam eder.",
+    "illustrativeTotalValue": "Illustrative örnek — toplam konut değeri",
+    "unitPriceNote": "Model target: unit_price_gross (TL/m²)",
+    "sale": "Satış",
+    "rental": "Kira",
+    "perfectPrediction": "Mükemmel tahmin (y = x)",
+    "cellCount": "Adet",
+    "cellDensity": "Yoğunluk"
+  },
   "contact": {
     "title": "İletişim kanalları",
     "subtitle": "Doğrudan hat",
