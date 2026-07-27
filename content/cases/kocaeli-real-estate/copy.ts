@@ -112,7 +112,7 @@ export const kocaeliCopy = {
     tr: "ŞEK — VERİ / ÜRÜN AKIŞI",
   },
   systemSteps: [
-    { en: "Sahibinden sale / rental listings", tr: "Sahibinden satış / kira ilanları" },
+    { en: "Public sale / rental listings", tr: "Açık satış / kira ilanları" },
     {
       en: "Cleaning + geo/location + trend/demographic enrichment",
       tr: "Temizlik + geo/konum + trend/demografi zenginleştirme",
