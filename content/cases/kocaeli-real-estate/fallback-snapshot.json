@@ -42,8 +42,8 @@
     ],
     "countyBreakdownScope": "approximate-reference",
     "countyCoverageNote": {
-      "en": "County rows sum to 6,729 sale and 3,525 rental — below full-run totals (6,979 / 3,573). Treat as an approximate/reference distribution, not the same inventory scope.",
-      "tr": "İlçe satırları 6.729 satış ve 3.525 kira toplar — full-run toplamlarının (6.979 / 3.573) altında. Aynı envanter kapsamı değil; yaklaşık/referans dağılım olarak okuyun."
+      "en": "County rows sum to 6,729 sale and 3,525 rental, below full-run totals (6,979 / 3,573). Treat as an approximate/reference distribution, not the same inventory scope.",
+      "tr": "İlçe satırları 6.729 satış ve 3.525 kira toplar; full-run toplamlarının (6.979 / 3.573) altındadır. Aynı envanter kapsamı değildir; yaklaşık/referans dağılım olarak okuyun."
     }
   },
   "countyEvaluation": [

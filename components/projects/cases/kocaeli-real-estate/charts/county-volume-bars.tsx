@@ -19,7 +19,11 @@ export function CountyVolumeBars({ snapshot, locale, messages: m }: Props) {
   const barH = 28;
   const gap = 14;
   const labelW = 88;
-  const chartW = 280;
+  /** Usable bar track width (max bar never consumes the value column). */
+  const trackW = 220;
+  /** Room for formatted counts like "2,424" after the bar. */
+  const valueGutter = 52;
+  const svgW = labelW + trackW + valueGutter;
   const h = counties.length * (barH + gap) + 8;
   const fmt = (n: number) =>
     new Intl.NumberFormat(locale === "tr" ? "tr-TR" : "en-US").format(n);
@@ -45,15 +49,16 @@ export function CountyVolumeBars({ snapshot, locale, messages: m }: Props) {
       ) : null}
       <div className="w-full overflow-x-auto">
         <svg
-          viewBox={`0 0 ${labelW + chartW + 8} ${h}`}
-          className="h-auto w-full min-w-[280px] max-w-lg"
+          viewBox={`0 0 ${svgW} ${h}`}
+          className="h-auto w-full min-w-[300px] max-w-lg"
           role="img"
           aria-label={kocaeliCopy.datasetTitle[locale]}
         >
           {counties.map((c, idx) => {
             const y = idx * (barH + gap);
-            const saleW = (c.sale / max) * chartW;
-            const rentW = (c.rental / max) * chartW;
+            const saleW = (c.sale / max) * trackW;
+            const rentW = (c.rental / max) * trackW;
+            const valueX = labelW + trackW + 6;
             return (
               <g key={c.county}>
                 <text
@@ -83,7 +88,7 @@ export function CountyVolumeBars({ snapshot, locale, messages: m }: Props) {
                   strokeDasharray="2 1.5"
                 />
                 <text
-                  x={labelW + saleW + 4}
+                  x={valueX}
                   y={y + 10}
                   className="fill-ink-faint"
                   style={{ fontSize: 8, fontFamily: "ui-monospace, monospace" }}
@@ -91,7 +96,7 @@ export function CountyVolumeBars({ snapshot, locale, messages: m }: Props) {
                   {fmt(c.sale)}
                 </text>
                 <text
-                  x={labelW + rentW + 4}
+                  x={valueX}
                   y={y + 22}
                   className="fill-ink-faint"
                   style={{ fontSize: 8, fontFamily: "ui-monospace, monospace" }}

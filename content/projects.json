@@ -408,7 +408,7 @@
         "en": "Kocaeli global model; county-scoped price prediction and market analysis."
       },
       "summary": {
-        "tr": "Kocaeli genelinde satış ve kira ilanlarından fold-safe özelliklerle birim fiyat (TL/m²) tahmin eden uçtan uca bir model ve ürün hattı. Global R² 0.652, MAPE %11.8; aktif geliştirmede.",
+        "tr": "Kocaeli genelinde satış ve kira ilanlarından fold-güvenli özelliklerle birim fiyat (TL/m²) tahmin eden uçtan uca bir model ve ürün hattı. Global R² 0.652, MAPE %11.8; aktif geliştirmede.",
         "en": "End-to-end model and product line predicting unit price (TL/m²) from Kocaeli sale and rental listings with fold-safe features. Global R² 0.652, MAPE 11.8%; in active development."
       },
       "domain": {
@@ -424,47 +424,47 @@
         "en": "In active development"
       },
       "problem": {
-        "tr": "Aynı il içindeki ilçeler farklı fiyat mekanizmaları ve veri yoğunlukları taşıyor; ilan verisi eksik ve tutarsız; site/proje kimliği doğrudan kullanılamıyor.",
-        "en": "Counties within the same province have different price mechanisms and data densities; listings are incomplete and inconsistent; site/project identity cannot be used raw."
+        "tr": "Aynı il içindeki ilçeler farklı fiyat mekanizmaları ve veri yoğunlukları taşır; ilan verisi eksik ve tutarsızdır; site ve proje kimliği ham kullanılamaz.",
+        "en": "Counties within the same province have different price mechanisms and data densities; listings are incomplete and inconsistent; site and project identity cannot be used raw."
       },
       "approach": {
-        "tr": "County-scoped site identity, fold-safe target encoding, duplex/large-home sinyalleri ve global validasyon; tahmin noktası artı makul değer bandı olarak ürünleştirildi.",
-        "en": "County-scoped site identity, fold-safe target encoding, duplex/large-home signals, and global validation; productized as a point estimate plus a reasonable value band."
+        "tr": "İlçe kapsamlı site kimliği, fold-güvenli hedef kodlama, dubleks ve büyük konut sinyalleri ile global doğrulama; nokta tahmin artı makul değer bandı olarak ürünleştirildi.",
+        "en": "County-scoped site identity, fold-safe target encoding, duplex and large-home signals, and global validation; productized as a point estimate plus a reasonable value band."
       },
       "outcome": {
-        "tr": "V24.1 merge repair sonrası full_v24 Kocaeli global best checkpoint (R² 0.652, MAPE 0.118); premium segment underprediction hâlâ açık.",
+        "tr": "V24.1 birleştirme onarımından sonra full_v24 Kocaeli global en iyi kontrol noktasıdır (R² 0.652, MAPE 0.118); premium segmentte düşük tahmin hâlâ açıktır.",
         "en": "After V24.1 merge repair, full_v24 is the Kocaeli global best checkpoint (R² 0.652, MAPE 0.118); premium-segment underprediction remains open."
       },
       "technicalStructure": [
         {
           "key": "site-identity",
-          "label": { "tr": "Site/proje kimliği", "en": "Site/project identity" },
+          "label": { "tr": "Site ve proje kimliği", "en": "Site and project identity" },
           "content": {
-            "tr": "Ham title/site/address doğrudan modele gitmez; county-scoped kimlik ve fold-safe encoding kullanılır.",
-            "en": "Raw title/site/address do not enter the model; county-scoped identity and fold-safe encoding are used."
+            "tr": "Ham title, site ve address doğrudan modele gitmez; ilçe kapsamlı kimlik ve fold-güvenli kodlama kullanılır.",
+            "en": "Raw title, site, and address do not enter the model; county-scoped identity and fold-safe encoding are used."
           }
         },
         {
           "key": "duplex-signals",
-          "label": { "tr": "Dubleks / büyük konut", "en": "Duplex / large-home" },
+          "label": { "tr": "Dubleks ve büyük konut", "en": "Duplex and large-home" },
           "content": {
-            "tr": "Structured detail_konut_tipi birincil; title yalnızca fallback; çatı/bahçe/ara kat ayrımı korunur.",
-            "en": "Structured detail_konut_tipi is primary; title is fallback only; roof/garden/mid-floor distinctions are preserved."
+            "tr": "Yapılandırılmış detail_konut_tipi birincildir; title yalnızca yedektir; çatı, bahçe ve ara kat ayrımı korunur.",
+            "en": "Structured detail_konut_tipi is primary; title is fallback only; roof, garden, and mid-floor distinctions are preserved."
           }
         },
         {
           "key": "validation",
-          "label": { "tr": "Validasyon", "en": "Validation" },
+          "label": { "tr": "Doğrulama", "en": "Validation" },
           "content": {
-            "tr": "Global ve ilçe bazlı R²/MAPE/variance ratio; leakage ve merge audit.",
-            "en": "Global and county R²/MAPE/variance ratio; leakage and merge audit."
+            "tr": "Global ve ilçe bazlı R², MAPE ve varyans oranı; sızıntı ve birleştirme denetimi.",
+            "en": "Global and county R², MAPE, and variance ratio; leakage and merge audit."
           }
         },
         {
           "key": "product",
           "label": { "tr": "Ürün çevirisi", "en": "Product translation" },
           "content": {
-            "tr": "Haritadan konum, yakındaki site seçimi, nokta tahmin + makul değer bandı.",
+            "tr": "Haritadan konum, yakındaki site seçimi, nokta tahmin ve makul değer bandı.",
             "en": "Map location, nearby site selection, point estimate plus reasonable value band."
           }
         }

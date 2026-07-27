@@ -2,7 +2,7 @@ import type { Locale } from "@/types/locale";
 import type { Messages } from "@/types/messages";
 import { kocaeliCopy } from "@/content/cases/kocaeli-real-estate/copy";
 
-/** Illustrative total dwelling value — not unit price (TL/m²). */
+/** Illustrative total dwelling value (not unit price TL/m²). */
 const ILLUSTRATIVE = {
   estimate: 7_200_000,
   reasonableMin: 6_500_000,
@@ -50,14 +50,16 @@ export function PredictionBandFigure({
         <div className="flex flex-wrap justify-between gap-2">
           <dt>{kocaeliCopy.productBandLabels.reasonable[locale]}</dt>
           <dd className="font-mono text-ink">
-            {formatTl(ILLUSTRATIVE.reasonableMin, locale)} –{" "}
+            {formatTl(ILLUSTRATIVE.reasonableMin, locale)}{" "}
+            {kocaeliCopy.productBandLabels.rangeTo[locale]}{" "}
             {formatTl(ILLUSTRATIVE.reasonableMax, locale)}
           </dd>
         </div>
         <div className="flex flex-wrap justify-between gap-2">
           <dt>{kocaeliCopy.productBandLabels.wider[locale]}</dt>
           <dd className="font-mono text-ink">
-            {formatTl(ILLUSTRATIVE.widerMin, locale)} –{" "}
+            {formatTl(ILLUSTRATIVE.widerMin, locale)}{" "}
+            {kocaeliCopy.productBandLabels.rangeTo[locale]}{" "}
             {formatTl(ILLUSTRATIVE.widerMax, locale)}
           </dd>
         </div>

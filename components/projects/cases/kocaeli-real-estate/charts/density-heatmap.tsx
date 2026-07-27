@@ -105,7 +105,7 @@ export function DensityHeatmap({ density, locale, messages: m }: Props) {
                 className="outline-none focus:stroke-accent"
               >
                 <title>
-                  {`${fmt(density.actualBinEdges[i]!)}–${fmt(density.actualBinEdges[i + 1]!)} × ${fmt(density.predictedBinEdges[j]!)}–${fmt(density.predictedBinEdges[j + 1]!)} · ${m.kocaeliCase.cellCount}: ${cell?.count ?? "—"} · ${m.kocaeliCase.cellDensity}: ${cell?.density ?? "—"}`}
+                  {`${fmt(density.actualBinEdges[i]!)}..${fmt(density.actualBinEdges[i + 1]!)} x ${fmt(density.predictedBinEdges[j]!)}..${fmt(density.predictedBinEdges[j + 1]!)} · ${m.kocaeliCase.cellCount}: ${cell?.count ?? "n/a"} · ${m.kocaeliCase.cellDensity}: ${cell?.density ?? "n/a"}`}
                 </title>
               </rect>
             );
@@ -171,12 +171,14 @@ export function DensityHeatmap({ density, locale, messages: m }: Props) {
           )}
           aria-live="polite"
         >
-          {fmt(density.actualBinEdges[hover.i]!)}–
-          {fmt(density.actualBinEdges[hover.i + 1]!)} ×{" "}
-          {fmt(density.predictedBinEdges[hover.j]!)}–
+          {fmt(density.actualBinEdges[hover.i]!)}
+          ..
+          {fmt(density.actualBinEdges[hover.i + 1]!)} x{" "}
+          {fmt(density.predictedBinEdges[hover.j]!)}
+          ..
           {fmt(density.predictedBinEdges[hover.j + 1]!)} ·{" "}
-          {m.kocaeliCase.cellCount}: {hover.count ?? "—"} ·{" "}
-          {m.kocaeliCase.cellDensity}: {hover.density ?? "—"}
+          {m.kocaeliCase.cellCount}: {hover.count ?? "n/a"} ·{" "}
+          {m.kocaeliCase.cellDensity}: {hover.density ?? "n/a"}
         </p>
       ) : null}
     </div>

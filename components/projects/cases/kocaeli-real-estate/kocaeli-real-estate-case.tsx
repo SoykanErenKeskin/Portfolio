@@ -75,15 +75,15 @@ export function KocaeliRealEstateCase({
         <div className="panel-edge divide-y divide-border bg-surface-raised">
           <div className="grid gap-0 sm:grid-cols-3 sm:divide-x sm:divide-border">
             <MetricCell
-              label="Global R²"
+              label={kocaeliCopy.metricGlobalR2[locale]}
               value={fmtMetric(g.r2, locale, 3)}
             />
             <MetricCell
-              label="Global MAPE"
+              label={kocaeliCopy.metricGlobalMape[locale]}
               value={fmtPct(g.mape, locale)}
             />
             <MetricCell
-              label={locale === "tr" ? "Satış + kira" : "Sale + rental"}
+              label={kocaeliCopy.metricSaleRental[locale]}
               value={`${fmtInt(data.dataset.saleTotal, locale)} + ${fmtInt(data.dataset.rentalTotal, locale)}`}
             />
           </div>
@@ -266,54 +266,58 @@ export function KocaeliRealEstateCase({
           </p>
           <div className="panel-edge divide-y divide-border bg-surface-raised font-mono text-[11px]">
             <ResultRow
-              label="Experiment"
+              label={kocaeliCopy.resultLabels.experiment[locale]}
               value={data.model.experimentId}
             />
-            <ResultRow label="Scope" value={data.model.scope} />
+            <ResultRow
+              label={kocaeliCopy.resultLabels.scope[locale]}
+              value={data.model.scope}
+            />
             <ResultRow label="R²" value={fmtMetric(g.r2, locale, 6)} />
             <ResultRow label="MAPE" value={fmtMetric(g.mape, locale, 6)} />
             <ResultRow
-              label="Variance ratio"
+              label={kocaeliCopy.resultLabels.varianceRatio[locale]}
               value={fmtMetric(g.varianceRatio, locale, 6)}
             />
             <ResultRow
-              label="Evaluation rows"
+              label={kocaeliCopy.resultLabels.evaluationRows[locale]}
               value={fmtInt(g.evaluationRows, locale)}
             />
             <ResultRow
-              label="Leakage pass"
+              label={kocaeliCopy.resultLabels.leakagePass[locale]}
               value={String(g.leakagePass)}
             />
             {data.audit ? (
               <ResultRow
-                label="Severe merge warnings"
+                label={kocaeliCopy.resultLabels.severeMergeWarnings[locale]}
                 value={String(data.audit.severeMergeWarnings)}
               />
             ) : null}
           </div>
           {data.referenceMetrics && data.deltaVsReference ? (
             <p className="mt-3 font-sans text-[13px] text-ink-muted">
-              vs {data.referenceMetrics.label ?? data.referenceMetrics.experimentId}
+              {kocaeliCopy.resultLabels.vsReference[locale]}{" "}
+              {data.referenceMetrics.label ?? data.referenceMetrics.experimentId}
               : R² {data.deltaVsReference.r2 >= 0 ? "+" : ""}
               {fmtMetric(data.deltaVsReference.r2, locale, 5)}, MAPE{" "}
               {fmtMetric(data.deltaVsReference.mape, locale, 5)}
               {data.deltaVsReference.varianceRatioImproved
-                ? locale === "tr"
-                  ? "; variance ratio iyileşti"
-                  : "; variance ratio improved"
+                ? `; ${kocaeliCopy.resultLabels.varianceImproved[locale]}`
                 : ""}
             </p>
           ) : null}
           <div className="mt-4 space-y-2">
             {data.countyEvaluation && data.countyEvaluation.length > 0 ? (
               <CaseAccordion
-                title={locale === "tr" ? "İlçe sonuçları" : "County results"}
+                title={kocaeliCopy.resultLabels.countyResults[locale]}
               >
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[240px] text-left font-mono text-[11px]">
                     <thead>
                       <tr className="border-b border-border text-ink-faint">
-                        <th className="py-2 pr-4 font-normal">County</th>
+                        <th className="py-2 pr-4 font-normal">
+                          {kocaeliCopy.resultLabels.countyColumn[locale]}
+                        </th>
                         <th className="py-2 pr-4 font-normal">R²</th>
                         <th className="py-2 font-normal">MAPE</th>
                       </tr>
@@ -339,14 +343,14 @@ export function KocaeliRealEstateCase({
               </CaseAccordion>
             ) : null}
             {data.audit ? (
-              <CaseAccordion
-                title={locale === "tr" ? "Merge audit" : "Merge audit"}
-              >
+              <CaseAccordion title={kocaeliCopy.resultLabels.mergeAudit[locale]}>
                 <p>
-                  Severe merge warnings: {data.audit.severeMergeWarnings}.
-                  Possible bad merges: {data.audit.possibleBadMerges}
-                  {data.audit.possibleBadMergesNote
-                    ? ` (${data.audit.possibleBadMergesNote})`
+                  {kocaeliCopy.resultLabels.severeMergeWarnings[locale]}:{" "}
+                  {data.audit.severeMergeWarnings}.{" "}
+                  {kocaeliCopy.resultLabels.possibleBadMerges[locale]}:{" "}
+                  {data.audit.possibleBadMerges}
+                  {data.audit.possibleBadMerges > 0
+                    ? ` (${kocaeliCopy.resultLabels.nonBlockingManualReview[locale]})`
                     : ""}
                   .
                 </p>
@@ -369,7 +373,7 @@ export function KocaeliRealEstateCase({
           </p>
         </section>
 
-        {/* Product proof — only when assets exist */}
+        {/* Product proof: only when assets exist */}
         {screenshots.length > 0 ? (
           <section>
             <h2 className="mb-4 font-mono text-[10px] uppercase tracking-[0.22em] text-ink-faint">
@@ -415,7 +419,7 @@ export function KocaeliRealEstateCase({
           </CaseAccordion>
         </section>
 
-        {/* Footer actions — repo only if project-specific URL */}
+        {/* Footer actions: repo only if project-specific URL */}
         <section className="flex flex-wrap gap-4 border-t border-border pt-6 font-mono text-[11px]">
           {isValidLink(p.links?.github) ? (
             <a
