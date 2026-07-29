@@ -13,7 +13,7 @@
     "db:seed-capability-map": "npx tsx scripts/seed-capability-map.ts",
     "db:seed-tech-tools": "npx tsx scripts/seed-tech-tools.ts",
     "db:import": "npx tsx scripts/migrate-projects.ts",
-    "test:kocaeli-snapshot": "npx tsx scripts/verify-kocaeli-snapshot.ts && npx tsx scripts/verify-kocaeli-snapshot-publish.ts"
+    "test:kocaeli-snapshot": "npx tsx scripts/verify-kocaeli-snapshot.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.99.3",

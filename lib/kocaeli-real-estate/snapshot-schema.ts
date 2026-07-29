@@ -96,6 +96,33 @@ const countyEvalSchema = z.object({
   mape: z.number(),
 });
 
+const listingGrowthDailySchema = z.object({
+  date: z.string().min(1),
+  sale: z.number().nonnegative(),
+  rental: z.number().nonnegative(),
+  total: z.number().nonnegative(),
+});
+
+const listingGrowthCumulativeSchema = z.object({
+  date: z.string().min(1),
+  saleCumulative: z.number().nonnegative(),
+  rentalCumulative: z.number().nonnegative(),
+  totalCumulative: z.number().nonnegative(),
+});
+
+const listingGrowthSchema = z
+  .object({
+    timezone: z.string().min(1),
+    basis: z.string().min(1),
+    scope: z.string().min(1),
+    firstListingDate: z.string().nullable(),
+    lastListingDate: z.string().nullable(),
+    last30Days: z.array(listingGrowthDailySchema),
+    allTimeCumulative: z.array(listingGrowthCumulativeSchema),
+  })
+  .nullable()
+  .optional();
+
 /** Canonical public-safe snapshot contract (producer-independent). */
 export const kocaeliSnapshotSchema = z.object({
   schemaVersion: z.number().int().positive(),
@@ -153,10 +180,14 @@ export const kocaeliSnapshotSchema = z.object({
     })
     .optional(),
   actualVsPredictedDensity: densitySchema.nullable().optional(),
+  listingGrowth: listingGrowthSchema,
 });
 
 export type KocaeliSnapshot = z.infer<typeof kocaeliSnapshotSchema>;
 export type KocaeliDensity = z.infer<typeof densitySchema>;
+export type KocaeliListingGrowth = NonNullable<
+  Exclude<z.infer<typeof listingGrowthSchema>, null | undefined>
+>;
 
 export type DensityValidation =
   | { ok: true; density: KocaeliDensity }
@@ -287,10 +318,10 @@ function assertFiniteMetrics(snapshot: KocaeliSnapshot, errors: string[]): void 
 }
 
 /**
- * Full publish gate: Zod + privacy + semantic density + no row-level data.
- * Does not mutate storage.
+ * Full public-payload gate: Zod + privacy + semantic density + no row-level data.
+ * Used by tests / optional hardening; website read path uses Zod alone + fallback.
  */
-export function validateSnapshotForPublish(
+export function validatePublicSnapshot(
   raw: unknown
 ): PublishValidationResult {
   const parsed = kocaeliSnapshotSchema.safeParse(raw);
@@ -351,19 +382,5 @@ export function validateSnapshotForPublish(
   return { ok: true, snapshot };
 }
 
-/** Canonical JSON for storage (stable key order via stringify of normalized object). */
-export function normalizeSnapshotForStorage(
-  snapshot: KocaeliSnapshot,
-  publishedAt: string
-): KocaeliSnapshot {
-  return {
-    ...snapshot,
-    source: "live",
-    containsRowLevelData: false,
-    publishedAt,
-  };
-}
-
-export function snapshotJsonBytes(snapshot: KocaeliSnapshot): Buffer {
-  return Buffer.from(JSON.stringify(snapshot), "utf8");
-}
+/** @deprecated Use validatePublicSnapshot */
+export const validateSnapshotForPublish = validatePublicSnapshot;

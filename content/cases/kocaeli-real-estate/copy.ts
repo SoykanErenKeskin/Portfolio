@@ -151,6 +151,39 @@ export const kocaeliCopy = {
     en: "Volume is not success by itself. Uneven county coverage is why evaluation is reported county by county, not only as a single global score.",
     tr: "Hacim tek başına başarı değildir. İlçe kapsamı dengesiz olduğu için değerlendirme yalnızca tek bir global skorla değil, ilçe ilçe de raporlanır.",
   },
+  growthTitle: {
+    en: "Listing growth",
+    tr: "İlan büyümesi",
+  },
+  growth30Title: {
+    en: "Last 30 days: new listings per day",
+    tr: "Son 30 gün: günlük yeni ilan",
+  },
+  growth30Figure: {
+    en: "FIG. Daily new listings (saved_at, Europe/Istanbul)",
+    tr: "ŞEK. Günlük yeni ilan (saved_at, Europe/Istanbul)",
+  },
+  growthCumulativeTitle: {
+    en: "All-time cumulative listings",
+    tr: "Tüm zamanlar: kümülatif ilan",
+  },
+  growthCumulativeFigure: {
+    en: "FIG. Cumulative sale, rental, and total",
+    tr: "ŞEK. Kümülatif satış, kira ve toplam",
+  },
+  growthEmptyTitle: {
+    en: "Growth series unavailable",
+    tr: "Büyüme serisi yok",
+  },
+  growthEmptyBody: {
+    en: "listingGrowth is null in this snapshot. Other verified metrics on the page remain available.",
+    tr: "Bu anlık görüntüde listingGrowth null. Sayfadaki diğer doğrulanmış metrikler görüntülenmeye devam eder.",
+  },
+  growthLegend: {
+    sale: { en: "Sale", tr: "Satış" },
+    rental: { en: "Rental", tr: "Kira" },
+    total: { en: "Total", tr: "Toplam" },
+  },
   innovationsTitle: {
     en: "Technical innovations",
     tr: "Ana teknik yenilikler",

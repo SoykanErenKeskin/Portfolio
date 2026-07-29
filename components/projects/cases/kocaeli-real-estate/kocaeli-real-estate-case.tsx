@@ -8,6 +8,7 @@ import {
   DensityHeatmap,
 } from "@/components/projects/cases/kocaeli-real-estate/charts/density-heatmap";
 import { CountyVolumeBars } from "@/components/projects/cases/kocaeli-real-estate/charts/county-volume-bars";
+import { ListingGrowthCharts } from "@/components/projects/cases/kocaeli-real-estate/charts/listing-growth";
 import { ExperimentTimeline } from "@/components/projects/cases/kocaeli-real-estate/charts/experiment-timeline";
 import { PredictionBandFigure } from "@/components/projects/cases/kocaeli-real-estate/charts/prediction-band";
 import { getAvailableScreenshots } from "@/components/projects/cases/kocaeli-real-estate/screenshots";
@@ -199,6 +200,19 @@ export function KocaeliRealEstateCase({
             </p>
           </div>
         </section>
+
+        {/* Listing growth (optional block from snapshot) */}
+        {data.listingGrowth ? (
+          <section>
+            <h2 className="mb-4 font-mono text-[10px] uppercase tracking-[0.22em] text-ink-faint">
+              {kocaeliCopy.growthTitle[locale]}
+            </h2>
+            <ListingGrowthCharts
+              growth={data.listingGrowth}
+              locale={locale}
+            />
+          </section>
+        ) : null}
 
         {/* Innovations */}
         <section>

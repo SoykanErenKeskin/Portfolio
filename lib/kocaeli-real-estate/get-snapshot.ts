@@ -14,7 +14,6 @@ export type SnapshotSource = "live" | "fallback-reference";
 export type ResolvedKocaeliSnapshot = {
   data: KocaeliSnapshot;
   source: SnapshotSource;
-  /** Prefer publishedAt, then dataAsOf, then generatedAt for UI badge */
   asOf: string;
   snapshotVersion: string;
 };
@@ -37,6 +36,7 @@ function loadFallback(): ResolvedKocaeliSnapshot {
     ...parsed.data,
     source: "fallback-reference",
     actualVsPredictedDensity: null,
+    listingGrowth: null,
   };
   return {
     data,
@@ -54,15 +54,14 @@ async function fetchLiveFromStorage(): Promise<KocaeliSnapshot | null> {
 
 const getCachedLiveSnapshot = unstable_cache(
   async () => fetchLiveFromStorage(),
-  ["kocaeli-snapshot-latest-v1"],
+  ["kocaeli-snapshot-latest-v2"],
   { revalidate: 60, tags: [KOCAELI_SNAPSHOT_CACHE_TAG] }
 );
 
 /**
- * Resolves public-safe snapshot from Supabase Storage
- * (`portfolio-snapshots/kocaeli-real-estate/latest.json`).
- * Invalid/missing live data never poisons the checked-in fallback-reference.
- * Density is never synthesized in fallback.
+ * Resolves public-safe snapshot from Supabase Storage public URL
+ * (`…/object/public/portfolio-snapshots/kocaeli-real-estate/latest.json`).
+ * Website never writes; dashboard alone publishes to the bucket.
  */
 export async function getKocaeliSnapshot(): Promise<ResolvedKocaeliSnapshot> {
   const fallback = loadFallback();

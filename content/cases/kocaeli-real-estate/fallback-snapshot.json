@@ -58,5 +58,6 @@
     "possibleBadMerges": 12,
     "possibleBadMergesNote": "non-blocking manual review"
   },
-  "actualVsPredictedDensity": null
+  "actualVsPredictedDensity": null,
+  "listingGrowth": null
 }

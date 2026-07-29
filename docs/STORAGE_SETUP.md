@@ -66,6 +66,6 @@ npm run dev
 
 ---
 
-## Related: case snapshot publish
+## Related: Kocaeli case snapshot
 
-Kocaeli public-safe snapshots use a separate **private** bucket (`portfolio-snapshots`). See [KOCAELI_SNAPSHOT_PUBLISH.md](./KOCAELI_SNAPSHOT_PUBLISH.md).
+Public-safe case JSON lives in bucket `portfolio-snapshots` (dashboard writes; site reads public `latest.json`). See [KOCAELI_SNAPSHOT.md](./KOCAELI_SNAPSHOT.md).
