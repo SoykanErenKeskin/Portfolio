@@ -7,9 +7,9 @@ import { outerFrame, svgRoot } from "@/lib/profile/svg/layout";
 export type SvgBlockId = "hero" | "work" | "system";
 
 const BLOCK_HEIGHT: Record<SvgBlockId, number> = {
-  hero: 320,
-  work: 560,
-  system: 460,
+  hero: 400,
+  work: 900,
+  system: 620,
 };
 
 const BLOCK_TITLE: Record<SvgBlockId, string> = {

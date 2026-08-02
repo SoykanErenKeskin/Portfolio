@@ -249,4 +249,19 @@ test("hero R² uses two-decimal formatting", () => {
   assert.doesNotMatch(svg, />0\.6523</);
 });
 
+test("hero formats short dates and readable status", () => {
+  const svg = renderHeroCard(baseData());
+  assert.match(svg, /29 Jul 2026/);
+  assert.match(svg, /Published/);
+  assert.doesNotMatch(svg, /2026-07-29T15:38:25/);
+});
+
+test("unavailable SOURCE CTAs are omitted", () => {
+  const work = renderWorkCard(baseData());
+  assert.match(work, /VIEW PROJECT/);
+  assert.match(work, /TECHNICAL OVERVIEW/);
+  // Order Tracking + Reservoir have no public source
+  assert.doesNotMatch(work, /SOURCE/);
+});
+
 console.log("verify-profile-svg: all checks passed");

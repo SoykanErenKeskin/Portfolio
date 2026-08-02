@@ -123,7 +123,7 @@ async function composeProfileData(): Promise<ProfileData> {
 
 const getCachedProfileData = unstable_cache(
   async () => composeProfileData(),
-  ["profile-data-v2"],
+  ["profile-data-v3"],
   {
     revalidate: 3600,
     tags: [PROFILE_DATA_CACHE_TAG, KOCAELI_SNAPSHOT_CACHE_TAG],

@@ -25,19 +25,36 @@ export function formatSvgR2(value: number | null | undefined): {
   return { available: true, text: value.toFixed(2) };
 }
 
-export function formatSvgInstant(iso: string | null | undefined): string {
+/** Short date for SVG cards — e.g. "29 Jul 2026" */
+export function formatSvgShortDate(iso: string | null | undefined): string {
   if (!iso) return "—";
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return "—";
-  return (
-    new Intl.DateTimeFormat("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      hour12: false,
-      timeZone: "UTC",
-    }).format(date) + " UTC"
-  );
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(date);
+}
+
+/** @deprecated prefer formatSvgShortDate for SVG cards */
+export function formatSvgInstant(iso: string | null | undefined): string {
+  return formatSvgShortDate(iso);
+}
+
+export function formatSvgStatus(raw: string | null | undefined): string {
+  if (!raw?.trim()) return "Unavailable";
+  const s = raw.trim().toLowerCase();
+  if (s === "published") return "Published";
+  if (s.includes("active")) return "Active development";
+  if (s.includes("develop")) return "Active development";
+  if (s === "unavailable" || s === "unknown") return "Unavailable";
+  // Title-case short tokens; avoid dumping awkward internals
+  if (/^[a-z0-9_\-]+$/i.test(raw.trim()) && raw.trim().length <= 24) {
+    return raw.trim().charAt(0).toUpperCase() + raw.trim().slice(1);
+  }
+  return "Unavailable";
 }
 
 export function truncate(text: string, max: number): string {

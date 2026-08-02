@@ -1,108 +1,259 @@
 import type { ProfileData } from "@/lib/profile/types";
 import { COLORS, TYPE } from "@/lib/profile/svg/constants";
 import { escapeXml } from "@/lib/profile/svg/escape";
+import {
+  LAYOUT,
+  panelPath,
+  renderWrappedText,
+} from "@/lib/profile/svg/flow";
 import { quaroxNodeSvg, textAttrs, truncate } from "@/lib/profile/svg/helpers";
 import { outerFrame, svgRoot, watermark } from "@/lib/profile/svg/layout";
 
+function clusterBlock(opts: {
+  x: number;
+  y: number;
+  w: number;
+  label: string;
+  nodes: { label: string }[];
+}): { svg: string; y: number; bottomY: number } {
+  const heading = `<text ${textAttrs({
+    x: opts.x,
+    y: opts.y,
+    size: TYPE.label,
+    fill: COLORS.coral,
+    mono: true,
+    letterSpacing: "0.1em",
+  })}>${escapeXml(opts.label.toUpperCase())}</text>`;
+
+  const lines = opts.nodes.slice(0, 4).map((node, i) => {
+    const col = i % 2;
+    const row = Math.floor(i / 2);
+    const nx = opts.x + col * (opts.w / 2);
+    const ny = opts.y + 32 + row * 28;
+    return `<text ${textAttrs({
+      x: nx,
+      y: ny,
+      size: TYPE.label,
+      fill: COLORS.ink,
+      mono: true,
+    })}>• ${escapeXml(node.label)}</text>`;
+  });
+
+  const rows = Math.ceil(Math.min(opts.nodes.length, 4) / 2);
+  const bottomY = opts.y + 32 + Math.max(1, rows) * 28;
+  return { svg: `${heading}${lines.join("")}`, y: opts.y, bottomY };
+}
+
 export function renderSystemCard(data: ProfileData): string {
-  const activityY = 78;
-  let activityBlock: string;
+  const pad = LAYOUT.outerPad;
+  let y = 70;
+
+  // Activity on top (full width when empty is compact; otherwise expands)
+  const activityX = pad;
+  const activityW = 880 - pad * 2;
+  let activityInner = "";
+  let activityH = 0;
 
   if (!data.activity.length) {
-    activityBlock = `
-      <path d="M36,${activityY} L420,${activityY} L432,${activityY + 12} L432,${activityY + 210} L48,${activityY + 210} L36,${activityY + 198} Z" fill="${COLORS.bgDeep}" fill-opacity="0.75" stroke="${COLORS.border}" stroke-width="1.1"/>
-      <text ${textAttrs({ x: 56, y: activityY + 32, size: TYPE.label, fill: COLORS.inkFaint, mono: true, letterSpacing: "0.14em" })}>SYSTEM ACTIVITY</text>
-      <text ${textAttrs({ x: 56, y: activityY + 110, size: TYPE.body, fill: COLORS.inkMuted, mono: true })}>NO RECENT MEANINGFUL ACTIVITY</text>
+    activityH = 78;
+    activityInner = `
+      <text ${textAttrs({
+        x: activityX + 16,
+        y: y + 24,
+        size: TYPE.label,
+        fill: COLORS.inkFaint,
+        mono: true,
+        letterSpacing: "0.14em",
+      })}>SYSTEM ACTIVITY</text>
+      <text ${textAttrs({
+        x: activityX + 16,
+        y: y + 48,
+        size: TYPE.body,
+        fill: COLORS.inkMuted,
+        mono: true,
+      })}>NO RECENT MEANINGFUL ACTIVITY</text>
+      <text ${textAttrs({
+        x: activityX + 16,
+        y: y + 68,
+        size: TYPE.label,
+        fill: COLORS.inkFaint,
+        mono: true,
+      })}>Waiting for configured project activity</text>
     `;
   } else {
-    let y = activityY + 52;
-    const rows = data.activity.slice(0, 5).flatMap((group) => {
-      const header = `
-        <text ${textAttrs({ x: 56, y, size: TYPE.label, fill: COLORS.coral, mono: true, letterSpacing: "0.1em" })}>&gt; ${escapeXml(group.projectLabel)}</text>
-      `;
-      y += 24;
-      const items = group.items.map((item, idx) => {
-        const isLast = idx === group.items.length - 1;
-        const line = `
-          <text ${textAttrs({ x: 72, y, size: TYPE.label, fill: COLORS.inkMuted, mono: true })}>${escapeXml(truncate(item.text, 42))}${
-            isLast
-              ? `  ·  ${escapeXml(group.relativeTime)}`
-              : ""
-          }</text>
-        `;
-        y += 22;
-        return line;
+    let cursor = y + 40;
+    const rows: string[] = [
+      `<text ${textAttrs({
+        x: activityX + 18,
+        y: y + 28,
+        size: TYPE.label,
+        fill: COLORS.inkFaint,
+        mono: true,
+        letterSpacing: "0.14em",
+      })}>SYSTEM ACTIVITY</text>`,
+    ];
+    for (const group of data.activity.slice(0, 5)) {
+      rows.push(
+        `<text ${textAttrs({
+          x: activityX + 18,
+          y: cursor,
+          size: TYPE.label,
+          fill: COLORS.coral,
+          mono: true,
+          letterSpacing: "0.08em",
+        })}>&gt; ${escapeXml(group.projectLabel)}</text>`
+      );
+      cursor += 24;
+      group.items.forEach((item, idx) => {
+        const last = idx === group.items.length - 1;
+        rows.push(
+          `<text ${textAttrs({
+            x: activityX + 34,
+            y: cursor,
+            size: TYPE.label,
+            fill: COLORS.inkMuted,
+            mono: true,
+          })}>${escapeXml(truncate(item.text, 56))}${
+            last ? `  ·  ${escapeXml(group.relativeTime)}` : ""
+          }</text>`
+        );
+        cursor += 22;
       });
-      y += 10;
-      return [header, ...items];
-    });
-
-    const panelH = Math.max(210, y - activityY + 16);
-    activityBlock = `
-      <path d="M36,${activityY} L420,${activityY} L432,${activityY + 12} L432,${activityY + panelH} L48,${activityY + panelH} L36,${activityY + panelH - 12} Z" fill="${COLORS.bgDeep}" fill-opacity="0.75" stroke="${COLORS.border}" stroke-width="1.1"/>
-      <text ${textAttrs({ x: 56, y: activityY + 32, size: TYPE.label, fill: COLORS.inkFaint, mono: true, letterSpacing: "0.14em" })}>SYSTEM ACTIVITY</text>
-      ${rows.join("")}
-    `;
+      cursor += 8;
+    }
+    activityH = cursor - y + 12;
+    activityInner = rows.join("");
   }
 
-  // Tech map right side
-  const techX = 460;
-  const techY = 78;
-  const clusters = data.techMap.clusters.slice(0, 3);
-  const clusterBlocks = clusters
-    .map((cluster, ci) => {
-      const cy = techY + 100 + ci * 62;
-      const nodes = cluster.nodes
-        .slice(0, 4)
-        .map((node, ni) => {
-          const nx = techX + 20 + (ni % 2) * 180;
-          const ny = cy + 28 + Math.floor(ni / 2) * 28;
-          return `<text ${textAttrs({ x: nx, y: ny, size: TYPE.label, fill: COLORS.ink, mono: true })}>• ${escapeXml(node.label)}</text>`;
-        })
-        .join("");
-      return `
-        <text ${textAttrs({ x: techX + 20, y: cy + 8, size: TYPE.label, fill: COLORS.coral, mono: true, letterSpacing: "0.1em" })}>${escapeXml(cluster.label.toUpperCase())}</text>
-        ${nodes}
-      `;
-    })
-    .join("");
-
-  const techBlock = `
-    <path d="M448,${techY} L844,${techY} L856,${techY + 12} L856,${techY + 290} L460,${techY + 290} L448,${techY + 278} Z" fill="${COLORS.bgDeep}" fill-opacity="0.75" stroke="${COLORS.border}" stroke-width="1.1"/>
-    <line x1="650" y1="${techY + 54}" x2="560" y2="${techY + 90}" stroke="${COLORS.coral}" stroke-opacity="0.35" stroke-width="1"/>
-    <line x1="650" y1="${techY + 54}" x2="740" y2="${techY + 90}" stroke="${COLORS.coral}" stroke-opacity="0.35" stroke-width="1"/>
-    <text ${textAttrs({ x: 652, y: techY + 36, size: TYPE.label, fill: COLORS.ink, mono: true, weight: 600, anchor: "middle", letterSpacing: "0.04em" })}>${escapeXml(truncate(data.techMap.centerLabel, 34))}</text>
-    ${quaroxNodeSvg(650, techY + 58, 0.55)}
-    ${clusterBlocks}
+  const activityPanel = `
+    ${panelPath(activityX, y, activityW, activityH, 12)}
+    ${activityInner}
   `;
+  y += activityH + 18;
 
-  const contactY = 400;
-  const openTo = truncate(
-    data.contact.openTo.replace(
-      "ambitious products, thoughtful collaboration",
-      "thoughtful collaboration"
-    ),
-    56
-  );
+  // Tech map — spatial clusters
+  const techY = y;
+  const techX = pad;
+  const techW = activityW;
+  const cx = techX + techW / 2;
+  const cy = techY + 56;
 
-  const contactBlock = `
-    <path d="M36,${contactY} L844,${contactY} L856,${contactY + 12} L856,${contactY + 118} L48,${contactY + 118} L36,${contactY + 106} Z" fill="${COLORS.bgDeep}" fill-opacity="0.8" stroke="${COLORS.border}" stroke-width="1.1"/>
-    <text ${textAttrs({ x: 56, y: contactY + 36, size: TYPE.body, fill: COLORS.inkMuted })}>${escapeXml(truncate(data.contact.statement, 78))}</text>
-    <text ${textAttrs({ x: 56, y: contactY + 66, size: TYPE.label, fill: COLORS.inkMuted, mono: true })}>&gt; open_to: ${escapeXml(openTo)}</text>
-    <text ${textAttrs({ x: 56, y: contactY + 90, size: TYPE.label, fill: COLORS.inkMuted, mono: true })}>&gt; connect: LinkedIn · Portfolio · Email</text>
-    <text ${textAttrs({ x: 56, y: contactY + 112, size: TYPE.label, fill: COLORS.ink, mono: true })}>&gt; ${escapeXml(data.contact.prompt)}</text>
+  const dataCluster = data.techMap.clusters.find((c) =>
+    c.id.includes("data")
+  ) ?? data.techMap.clusters[0]!;
+  const productCluster = data.techMap.clusters.find((c) =>
+    c.id.includes("product")
+  ) ?? data.techMap.clusters[1]!;
+  const infraCluster = data.techMap.clusters.find((c) =>
+    c.id.includes("infra")
+  ) ?? data.techMap.clusters[2]!;
+
+  const left = clusterBlock({
+    x: techX + 28,
+    y: techY + 118,
+    w: 300,
+    label: dataCluster.label,
+    nodes: dataCluster.nodes,
+  });
+  const right = clusterBlock({
+    x: techX + techW - 328,
+    y: techY + 118,
+    w: 300,
+    label: productCluster.label,
+    nodes: productCluster.nodes,
+  });
+  const bottom = clusterBlock({
+    x: cx - 150,
+    y: Math.max(left.bottomY, right.bottomY) + 36,
+    w: 300,
+    label: infraCluster.label,
+    nodes: infraCluster.nodes,
+  });
+  const techH = bottom.bottomY - techY + 28;
+
+  const techPanel = `
+    ${panelPath(techX, techY, techW, techH, 12)}
+    <text ${textAttrs({
+      x: cx,
+      y: techY + 36,
+      size: TYPE.label,
+      fill: COLORS.ink,
+      mono: true,
+      weight: 600,
+      anchor: "middle",
+      letterSpacing: "0.06em",
+    })}>${escapeXml(truncate(data.techMap.centerLabel, 36))}</text>
+    ${quaroxNodeSvg(cx, cy + 8, 0.7)}
+    <line x1="${cx - 20}" y1="${cy + 20}" x2="${techX + 120}" y2="${techY + 118}" stroke="${COLORS.coral}" stroke-opacity="0.35" stroke-width="1"/>
+    <line x1="${cx + 20}" y1="${cy + 20}" x2="${techX + techW - 120}" y2="${techY + 118}" stroke="${COLORS.coral}" stroke-opacity="0.35" stroke-width="1"/>
+    <line x1="${cx}" y1="${cy + 28}" x2="${cx}" y2="${bottom.y}" stroke="${COLORS.coral}" stroke-opacity="0.35" stroke-width="1"/>
+    ${left.svg}
+    ${right.svg}
+    ${bottom.svg}
   `;
+  y += techH + 16;
 
-  const height = contactY + 140;
+  // Contact strip — compact, flow-based height
+  const statement = renderWrappedText({
+    x: pad + 20,
+    y: y + 32,
+    text: data.contact.statement,
+    maxWidth: activityW - 48,
+    size: TYPE.body,
+    fill: COLORS.inkMuted,
+    maxLines: 2,
+    lineHeight: 28,
+  });
+  const openToY = statement.bottomY + 26;
+  const openTo = `
+    <text ${textAttrs({
+      x: pad + 20,
+      y: openToY,
+      size: TYPE.label,
+      fill: COLORS.inkMuted,
+      mono: true,
+    })}>&gt; open_to: meaningful problems</text>
+    <text ${textAttrs({
+      x: pad + 20,
+      y: openToY + 22,
+      size: TYPE.label,
+      fill: COLORS.inkMuted,
+      mono: true,
+    })}>  and thoughtful collaboration</text>
+  `;
+  const connectY = openToY + 48;
+  const contactH = connectY - y + 56;
+  const contactPanel = `
+    ${panelPath(pad, y, activityW, contactH, 12)}
+    ${statement.svg}
+    ${openTo}
+    <text ${textAttrs({
+      x: pad + 20,
+      y: connectY,
+      size: TYPE.label,
+      fill: COLORS.inkMuted,
+      mono: true,
+    })}>&gt; connect: LinkedIn · Portfolio · Email</text>
+    <text ${textAttrs({
+      x: pad + 20,
+      y: connectY + 24,
+      size: TYPE.label,
+      fill: COLORS.ink,
+      mono: true,
+    })}>&gt; ${escapeXml(data.contact.prompt)}</text>
+  `;
+  y += contactH + pad;
+
+  const height = y;
 
   const body = `
     ${outerFrame(height)}
-    ${watermark(700, height - 40, 130)}
-    <text ${textAttrs({ x: 44, y: 42, size: TYPE.label, fill: COLORS.coral, mono: true, letterSpacing: "0.18em" })}>FEED · STACK · SIGNAL</text>
-    <text ${textAttrs({ x: 44, y: 70, size: TYPE.section, weight: 650 })}>System</text>
-    ${activityBlock}
-    ${techBlock}
-    ${contactBlock}
+    ${watermark(730, height - 48, 100)}
+    <text ${textAttrs({ x: pad, y: 38, size: TYPE.label, fill: COLORS.coral, mono: true, letterSpacing: "0.18em" })}>FEED · STACK · SIGNAL</text>
+    <text ${textAttrs({ x: pad, y: 64, size: TYPE.section, weight: 650 })}>System</text>
+    ${activityPanel}
+    ${techPanel}
+    ${contactPanel}
   `;
 
   return svgRoot({

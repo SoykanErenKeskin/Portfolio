@@ -3,7 +3,10 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const base = process.env.PROFILE_SVG_BASE ?? "http://127.0.0.1:3000";
-const outDir = path.resolve("docs/github-profile/phase3-screenshots");
+const outDir = path.resolve(
+  process.env.PROFILE_SCREENSHOT_DIR ??
+    "docs/github-profile/phase3-1-screenshots"
+);
 
 const blocks = ["hero", "work", "system"];
 const widths = [
