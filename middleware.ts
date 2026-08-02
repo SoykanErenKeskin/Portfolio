@@ -10,12 +10,8 @@ const LOCALE_PREFIX = new RegExp(
 export default auth((req) => {
   const { pathname } = req.nextUrl;
 
-  // Skip locale logic for admin, auth callbacks, and local preview tooling
-  if (
-    !pathname.startsWith("/admin") &&
-    !pathname.startsWith("/api/auth") &&
-    !pathname.startsWith("/dev")
-  ) {
+  // Skip locale logic for admin and auth callback routes
+  if (!pathname.startsWith("/admin") && !pathname.startsWith("/api/auth")) {
     const hasLocale = LOCALE_PREFIX.test(pathname);
     if (!hasLocale) {
       const url = req.nextUrl.clone();

@@ -86,7 +86,7 @@ export type ProfileConfig = z.infer<typeof profileConfigSchema>;
  * Repository slugs are centralized here — adapters/UI never hardcode them.
  */
 const rawProfileConfig = {
-  version: "profile-v3",
+  version: "profile-v4",
   githubUsername: "SoykanErenKeskin",
   commitsPerRepo: 10,
   maxActivityEntries: 5,

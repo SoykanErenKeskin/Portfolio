@@ -9,7 +9,7 @@ import path from "node:path";
 const base = process.env.PROFILE_SVG_BASE ?? "http://127.0.0.1:3000";
 const previewUrl =
   process.env.PROFILE_PREVIEW_URL ??
-  `${base}/dev/github-profile-preview`;
+  `${base}/admin/github-profile`;
 const outDir = path.resolve("docs/github-profile/phase4-1-comparison");
 const stackDir = path.resolve("docs/github-profile/phase4-1-screenshots");
 

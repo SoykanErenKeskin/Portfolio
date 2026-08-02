@@ -13,7 +13,7 @@ import { renderSystemCard } from "../lib/profile/svg/system";
 
 function baseData(overrides: Partial<ProfileData> = {}): ProfileData {
   const data: ProfileData = {
-    version: "profile-v3",
+    version: "profile-v4",
     generatedAt: "2026-08-01T00:00:00.000Z",
     identity: {
       name: "SOYKAN EREN KESKIN",

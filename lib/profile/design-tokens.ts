@@ -91,5 +91,5 @@ export const SVG_CANVAS = {
   width: 880,
   heroHeight: 480,
   workMinHeight: 1340,
-  systemMinHeight: 920,
+  systemMinHeight: 980,
 } as const;

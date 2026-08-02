@@ -4,7 +4,7 @@ import path from "node:path";
 
 const base =
   process.env.PROFILE_PREVIEW_URL ??
-  "http://127.0.0.1:3000/dev/github-profile-preview";
+  "http://127.0.0.1:3000/admin/github-profile";
 const outDir = path.resolve(
   process.env.PROFILE_SCREENSHOT_DIR ??
     "docs/github-profile/phase2-screenshots"

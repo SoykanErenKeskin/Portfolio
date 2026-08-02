@@ -230,60 +230,76 @@ export function renderSystemCard(data: ProfileData): string {
   `;
   y += techH + 28;
 
-  // —— Contact terminal ——
+  // —— Contact terminal (larger type + explicit wraps for mobile scale) ——
   const contactY = y;
-  const contactH = 200;
+  const contactPadX = PANEL_X + 22;
+  const termSize = GP_TYPE.body; // 16 — readable when scaled to 390px
+  const termLH = 26;
+  const statementLines = [
+    "Good products begin with understanding",
+    "the system behind the problem.",
+  ];
+  const connectLabels = data.contact.connect.map((c) => c.label).join(" · ");
+  const statementBottom = contactY + 30 + (statementLines.length - 1) * 26;
+  const dividerY = statementBottom + 18;
+  const termStart = dividerY + 28;
+  const contactH = termStart - contactY + termLH * 5 + 36;
   const contactClip = "clip-system-contact";
   defsParts.push(clipRect(contactClip, PANEL_X, contactY, PANEL_W, contactH));
-  const openTo = truncate(data.contact.openTo, 72);
-  const connectLabels = data.contact.connect.map((c) => c.label).join(" · ");
 
   const contactPanel = `
     <g clip-path="url(#${contactClip})">
       ${panelPath(PANEL_X, contactY, PANEL_W, contactH, GP_CUT.lg)}
-      <line x1="${PANEL_X}" y1="${contactY + 64}" x2="${PANEL_X + PANEL_W}" y2="${contactY + 64}" stroke="${COLORS.borderSubtle}" stroke-width="1"/>
+      <line x1="${PANEL_X}" y1="${dividerY}" x2="${PANEL_X + PANEL_W}" y2="${dividerY}" stroke="${COLORS.borderSubtle}" stroke-width="1"/>
       ${linesText({
-        x: PANEL_X + 22,
-        y: contactY + 28,
-        lines: wrapActivityLine(data.contact.statement, 68, 2),
-        size: GP_TYPE.body,
-        lineHeight: 24,
+        x: contactPadX,
+        y: contactY + 30,
+        lines: statementLines,
+        size: GP_TYPE.bodyLg,
+        lineHeight: 26,
         fill: COLORS.inkMuted,
         id: "system-contact-statement",
       })}
       <text ${textAttrs({
-        x: PANEL_X + 22,
-        y: contactY + 92,
-        size: GP_TYPE.bodySm,
+        x: contactPadX,
+        y: termStart,
+        size: termSize,
         fill: COLORS.inkMuted,
         mono: true,
         id: "system-contact-open-to",
-      })}><tspan fill="${COLORS.coral}">&gt;</tspan> open_to: <tspan fill="${COLORS.ink}">${escapeXml(openTo)}</tspan></text>
+      })}><tspan fill="${COLORS.coral}">&gt;</tspan> open_to: <tspan fill="${COLORS.ink}">meaningful problems and</tspan></text>
       <text ${textAttrs({
-        x: PANEL_X + 22,
-        y: contactY + 116,
-        size: GP_TYPE.bodySm,
+        x: contactPadX,
+        y: termStart + termLH,
+        size: termSize,
+        fill: COLORS.ink,
+        mono: true,
+      })}>  thoughtful collaboration</text>
+      <text ${textAttrs({
+        x: contactPadX,
+        y: termStart + termLH * 2,
+        size: termSize,
         fill: COLORS.inkMuted,
         mono: true,
         id: "system-contact-connect",
       })}><tspan fill="${COLORS.coral}">&gt;</tspan> connect: <tspan fill="${COLORS.ink}">${escapeXml(connectLabels)}</tspan></text>
       <text ${textAttrs({
-        x: PANEL_X + 22,
-        y: contactY + 140,
-        size: GP_TYPE.bodySm,
+        x: contactPadX,
+        y: termStart + termLH * 3,
+        size: termSize,
         fill: COLORS.inkMuted,
         mono: true,
         id: "system-contact-status",
       })}><tspan fill="${COLORS.coral}">&gt;</tspan> status: <tspan fill="${COLORS.ink}">${escapeXml(data.contact.status)}</tspan></text>
       <text ${textAttrs({
-        x: PANEL_X + 22,
-        y: contactY + 176,
-        size: GP_TYPE.bodySm,
+        x: contactPadX,
+        y: termStart + termLH * 4 + 8,
+        size: termSize,
         fill: COLORS.ink,
         mono: true,
         id: "system-contact-prompt",
       })}><tspan fill="${COLORS.coral}">&gt;</tspan> ${escapeXml(data.contact.prompt)}</text>
-      <rect x="${PANEL_X + 22 + Math.min(220, data.contact.prompt.length * 9)}" y="${contactY + 164}" width="8" height="14" fill="${COLORS.coral}"/>
+      <rect x="${contactPadX + Math.min(240, data.contact.prompt.length * 10)}" y="${termStart + termLH * 4 - 4}" width="9" height="16" fill="${COLORS.coral}"/>
     </g>
   `;
   y += contactH + PAD;
