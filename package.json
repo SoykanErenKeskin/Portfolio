@@ -17,7 +17,8 @@
     "test:profile-activity": "npx tsx --test scripts/verify-profile-activity.ts",
     "test:profile-svg": "npx tsx --test scripts/verify-profile-svg.ts",
     "test:profile-svg-bbox": "node scripts/validate-profile-svg-bbox.mjs",
-    "screenshot:profile-svg": "node scripts/screenshot-profile-svg.mjs"
+    "screenshot:profile-svg": "node scripts/screenshot-profile-svg.mjs",
+    "screenshot:profile-comparison": "node scripts/screenshot-profile-comparison.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.99.3",

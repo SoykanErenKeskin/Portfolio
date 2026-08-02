@@ -2,14 +2,14 @@ import type { ProfileData } from "@/lib/profile/types";
 import { COLORS, TYPE } from "@/lib/profile/svg/constants";
 import { escapeXml } from "@/lib/profile/svg/escape";
 import { textAttrs } from "@/lib/profile/svg/helpers";
-import { outerFrame, svgRoot } from "@/lib/profile/svg/layout";
+import { outerShell, svgRoot } from "@/lib/profile/svg/layout";
 
 export type SvgBlockId = "hero" | "work" | "system";
 
 const BLOCK_HEIGHT: Record<SvgBlockId, number> = {
-  hero: 400,
-  work: 1014,
-  system: 760,
+  hero: 480,
+  work: 1340,
+  system: 920,
 };
 
 const BLOCK_TITLE: Record<SvgBlockId, string> = {
@@ -29,7 +29,7 @@ export function renderFallbackCard(
     identity?.role ?? "Industrial Engineer building data-driven solutions";
 
   const body = `
-    ${outerFrame(height)}
+    ${outerShell(height)}
     <text ${textAttrs({ x: 48, y: 72, size: TYPE.name, weight: 650 })}>${escapeXml(name)}</text>
     <text ${textAttrs({ x: 48, y: 108, size: TYPE.body, fill: COLORS.inkMuted })}>${escapeXml(role)}</text>
     <text ${textAttrs({ x: 48, y: 160, size: TYPE.bodySecondary, fill: COLORS.inkFaint, mono: true })}>Live details temporarily unavailable</text>

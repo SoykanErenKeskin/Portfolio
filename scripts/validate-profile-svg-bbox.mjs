@@ -20,12 +20,12 @@ function ok(msg) {
 
 const PANELS = {
   hero: {
-    height: 400,
+    height: 480,
     zones: {
-      "hero-last-update-value": { x: 450, y: 32, w: 390, h: 336 },
-      "hero-r2-value": { x: 450, y: 32, w: 390, h: 336 },
-      "hero-eder-description": { x: 450, y: 32, w: 390, h: 336 },
-      "hero-status-value": { x: 450, y: 32, w: 390, h: 336 },
+      "hero-last-update-value": { x: 436, y: 34, w: 408, h: 412 },
+      "hero-r2-value": { x: 436, y: 34, w: 408, h: 412 },
+      "hero-eder-description": { x: 436, y: 34, w: 408, h: 412 },
+      "hero-status-value": { x: 436, y: 34, w: 408, h: 412 },
     },
   },
   work: {

@@ -131,19 +131,14 @@ export function EderHudPanel({ eder }: Props) {
           <dt className="gp-mono text-[10px] uppercase tracking-[0.18em] text-[rgb(var(--gp-ink-faint))]">
             Global model R²
           </dt>
-          <dd className="gp-mono mt-1 flex items-baseline justify-between gap-4 text-[rgb(var(--gp-ink))]">
-            <span className="text-[10px] uppercase tracking-[0.2em] text-[rgb(var(--gp-ink-muted))]">
-              GLOBAL MODEL R²
-            </span>
-            <span
-              className={
-                r2Available
-                  ? "text-2xl font-semibold tabular-nums text-[rgb(var(--gp-coral))]"
-                  : "text-sm font-medium text-[rgb(var(--gp-ink-muted))]"
-              }
-            >
-              {r2}
-            </span>
+          <dd
+            className={
+              r2Available
+                ? "gp-mono mt-1 text-2xl font-semibold tabular-nums text-[rgb(var(--gp-coral))]"
+                : "mt-1 text-sm font-medium text-[rgb(var(--gp-ink-muted))]"
+            }
+          >
+            {r2}
           </dd>
         </div>
         <div>

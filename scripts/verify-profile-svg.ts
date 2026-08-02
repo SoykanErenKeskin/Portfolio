@@ -252,7 +252,11 @@ test("hero R² uses two-decimal formatting", () => {
 test("hero formats short dates and readable status", () => {
   const svg = renderHeroCard(baseData());
   assert.match(svg, /29 Jul 2026/);
-  assert.match(svg, /Published/);
+  assert.match(svg, /published/i);
+  assert.match(svg, /LIVE SYSTEM/);
+  assert.match(svg, /GLOBAL MODEL R²/);
+  // Single R² label (no duplicate)
+  assert.equal((svg.match(/GLOBAL MODEL R²/g) ?? []).length, 1);
   assert.doesNotMatch(svg, /2026-07-29T15:38:25/);
 });
 

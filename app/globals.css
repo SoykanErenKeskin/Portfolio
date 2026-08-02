@@ -343,6 +343,7 @@ body {
 }
 
 /* ── GitHub profile experience (admin preview only) ── */
+/* Channel values mirrored from lib/profile/design-tokens.ts (GP_RGB). */
 .profile-experience {
   --gp-bg: 10 12 18;
   --gp-bg-raised: 16 18 26;

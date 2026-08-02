@@ -30,7 +30,7 @@ export function ActivityConsole({ groups }: Props) {
             System activity
           </p>
           <p className="gp-mono text-[10px] uppercase tracking-[0.14em] text-[rgb(var(--gp-ink-faint))]">
-            Mock · Phase 1
+            Live feed
           </p>
         </div>
 

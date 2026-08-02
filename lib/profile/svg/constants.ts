@@ -1,4 +1,10 @@
-export const SVG_WIDTH = 880;
+import {
+  GP_COLOR,
+  GP_TYPE,
+  SVG_CANVAS,
+} from "@/lib/profile/design-tokens";
+
+export const SVG_WIDTH = SVG_CANVAS.width;
 
 export const FONT_SANS =
   'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif';
@@ -6,27 +12,29 @@ export const FONT_SANS =
 export const FONT_MONO =
   'ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace';
 
-/** TheQuarox-derived palette (not site blue accent). */
+/** Alias of shared GP_COLOR for SVG generators. */
 export const COLORS = {
-  bg: "#0a0c12",
-  bgRaised: "#10141c",
-  bgDeep: "#07090e",
-  ink: "#ecf0f6",
-  inkMuted: "#949cac",
-  inkFaint: "#646c7c",
-  coral: "#f05a6e",
-  coralDim: "#c8465a",
-  border: "#303440",
-  borderSubtle: "#20262e",
+  bg: GP_COLOR.bg,
+  bgRaised: GP_COLOR.bgRaised,
+  bgDeep: GP_COLOR.bgDeep,
+  ink: GP_COLOR.ink,
+  inkMuted: GP_COLOR.inkMuted,
+  inkFaint: GP_COLOR.inkFaint,
+  coral: GP_COLOR.coral,
+  coralDim: GP_COLOR.coralSoft,
+  border: GP_COLOR.border,
+  borderSubtle: GP_COLOR.borderSubtle,
 } as const;
 
 export const TYPE = {
-  name: 36,
-  section: 26,
-  body: 22,
-  bodySecondary: 20,
-  label: 18,
-  metric: 32,
+  name: GP_TYPE.name,
+  section: GP_TYPE.section,
+  body: GP_TYPE.bodyLg,
+  bodySecondary: GP_TYPE.body,
+  label: GP_TYPE.label,
+  metric: GP_TYPE.metric,
+  eyebrow: GP_TYPE.eyebrow,
+  mark: GP_TYPE.mark,
 } as const;
 
 export const FORBIDDEN_PROVIDER_SNIPPETS = [

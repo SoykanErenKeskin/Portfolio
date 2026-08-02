@@ -1,323 +1,336 @@
-import type { ProfileData } from "@/lib/profile/types";
-import { COLORS, TYPE } from "@/lib/profile/svg/constants";
+import type { FeaturedProject, ProfileData } from "@/lib/profile/types";
+import {
+  GP_CUT,
+  GP_SPACE,
+  GP_TRACKING,
+  GP_TYPE,
+  SVG_CANVAS,
+} from "@/lib/profile/design-tokens";
+import { COLORS } from "@/lib/profile/svg/constants";
 import { escapeXml } from "@/lib/profile/svg/escape";
 import {
-  assertInBounds,
   formatSvgR2,
-  formatSvgStatus,
+  formatSvgShortDate,
   textAttrs,
+  truncate,
+  wrapActivityLine,
 } from "@/lib/profile/svg/helpers";
 import {
   clipRect,
   ederHouseImage,
-  outerFrame,
+  outerShell,
   panelPath,
   quaroxNodesImage,
   svgRoot,
   watermark,
 } from "@/lib/profile/svg/layout";
 
-/** Fixed README work card height (taller than early 900 target for padding). */
-export const WORK_HEIGHT = 1014;
+export const WORK_HEIGHT = SVG_CANVAS.workMinHeight;
 
-const PAD = 32;
-const CARD_X = 32;
-const CARD_W = 816;
-
-const WHAT_I_BUILD = [
-  {
-    title: "Engineering Systems",
-    description: "Structured systems for complex workflows.",
-    modules: "PROCESS DESIGN · SYSTEM ARCHITECTURE · OPTIMIZATION",
-  },
-  {
-    title: "Data & Intelligence",
-    description: "Models and pipelines for useful decisions.",
-    modules: "MACHINE LEARNING · FEATURE ENGINEERING · DECISION SUPPORT",
-  },
-  {
-    title: "Digital Products",
-    description: "Technical solutions shaped into usable products.",
-    modules: "PRODUCT DESIGN · FRONTEND · DATA VISUALIZATION",
-  },
-] as const;
+const PAD = 28;
+const CARD_X = 28;
+const CARD_W = 824;
 
 function practiceCard(
-  card: (typeof WHAT_I_BUILD)[number],
+  card: ProfileData["whatIBuild"][number],
   y: number,
   index: number
-): { svg: string; defs: string } {
-  const h = 96;
+): { svg: string; defs: string; h: number } {
   const clipId = `clip-practice-${index}`;
-  assertInBounds(`practice-${index}`, CARD_X + CARD_W, 880, CARD_X);
+  const descLines = wrapActivityLine(card.description, 70, 2);
+  const modules = card.modules.slice(0, 3);
+  const descBottom = y + 64 + (descLines.length - 1) * 18;
+  let moduleY = descBottom + 16;
+  const h = moduleY - y + modules.length * 26 + 16;
+  const moduleRows = modules
+    .map((mod, mi) => {
+      const row = `
+        <rect x="${CARD_X + 20}" y="${moduleY}" width="${CARD_W - 40}" height="22" fill="none" stroke="${COLORS.border}" stroke-opacity="0.9" stroke-width="1"/>
+        <text ${textAttrs({
+          x: CARD_X + 30,
+          y: moduleY + 15,
+          size: GP_TYPE.eyebrow,
+          fill: COLORS.inkMuted,
+          mono: true,
+          letterSpacing: "0.12em",
+          id: mi === 0 ? `work-practice-modules-${index}` : undefined,
+        })}>${escapeXml(mod)}</text>
+      `;
+      moduleY += 26;
+      return row;
+    })
+    .join("");
+
   return {
+    h,
     defs: clipRect(clipId, CARD_X, y, CARD_W, h),
     svg: `
     <g clip-path="url(#${clipId})">
-      ${panelPath(CARD_X, y, CARD_W, h, 10, { fillOpacity: 0.72 })}
-      ${quaroxNodesImage(CARD_X + 18, y + 22, 40, `work-practice-icon-${index}`)}
+      ${panelPath(CARD_X, y, CARD_W, h, GP_CUT.sm)}
+      ${quaroxNodesImage(CARD_X + 20, y + 18, 40, `work-practice-icon-${index}`)}
       <text ${textAttrs({
-        x: CARD_X + 72,
-        y: y + 36,
-        size: 22,
+        x: CARD_X + CARD_W - 28,
+        y: y + 34,
+        size: GP_TYPE.eyebrow,
+        fill: COLORS.inkFaint,
+        mono: true,
+        anchor: "end",
+      })}>0${index + 1}</text>
+      <text ${textAttrs({
+        x: CARD_X + 76,
+        y: y + 40,
+        size: GP_TYPE.title,
         weight: 650,
         id: `work-practice-title-${index}`,
       })}>${escapeXml(card.title)}</text>
       <text ${textAttrs({
-        x: CARD_X + 72,
-        y: y + 60,
-        size: TYPE.label,
+        x: CARD_X + 76,
+        y: y + 64,
+        size: GP_TYPE.bodySm,
         fill: COLORS.inkMuted,
         id: `work-practice-desc-${index}`,
-      })}>${escapeXml(card.description)}</text>
-      <text ${textAttrs({
-        x: CARD_X + 72,
-        y: y + 82,
-        size: TYPE.label,
-        fill: COLORS.inkFaint,
-        mono: true,
-        letterSpacing: "0.06em",
-        id: `work-practice-modules-${index}`,
-      })}>${escapeXml(card.modules)}</text>
+      })}>${escapeXml(descLines[0] ?? "")}</text>
+      ${
+        descLines[1]
+          ? `<text ${textAttrs({
+              x: CARD_X + 76,
+              y: y + 82,
+              size: GP_TYPE.bodySm,
+              fill: COLORS.inkMuted,
+            })}>${escapeXml(descLines[1])}</text>`
+          : ""
+      }
+      ${moduleRows}
     </g>
   `,
   };
 }
 
-function moduleRow(opts: {
-  x: number;
+function projectCard(opts: {
+  project: FeaturedProject;
   y: number;
-  labels: string[];
-  id: string;
-}): string {
-  return opts.labels
-    .map((label, i) => {
-      const lx = opts.x + i * 196;
-      return `
-        <rect x="${lx}" y="${opts.y}" width="180" height="28" fill="none" stroke="${COLORS.border}" stroke-width="1"/>
+  globalR2: number | null;
+  latestUpdate: string | null;
+}): { svg: string; defs: string; h: number } {
+  const emphasized = Boolean(opts.project.emphasized);
+  const h = emphasized ? 200 : 156;
+  const clipId = `clip-project-${opts.project.id}`;
+  const pad = 22;
+  const leftX = CARD_X + pad;
+  const arch = opts.project.architecture.slice(0, 4);
+  const desc = truncate(
+    opts.project.solution || opts.project.problem,
+    emphasized ? 72 : 68
+  );
+
+  let tagsX = leftX;
+  const tags = arch
+    .map((item, i) => {
+      const label = item.toUpperCase().slice(0, 18);
+      const w = Math.min(160, 18 + label.length * 8);
+      const el = `
+        <rect x="${tagsX}" y="${opts.y + (emphasized ? 118 : 92)}" width="${w}" height="24" fill="none" stroke="${COLORS.border}" stroke-width="1"/>
         <text ${textAttrs({
-          x: lx + 10,
-          y: opts.y + 19,
-          size: TYPE.label,
+          x: tagsX + 8,
+          y: opts.y + (emphasized ? 134 : 108),
+          size: GP_TYPE.eyebrow,
           fill: COLORS.inkMuted,
           mono: true,
-          letterSpacing: "0.05em",
-          id: i === 0 ? opts.id : undefined,
+          letterSpacing: "0.1em",
+          id: i === 0 ? `work-${opts.project.id}-modules` : undefined,
         })}>${escapeXml(label)}</text>
       `;
+      tagsX += w + 10;
+      return el;
     })
     .join("");
-}
 
-function projectCard(opts: {
-  id: string;
-  title: string;
-  description: string;
-  modules: string[];
-  y: number;
-  h: number;
-  emphasized?: boolean;
-  status?: string;
-  r2Text?: string | null;
-  r2Available?: boolean;
-}): { svg: string; defs: string } {
-  const clipId = `clip-project-${opts.id}`;
-  const pad = 24;
-  const leftX = CARD_X + pad;
-
-  let rightMetrics = "";
-  if (opts.emphasized) {
-    const mx = CARD_X + CARD_W - pad - 150;
-    rightMetrics = `
+  let metrics = "";
+  if (emphasized) {
+    const r2 = formatSvgR2(opts.globalR2);
+    const updated = formatSvgShortDate(opts.latestUpdate);
+    metrics = `
+      <line x1="${leftX}" y1="${opts.y + 152}" x2="${CARD_X + CARD_W - pad}" y2="${opts.y + 152}" stroke="${COLORS.borderSubtle}" stroke-width="1"/>
       <text ${textAttrs({
-        x: mx,
-        y: opts.y + 36,
-        size: TYPE.label,
+        x: leftX,
+        y: opts.y + 172,
+        size: GP_TYPE.eyebrow,
         fill: COLORS.inkFaint,
         mono: true,
-        letterSpacing: "0.1em",
-        id: "work-eder-status-label",
-      })}>STATUS</text>
+        letterSpacing: GP_TRACKING.label,
+      })}>LAST MEANINGFUL UPDATE</text>
       <text ${textAttrs({
-        x: mx,
-        y: opts.y + 58,
-        size: TYPE.label,
-        fill: COLORS.coral,
+        x: leftX,
+        y: opts.y + 190,
+        size: GP_TYPE.bodySm,
+        fill: COLORS.inkMuted,
         mono: true,
-        id: "work-eder-status-value",
-      })}>${escapeXml(opts.status ?? "Unavailable")}</text>
+      })}>${escapeXml(updated)}</text>
       <text ${textAttrs({
-        x: mx,
-        y: opts.y + 90,
-        size: TYPE.label,
+        x: CARD_X + CARD_W - pad,
+        y: opts.y + 172,
+        size: GP_TYPE.eyebrow,
         fill: COLORS.inkFaint,
         mono: true,
-        letterSpacing: "0.1em",
+        letterSpacing: GP_TRACKING.label,
+        anchor: "end",
         id: "work-eder-r2-label",
-      })}>GLOBAL R²</text>
+      })}>${escapeXml(
+        (opts.project.metricLabel || "GLOBAL MODEL R²").toUpperCase()
+      )}</text>
       <text ${textAttrs({
-        x: mx,
-        y: opts.y + 120,
-        size: opts.r2Available ? 28 : TYPE.label,
-        fill: opts.r2Available ? COLORS.coral : COLORS.inkMuted,
+        x: CARD_X + CARD_W - pad,
+        y: opts.y + 196,
+        size: r2.available ? 26 : GP_TYPE.bodySm,
+        fill: r2.available ? COLORS.coral : COLORS.inkMuted,
         mono: true,
         weight: 650,
+        anchor: "end",
         id: "work-eder-r2-value",
-      })}>${escapeXml(opts.r2Text ?? "—")}</text>
+      })}>${escapeXml(
+        opts.project.metricValue ?? r2.text
+      )}</text>
     `;
   }
 
-  const titleX = opts.emphasized ? leftX + 40 : leftX;
+  const status = opts.project.status
+    ? `<text ${textAttrs({
+        x: CARD_X + CARD_W - pad,
+        y: opts.y + 36,
+        size: GP_TYPE.eyebrow,
+        fill: COLORS.coral,
+        mono: true,
+        letterSpacing: GP_TRACKING.label,
+        anchor: "end",
+        id: emphasized ? "work-eder-status-value" : undefined,
+      })}>${escapeXml(opts.project.status.toUpperCase())}</text>`
+    : "";
 
   return {
-    defs: clipRect(clipId, CARD_X, opts.y, CARD_W, opts.h),
+    h,
+    defs: clipRect(clipId, CARD_X, opts.y, CARD_W, h),
     svg: `
     <g clip-path="url(#${clipId})">
-      ${panelPath(CARD_X, opts.y, CARD_W, opts.h, 12, {
-        stroke: opts.emphasized ? COLORS.coral : COLORS.border,
-        fillOpacity: opts.emphasized ? 0.9 : 0.72,
-        strokeOpacity: opts.emphasized ? 0.5 : 0.9,
+      ${panelPath(CARD_X, opts.y, CARD_W, h, GP_CUT.lg, {
+        stroke: emphasized ? COLORS.coral : COLORS.border,
+        active: emphasized,
       })}
-      ${opts.emphasized ? ederHouseImage(leftX, opts.y + 20, 32, "work-eder-house") : ""}
+      ${emphasized ? ederHouseImage(leftX, opts.y + 16, 36, "work-eder-house") : ""}
       <text ${textAttrs({
-        x: titleX,
+        x: emphasized ? leftX + 48 : leftX,
         y: opts.y + 40,
-        size: 22,
+        size: GP_TYPE.title,
         weight: 650,
-        id: `work-${opts.id}-title`,
-      })}>${escapeXml(opts.title)}</text>
+        id: `work-${opts.project.id}-title`,
+      })}>${escapeXml(opts.project.title)}</text>
+      ${status}
       <text ${textAttrs({
         x: leftX,
         y: opts.y + 70,
-        size: TYPE.label,
+        size: GP_TYPE.bodySm,
         fill: COLORS.inkMuted,
-        id: `work-${opts.id}-description`,
-      })}>${escapeXml(opts.description)}</text>
-      ${moduleRow({
+        id: `work-${opts.project.id}-description`,
+      })}>${escapeXml(desc)}</text>
+      <text ${textAttrs({
         x: leftX,
-        y: opts.y + 96,
-        labels: opts.modules,
-        id: `work-${opts.id}-modules`,
-      })}
-      ${rightMetrics}
+        y: opts.y + (emphasized ? 96 : 84),
+        size: GP_TYPE.eyebrow,
+        fill: COLORS.inkFaint,
+        mono: true,
+        letterSpacing: GP_TRACKING.label,
+      })}>ARCHITECTURE</text>
+      ${tags}
+      ${metrics}
     </g>
   `,
   };
 }
 
 export function renderWorkCard(data: ProfileData): string {
-  let y = 78;
+  let y = 72;
   const defsParts: string[] = [];
-  const practiceBlocks = WHAT_I_BUILD.map((card, i) => {
-    const block = practiceCard(card, y, i);
+  const practiceCards = (data.whatIBuild.length
+    ? data.whatIBuild
+    : []
+  )
+    .slice(0, 3)
+    .map((card, i) => {
+      const block = practiceCard(card, y, i);
+      defsParts.push(block.defs);
+      y += block.h + 14;
+      return block.svg;
+    })
+    .join("");
+
+  y += 18;
+  const projectsHeaderY = y;
+  y += 50;
+
+  const projectBlocks = data.projects.slice(0, 3).map((project) => {
+    const block = projectCard({
+      project,
+      y,
+      globalR2: data.eder.globalR2,
+      latestUpdate:
+        project.latestMeaningfulUpdate ?? data.eder.latestMeaningfulUpdate,
+    });
     defsParts.push(block.defs);
-    y += 108;
+    y += block.h + 14;
     return block.svg;
   }).join("");
 
-  y += 20;
-  const projectsHeaderY = y;
-  y += 48;
-
-  const eder = data.projects.find((p) => p.id === "eder");
-  const r2 = formatSvgR2(data.eder.globalR2);
-
-  const ederH = 168;
-  const otherH = 156;
-  const projectSvgs: string[] = [];
-
-  const ederCard = projectCard({
-    id: "eder",
-    title: "EDER",
-    description:
-      "Machine learning valuation and regional market intelligence.",
-    modules: ["ML VALUATION", "REGIONAL INSIGHTS", "DATA PIPELINE"],
-    y,
-    h: ederH,
-    emphasized: true,
-    status: formatSvgStatus(eder?.status ?? data.eder.projectStatus),
-    r2Text: r2.text,
-    r2Available: r2.available,
-  });
-  defsParts.push(ederCard.defs);
-  projectSvgs.push(ederCard.svg);
-  y += ederH + 16;
-
-  const orderCard = projectCard({
-    id: "order-tracking",
-    title: "ORDER TRACKING APP",
-    description: "Role-based order and delivery tracking.",
-    modules: ["REACT NATIVE", "POSTGRESQL", "ROLE ACCESS"],
-    y,
-    h: otherH,
-  });
-  defsParts.push(orderCard.defs);
-  projectSvgs.push(orderCard.svg);
-  y += otherH + 16;
-
-  const reservoirCard = projectCard({
-    id: "reservoir",
-    title: "RESERVOIR FORECASTING",
-    description: "Time-series forecasting for reservoir systems.",
-    modules: ["PYTHON", "TIME SERIES", "MODEL EVAL"],
-    y,
-    h: otherH,
-  });
-  defsParts.push(reservoirCard.defs);
-  projectSvgs.push(reservoirCard.svg);
-  y += otherH + PAD;
-
+  y += PAD;
   const height = Math.max(WORK_HEIGHT, y);
 
   const body = `
-    ${outerFrame(height)}
+    ${outerShell(height)}
     ${watermark({
-      canvasW: 880,
       canvasH: height,
-      width: 96,
-      margin: 48,
-      opacity: 0.045,
+      width: 120,
+      x: 880 - 40 - 120,
+      y: 36,
+      opacity: 0.05,
     })}
     <text ${textAttrs({
       x: PAD,
-      y: 40,
-      size: TYPE.label,
+      y: 36,
+      size: GP_TYPE.eyebrow,
       fill: COLORS.coral,
       mono: true,
-      letterSpacing: "0.18em",
+      letterSpacing: GP_TRACKING.eyebrow,
       id: "work-practice-label",
     })}>PRACTICE</text>
     <text ${textAttrs({
       x: PAD,
-      y: 68,
-      size: TYPE.section,
+      y: 62,
+      size: GP_TYPE.section,
       weight: 650,
       id: "work-practice-heading",
     })}>What I Build</text>
-    ${practiceBlocks}
+    ${practiceCards}
     <text ${textAttrs({
       x: PAD,
       y: projectsHeaderY,
-      size: TYPE.label,
+      size: GP_TYPE.eyebrow,
       fill: COLORS.coral,
       mono: true,
-      letterSpacing: "0.18em",
+      letterSpacing: GP_TRACKING.eyebrow,
       id: "work-selected-label",
     })}>SELECTED WORK</text>
     <text ${textAttrs({
       x: PAD,
       y: projectsHeaderY + 28,
-      size: TYPE.section,
+      size: GP_TYPE.section,
       weight: 650,
       id: "work-projects-heading",
     })}>Featured Projects</text>
-    ${projectSvgs.join("")}
+    ${projectBlocks}
   `;
 
   return svgRoot({
     height,
     title: "What I build and featured projects",
-    desc: "Practice areas and featured projects: Eder, Order Tracking App, and Reservoir Forecasting.",
+    desc: "Practice areas and featured projects aligned with the admin profile preview.",
     defs: defsParts.join(""),
     body,
   });
