@@ -113,9 +113,11 @@ function projectCard(opts: {
   latestUpdate: string | null;
 }): { svg: string; defs: string; h: number } {
   const emphasized = Boolean(opts.project.emphasized);
-  const h = emphasized ? 200 : 156;
+  const h = emphasized ? 220 : 156;
   const clipId = `clip-project-${opts.project.id}`;
   const pad = 22;
+  // Keep metric clear of the cut-corner + card edge.
+  const metricPad = GP_CUT.lg + 36;
   const leftX = CARD_X + pad;
   const arch = opts.project.architecture.slice(0, 4);
   const desc = truncate(
@@ -149,11 +151,14 @@ function projectCard(opts: {
   if (emphasized) {
     const r2 = formatSvgR2(opts.globalR2);
     const updated = formatSvgShortDate(opts.latestUpdate);
+    const metricRight = CARD_X + CARD_W - metricPad;
+    const metricLabelY = opts.y + h - 48;
+    const metricValueY = opts.y + h - 28;
     metrics = `
-      <line x1="${leftX}" y1="${opts.y + 152}" x2="${CARD_X + CARD_W - pad}" y2="${opts.y + 152}" stroke="${COLORS.borderSubtle}" stroke-width="1"/>
+      <line x1="${leftX}" y1="${opts.y + 150}" x2="${metricRight}" y2="${opts.y + 150}" stroke="${COLORS.borderSubtle}" stroke-width="1"/>
       <text ${textAttrs({
         x: leftX,
-        y: opts.y + 172,
+        y: metricLabelY,
         size: GP_TYPE.eyebrow,
         fill: COLORS.inkFaint,
         mono: true,
@@ -161,14 +166,14 @@ function projectCard(opts: {
       })}>LAST MEANINGFUL UPDATE</text>
       <text ${textAttrs({
         x: leftX,
-        y: opts.y + 190,
+        y: metricValueY,
         size: GP_TYPE.bodySm,
         fill: COLORS.inkMuted,
         mono: true,
       })}>${escapeXml(updated)}</text>
       <text ${textAttrs({
-        x: CARD_X + CARD_W - pad,
-        y: opts.y + 172,
+        x: metricRight,
+        y: metricLabelY,
         size: GP_TYPE.eyebrow,
         fill: COLORS.inkFaint,
         mono: true,
@@ -179,9 +184,9 @@ function projectCard(opts: {
         (opts.project.metricLabel || "GLOBAL MODEL R²").toUpperCase()
       )}</text>
       <text ${textAttrs({
-        x: CARD_X + CARD_W - pad,
-        y: opts.y + 196,
-        size: r2.available ? 26 : GP_TYPE.bodySm,
+        x: metricRight,
+        y: metricValueY,
+        size: r2.available ? 20 : GP_TYPE.bodySm,
         fill: r2.available ? COLORS.coral : COLORS.inkMuted,
         mono: true,
         weight: 650,

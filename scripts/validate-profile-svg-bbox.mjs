@@ -22,10 +22,11 @@ const PANELS = {
   hero: {
     height: 480,
     zones: {
-      "hero-last-update-value": { x: 436, y: 34, w: 408, h: 412 },
-      "hero-r2-value": { x: 436, y: 34, w: 408, h: 412 },
-      "hero-eder-description": { x: 436, y: 34, w: 408, h: 412 },
-      "hero-status-value": { x: 436, y: 34, w: 408, h: 412 },
+      "hero-last-update-value": { x: 496, y: 34, w: 350, h: 412 },
+      "hero-r2-value": { x: 496, y: 34, w: 350, h: 412 },
+      "hero-eder-description": { x: 496, y: 34, w: 350, h: 412 },
+      "hero-status-value": { x: 496, y: 34, w: 350, h: 412 },
+      "hero-name": { x: 32, y: 50, w: 430, h: 130 },
     },
   },
   work: {
@@ -33,6 +34,8 @@ const PANELS = {
     zones: {
       "work-eder-description": { x: 32, y: 0, w: 816, h: null },
       "work-eder-modules": { x: 32, y: 0, w: 816, h: null },
+      "work-eder-r2-value": { x: 32, y: 0, w: 816, h: null },
+      "work-eder-r2-label": { x: 32, y: 0, w: 816, h: null },
     },
   },
   system: {

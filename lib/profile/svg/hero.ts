@@ -42,27 +42,37 @@ export function renderHeroCard(data: ProfileData): string {
   const shellH = HERO_HEIGHT - shellY * 2;
 
   const leftX = shellX + 28;
-  const leftW = 360;
-  const dividerX = 420;
-  const hudX = 436;
+  const leftW = 420;
+  // Push divider / HUD right so the identity name never sits under the panel edge.
+  const dividerX = leftX + leftW + 16;
+  const hudX = dividerX + 16;
   const hudY = shellY + 18;
-  const hudW = 408;
+  const hudW = shellX + shellW - 18 - hudX;
   const hudH = shellH - 36;
   const hudPad = 22;
   const contentLeft = hudX + hudPad;
   const contentRight = hudX + hudW - hudPad;
+  const contentMid = (contentLeft + contentRight) / 2;
 
+  // Prefer an explicit two-line break so the name stays dominant without crowding the divider.
+  const nameParts = identity.name.trim().split(/\s+/);
   const nameLines =
-    identity.name.length > 22
-      ? ["SOYKAN EREN", "KESKIN"]
-      : [identity.name];
+    nameParts.length >= 3
+      ? [`${nameParts[0]} ${nameParts[1]}`, nameParts.slice(2).join(" ")]
+      : nameParts.length === 2
+        ? [nameParts[0], nameParts[1]]
+        : [identity.name];
 
   const defs = `
     ${clipRect("clip-hero-hud", hudX, hudY, hudW, hudH)}
   `;
 
-  const nodeCy = hudY + 188;
-  const metaTop = hudY + 250;
+  // Center the node network between description and metadata.
+  const nodeCy = hudY + 162;
+  const metaTop = hudY + 248;
+  const nodeSide = 44;
+  const houseSize = 64;
+  const sideNodeY = nodeCy - 18;
 
   const body = `
     ${flowLines(HERO_HEIGHT)}
@@ -171,15 +181,15 @@ export function renderHeroCard(data: ProfileData): string {
       })}
 
       <!-- Node network -->
-      <line x1="${contentLeft + 48}" y1="${nodeCy + 28}" x2="${contentLeft + 170}" y2="${nodeCy - 8}" stroke="${COLORS.coral}" stroke-opacity="0.4" stroke-width="1.2" stroke-dasharray="5 5"/>
-      <line x1="${contentRight - 48}" y1="${nodeCy + 28}" x2="${contentLeft + 230}" y2="${nodeCy - 8}" stroke="${COLORS.coral}" stroke-opacity="0.4" stroke-width="1.2" stroke-dasharray="5 5"/>
-      <line x1="${contentLeft + 200}" y1="${nodeCy - 48}" x2="${contentLeft + 200}" y2="${nodeCy - 22}" stroke="${COLORS.coral}" stroke-opacity="0.3" stroke-width="1"/>
-      ${quaroxNodesImage(contentLeft + 20, nodeCy + 4, 44, "hero-quarox-node")}
-      ${quaroxNodesImage(contentRight - 64, nodeCy + 4, 44, "hero-quarox-node-b")}
-      ${ederHouseImage(contentLeft + 168, nodeCy - 36, 64, "hero-eder-house")}
+      <line x1="${contentLeft + 48}" y1="${sideNodeY + 22}" x2="${contentMid - 20}" y2="${nodeCy - 8}" stroke="${COLORS.coral}" stroke-opacity="0.4" stroke-width="1.2" stroke-dasharray="5 5"/>
+      <line x1="${contentRight - 48}" y1="${sideNodeY + 22}" x2="${contentMid + 20}" y2="${nodeCy - 8}" stroke="${COLORS.coral}" stroke-opacity="0.4" stroke-width="1.2" stroke-dasharray="5 5"/>
+      <line x1="${contentMid}" y1="${nodeCy - 48}" x2="${contentMid}" y2="${nodeCy - 22}" stroke="${COLORS.coral}" stroke-opacity="0.3" stroke-width="1"/>
+      ${quaroxNodesImage(contentLeft + 16, sideNodeY, nodeSide, "hero-quarox-node")}
+      ${quaroxNodesImage(contentRight - nodeSide - 16, sideNodeY, nodeSide, "hero-quarox-node-b")}
+      ${ederHouseImage(contentMid - houseSize / 2, nodeCy - 36, houseSize, "hero-eder-house")}
       <text ${textAttrs({
-        x: contentLeft + 200,
-        y: nodeCy + 46,
+        x: contentMid,
+        y: nodeCy + 40,
         size: 10,
         fill: COLORS.inkFaint,
         mono: true,
@@ -200,12 +210,13 @@ export function renderHeroCard(data: ProfileData): string {
         id: "hero-status-label",
       })}>DEVELOPMENT STATUS</text>
       <text ${textAttrs({
-        x: contentLeft + 200,
+        x: contentRight,
         y: metaTop,
         size: GP_TYPE.eyebrow,
         fill: COLORS.inkFaint,
         mono: true,
         letterSpacing: GP_TRACKING.label,
+        anchor: "end",
         id: "hero-last-update-label",
       })}>LAST MEANINGFUL UPDATE</text>
       <text ${textAttrs({
@@ -216,11 +227,12 @@ export function renderHeroCard(data: ProfileData): string {
         id: "hero-status-value",
       })}>${escapeXml(status)}</text>
       <text ${textAttrs({
-        x: contentLeft + 200,
+        x: contentRight,
         y: metaTop + 22,
         size: GP_TYPE.bodySm,
         fill: COLORS.ink,
         mono: true,
+        anchor: "end",
         id: "hero-last-update-value",
       })}>${escapeXml(updated)}</text>
 
@@ -252,12 +264,13 @@ export function renderHeroCard(data: ProfileData): string {
         letterSpacing: GP_TRACKING.label,
       })}>SNAPSHOT UPDATED</text>
       <text ${textAttrs({
-        x: contentLeft + 200,
+        x: contentRight,
         y: metaTop + 118,
         size: GP_TYPE.eyebrow,
         fill: COLORS.inkFaint,
         mono: true,
         letterSpacing: GP_TRACKING.label,
+        anchor: "end",
       })}>SCOPE</text>
       <text ${textAttrs({
         x: contentLeft,
@@ -268,16 +281,15 @@ export function renderHeroCard(data: ProfileData): string {
         id: "hero-snapshot-value",
       })}>${escapeXml(snapshot)}</text>
       <text ${textAttrs({
-        x: contentLeft + 200,
+        x: contentRight,
         y: metaTop + 140,
         size: GP_TYPE.bodySm,
         fill: COLORS.inkMuted,
+        anchor: "end",
         id: "hero-scope-value",
       })}>${escapeXml(scope)}</text>
     </g>
   `;
-
-  void leftW;
 
   return svgRoot({
     height: HERO_HEIGHT,
