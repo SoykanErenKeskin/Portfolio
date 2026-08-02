@@ -8,8 +8,8 @@ export type SvgBlockId = "hero" | "work" | "system";
 
 const BLOCK_HEIGHT: Record<SvgBlockId, number> = {
   hero: 400,
-  work: 900,
-  system: 620,
+  work: 1014,
+  system: 760,
 };
 
 const BLOCK_TITLE: Record<SvgBlockId, string> = {

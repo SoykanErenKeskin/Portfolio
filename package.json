@@ -15,7 +15,9 @@
     "db:import": "npx tsx scripts/migrate-projects.ts",
     "test:kocaeli-snapshot": "npx tsx scripts/verify-kocaeli-snapshot.ts",
     "test:profile-activity": "npx tsx --test scripts/verify-profile-activity.ts",
-    "test:profile-svg": "npx tsx --test scripts/verify-profile-svg.ts"
+    "test:profile-svg": "npx tsx --test scripts/verify-profile-svg.ts",
+    "test:profile-svg-bbox": "node scripts/validate-profile-svg-bbox.mjs",
+    "screenshot:profile-svg": "node scripts/screenshot-profile-svg.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.99.3",

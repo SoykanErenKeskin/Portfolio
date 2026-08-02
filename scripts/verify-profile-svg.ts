@@ -256,12 +256,34 @@ test("hero formats short dates and readable status", () => {
   assert.doesNotMatch(svg, /2026-07-29T15:38:25/);
 });
 
-test("unavailable SOURCE CTAs are omitted", () => {
+test("decorative CTA labels are absent from README SVGs", () => {
   const work = renderWorkCard(baseData());
-  assert.match(work, /VIEW PROJECT/);
-  assert.match(work, /TECHNICAL OVERVIEW/);
-  // Order Tracking + Reservoir have no public source
-  assert.doesNotMatch(work, /SOURCE/);
+  assert.doesNotMatch(work, /VIEW PROJECT/);
+  assert.doesNotMatch(work, /TECHNICAL OVERVIEW/);
+  assert.doesNotMatch(work, /\bSOURCE\b/);
+});
+
+test("brand PNGs are embedded as data URIs with aspect meet", () => {
+  const hero = renderHeroCard(baseData());
+  assert.match(hero, /data:image\/png;base64,/);
+  assert.match(hero, /preserveAspectRatio="xMidYMid meet"/);
+  assert.match(hero, /id="hero-eder-house"/);
+  assert.match(hero, /id="hero-quarox-node"/);
+  // No clover-geometry redraw
+  assert.doesNotMatch(hero, /<ellipse cx="0" cy="-10"/);
+});
+
+test("hero date is on its own labeled line", () => {
+  const svg = renderHeroCard(baseData());
+  assert.match(svg, /id="hero-last-update-label"/);
+  assert.match(svg, /id="hero-last-update-value"[^>]*>29 Jul 2026</);
+  assert.doesNotMatch(svg, /LAST MEANINGFUL UPDATE ·/);
+});
+
+test("clipPaths exist for major panels", () => {
+  assert.match(renderHeroCard(baseData()), /clipPath id="clip-hero-hud"/);
+  assert.match(renderWorkCard(baseData()), /clipPath id="clip-project-eder"/);
+  assert.match(renderSystemCard(baseData()), /clipPath id="clip-system-tech"/);
 });
 
 console.log("verify-profile-svg: all checks passed");

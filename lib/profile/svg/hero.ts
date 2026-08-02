@@ -2,147 +2,210 @@ import type { ProfileData } from "@/lib/profile/types";
 import { COLORS, TYPE } from "@/lib/profile/svg/constants";
 import { escapeXml } from "@/lib/profile/svg/escape";
 import {
-  LAYOUT,
-  panelPath,
-  renderWrappedText,
-} from "@/lib/profile/svg/flow";
-import {
+  assertInBounds,
   formatSvgR2,
   formatSvgShortDate,
   formatSvgStatus,
-  quaroxNodeSvg,
+  linesText,
   textAttrs,
 } from "@/lib/profile/svg/helpers";
 import {
+  clipRect,
   ederHouseImage,
   flowLines,
   outerFrame,
+  panelPath,
+  quaroxNodesImage,
   svgRoot,
   watermark,
 } from "@/lib/profile/svg/layout";
 
-export const HERO_HEIGHT = 420;
+export const HERO_HEIGHT = 400;
 
-const HUD = {
-  x: 436,
-  y: 28,
-  w: 416,
-  h: 364,
-  pad: 22,
-} as const;
+const LEFT = { x: 40, w: 380 } as const;
+const HUD = { x: 450, y: 32, w: 390, h: 336 } as const; // bottom pad = 400-32-336 = 32
 
 export function renderHeroCard(data: ProfileData): string {
   const { eder } = data;
   const r2 = formatSvgR2(eder.globalR2);
   const status = formatSvgStatus(eder.projectStatus);
   const updated = formatSvgShortDate(eder.latestMeaningfulUpdate);
-  const contentRight = HUD.x + HUD.w - HUD.pad;
-  const contentLeft = HUD.x + HUD.pad;
-  const contentW = HUD.w - HUD.pad * 2;
 
-  const desc = renderWrappedText({
-    x: contentLeft,
-    y: 118,
-    text: "Real estate intelligence powered by machine learning and local data.",
-    maxWidth: contentW + 4,
-    size: TYPE.label,
-    fill: COLORS.inkMuted,
-    maxLines: 2,
-    lineHeight: 24,
-  });
+  const contentLeft = HUD.x + 22;
+  const contentRight = HUD.x + HUD.w - 22;
+  const contentW = contentRight - contentLeft;
 
-  const nodeTop = desc.bottomY + 32;
-  const nodeCy = nodeTop + 36;
-  const metaTop = nodeCy + 60;
+  assertInBounds("hero-hud-left", contentLeft, 880, HUD.x);
+  assertInBounds("hero-hud-right", contentRight, HUD.x + HUD.w, HUD.x);
+  assertInBounds("hero-left-col", LEFT.x + LEFT.w, 450, LEFT.x);
 
-  // Metadata zones
-  const metaLabelY = metaTop;
-  const metaValueY = metaTop + 26;
-  const updateLabelY = metaTop + 58;
-  const updateValueY = metaTop + 82;
+  // Fixed graphic zone (between description and metadata)
+  const graphicCy = 210;
+  const metaTop = 268;
+
+  const defs = `
+    ${clipRect("clip-hero-hud", HUD.x, HUD.y, HUD.w, HUD.h)}
+  `;
 
   const body = `
     ${flowLines(HERO_HEIGHT)}
     ${outerFrame(HERO_HEIGHT)}
-    ${watermark(690, HERO_HEIGHT - 58, 110)}
 
-    <!-- Left identity -->
-    <text ${textAttrs({ x: 40, y: 48, size: TYPE.label, fill: COLORS.inkFaint, mono: true, letterSpacing: "0.18em" })}>PERSONAL SYSTEM</text>
-    <text ${textAttrs({ x: 40, y: 96, size: 34, weight: 650 })}>
-      <tspan x="40" y="96">SOYKAN EREN</tspan>
-      <tspan x="40" y="134">KESKIN</tspan>
-    </text>
-    ${
-      renderWrappedText({
-        x: 40,
-        y: 178,
-        text: "Industrial Engineer building data-driven solutions",
-        maxWidth: 380,
-        size: TYPE.body,
-        fill: COLORS.inkMuted,
-        maxLines: 2,
-        lineHeight: 28,
-      }).svg
-    }
-    <line x1="40" y1="252" x2="40" y2="322" stroke="${COLORS.coral}" stroke-opacity="0.55" stroke-width="2"/>
-    ${
-      renderWrappedText({
-        x: 56,
-        y: 274,
-        text: "Solving complex systems through data and design.",
-        maxWidth: 360,
-        size: TYPE.bodySecondary,
-        weight: 560,
-        maxLines: 2,
-        lineHeight: 28,
-      }).svg
-    }
-
-    <!-- Right Eder HUD -->
-    ${panelPath(HUD.x, HUD.y, HUD.w, HUD.h, 14, {
-      fill: COLORS.bgDeep,
-      stroke: COLORS.coral,
-      fillOpacity: 0.9,
-      strokeOpacity: 0.5,
+    <!-- Left identity (explicit lines, no auto-wrap) -->
+    <text ${textAttrs({
+      x: LEFT.x,
+      y: 48,
+      size: TYPE.label,
+      fill: COLORS.inkFaint,
+      mono: true,
+      letterSpacing: "0.18em",
+      id: "hero-personal-label",
+    })}>PERSONAL SYSTEM</text>
+    ${linesText({
+      x: LEFT.x,
+      y: 96,
+      lines: ["SOYKAN EREN", "KESKIN"],
+      size: 34,
+      lineHeight: 40,
+      weight: 650,
+      id: "hero-name",
+    })}
+    ${linesText({
+      x: LEFT.x,
+      y: 192,
+      lines: ["Industrial Engineer building", "data-driven solutions"],
+      size: TYPE.body,
+      lineHeight: 28,
+      fill: COLORS.inkMuted,
+      id: "hero-role",
+    })}
+    <line x1="${LEFT.x}" y1="264" x2="${LEFT.x}" y2="336" stroke="${COLORS.coral}" stroke-opacity="0.55" stroke-width="2"/>
+    ${linesText({
+      x: LEFT.x + 16,
+      y: 286,
+      lines: ["Solving complex systems", "through data and design."],
+      size: TYPE.bodySecondary,
+      lineHeight: 28,
+      weight: 560,
+      id: "hero-statement",
     })}
 
-    <text ${textAttrs({ x: contentLeft, y: 54, size: TYPE.label, fill: COLORS.coral, mono: true, letterSpacing: "0.14em" })}>CURRENTLY BUILDING</text>
-    <circle cx="${contentRight - 4}" cy="50" r="5" fill="${COLORS.coral}" opacity="${eder.isActive ? 1 : 0.35}"/>
-    <text ${textAttrs({ x: contentLeft, y: 92, size: 30, weight: 650 })}>${escapeXml(eder.projectName)}</text>
-    ${desc.svg}
+    <!-- Right Eder HUD -->
+    <g clip-path="url(#clip-hero-hud)">
+      ${panelPath(HUD.x, HUD.y, HUD.w, HUD.h, 14, {
+        stroke: COLORS.coral,
+        fillOpacity: 0.9,
+        strokeOpacity: 0.5,
+      })}
 
-    <!-- Node network (between description and metadata) -->
-    <line x1="${contentLeft + 40}" y1="${nodeCy + 20}" x2="${contentLeft + contentW / 2 - 20}" y2="${nodeCy - 8}" stroke="${COLORS.coral}" stroke-opacity="0.4" stroke-width="1.2" stroke-dasharray="4 6"/>
-    <line x1="${contentRight - 40}" y1="${nodeCy + 20}" x2="${contentLeft + contentW / 2 + 20}" y2="${nodeCy - 8}" stroke="${COLORS.coral}" stroke-opacity="0.4" stroke-width="1.2" stroke-dasharray="4 6"/>
-    ${quaroxNodeSvg(contentLeft + 48, nodeCy + 16, 0.75)}
-    ${quaroxNodeSvg(contentRight - 48, nodeCy + 16, 0.75)}
-    <circle cx="${contentLeft + contentW / 2}" cy="${nodeCy - 8}" r="26" fill="${COLORS.bg}" stroke="${COLORS.coral}" stroke-opacity="0.45" stroke-width="1.2"/>
-    ${ederHouseImage(contentLeft + contentW / 2 - 26, nodeCy - 34, 52)}
+      <text ${textAttrs({
+        x: contentLeft,
+        y: HUD.y + 28,
+        size: TYPE.label,
+        fill: COLORS.coral,
+        mono: true,
+        letterSpacing: "0.14em",
+        id: "hero-building-label",
+      })}>CURRENTLY BUILDING</text>
+      <circle cx="${contentRight - 6}" cy="${HUD.y + 24}" r="5" fill="${COLORS.coral}" opacity="${eder.isActive ? 1 : 0.35}"/>
 
-    <!-- Metadata row 1: Status | R² -->
-    <text ${textAttrs({ x: contentLeft, y: metaLabelY, size: TYPE.label, fill: COLORS.inkFaint, mono: true, letterSpacing: "0.12em" })}>STATUS</text>
-    <text ${textAttrs({ x: contentLeft + contentW / 2 + 8, y: metaLabelY, size: TYPE.label, fill: COLORS.inkFaint, mono: true, letterSpacing: "0.1em" })}>GLOBAL MODEL R²</text>
-    <text ${textAttrs({ x: contentLeft, y: metaValueY, size: TYPE.label, fill: COLORS.ink })}>${escapeXml(status)}</text>
-    <text ${textAttrs({
-      x: contentLeft + contentW / 2 + 8,
-      y: metaValueY + (r2.available ? 4 : 0),
-      size: r2.available ? 28 : TYPE.label,
-      fill: r2.available ? COLORS.coral : COLORS.inkMuted,
-      mono: true,
-      weight: 650,
-    })}>${escapeXml(r2.text)}</text>
+      <text ${textAttrs({
+        x: contentLeft,
+        y: HUD.y + 64,
+        size: 30,
+        weight: 650,
+        id: "hero-eder-title",
+      })}>${escapeXml(eder.projectName)}</text>
 
-    <!-- Metadata row 2: Last update -->
-    <text ${textAttrs({ x: contentLeft, y: updateLabelY, size: TYPE.label, fill: COLORS.inkFaint, mono: true, letterSpacing: "0.1em" })}>LAST MEANINGFUL UPDATE</text>
-    <text ${textAttrs({ x: contentLeft, y: updateValueY, size: TYPE.label, fill: COLORS.inkMuted, mono: true })}>${escapeXml(updated)}</text>
+      ${linesText({
+        x: contentLeft,
+        y: HUD.y + 96,
+        lines: [
+          "Real estate intelligence powered by",
+          "machine learning and local market data.",
+        ],
+        size: TYPE.label,
+        lineHeight: 22,
+        fill: COLORS.inkMuted,
+        id: "hero-eder-description",
+      })}
+
+      <!-- Brand PNGs only — side by side, aspect preserved -->
+      ${quaroxNodesImage(contentLeft + contentW / 2 - 90, graphicCy - 30, 64, "hero-quarox-node")}
+      ${ederHouseImage(contentLeft + contentW / 2 + 10, graphicCy - 28, 56, "hero-eder-house")}
+
+      <!-- Metadata zone (fixed) -->
+      <text ${textAttrs({
+        x: contentLeft,
+        y: metaTop,
+        size: TYPE.label,
+        fill: COLORS.inkFaint,
+        mono: true,
+        letterSpacing: "0.12em",
+        id: "hero-status-label",
+      })}>STATUS</text>
+      <text ${textAttrs({
+        x: contentLeft + contentW / 2 + 8,
+        y: metaTop,
+        size: TYPE.label,
+        fill: COLORS.inkFaint,
+        mono: true,
+        letterSpacing: "0.1em",
+        id: "hero-r2-label",
+      })}>GLOBAL MODEL R²</text>
+
+      <text ${textAttrs({
+        x: contentLeft,
+        y: metaTop + 26,
+        size: TYPE.label,
+        fill: COLORS.ink,
+        id: "hero-status-value",
+      })}>${escapeXml(status)}</text>
+      <text ${textAttrs({
+        x: contentLeft + contentW / 2 + 8,
+        y: metaTop + (r2.available ? 30 : 26),
+        size: r2.available ? 28 : TYPE.label,
+        fill: r2.available ? COLORS.coral : COLORS.inkMuted,
+        mono: true,
+        weight: 650,
+        id: "hero-r2-value",
+      })}>${escapeXml(r2.text)}</text>
+
+      <text ${textAttrs({
+        x: contentLeft,
+        y: metaTop + 58,
+        size: TYPE.label,
+        fill: COLORS.inkFaint,
+        mono: true,
+        letterSpacing: "0.1em",
+        id: "hero-last-update-label",
+      })}>LAST MEANINGFUL UPDATE</text>
+      <text ${textAttrs({
+        x: contentLeft,
+        y: metaTop + 82,
+        size: TYPE.label,
+        fill: COLORS.inkMuted,
+        mono: true,
+        id: "hero-last-update-value",
+      })}>${escapeXml(updated)}</text>
+    </g>
+
+    <!-- Watermark outside HUD; bottom-left so cut-corner never clips it -->
+    ${watermark({
+      canvasW: 880,
+      canvasH: HERO_HEIGHT,
+      width: 88,
+      margin: 52,
+      opacity: 0.04,
+      align: "start",
+    })}
   `;
-
-  void LAYOUT;
 
   return svgRoot({
     height: HERO_HEIGHT,
     title: "Soykan Eren Keskin — profile and current Eder project",
     desc: "Identity card for Soykan Eren Keskin with a compact Eder live system panel showing status, latest meaningful update, and global model R-squared.",
+    defs,
     body,
   });
 }

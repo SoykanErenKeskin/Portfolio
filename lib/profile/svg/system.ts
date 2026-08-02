@@ -2,100 +2,102 @@ import type { ProfileData } from "@/lib/profile/types";
 import { COLORS, TYPE } from "@/lib/profile/svg/constants";
 import { escapeXml } from "@/lib/profile/svg/escape";
 import {
-  LAYOUT,
+  assertInBounds,
+  linesText,
+  textAttrs,
+  truncate,
+  wrapActivityLine,
+} from "@/lib/profile/svg/helpers";
+import {
+  clipRect,
+  outerFrame,
   panelPath,
-  renderWrappedText,
-} from "@/lib/profile/svg/flow";
-import { quaroxNodeSvg, textAttrs, truncate } from "@/lib/profile/svg/helpers";
-import { outerFrame, svgRoot, watermark } from "@/lib/profile/svg/layout";
+  quaroxNodesImage,
+  svgRoot,
+} from "@/lib/profile/svg/layout";
 
-function clusterBlock(opts: {
-  x: number;
-  y: number;
-  w: number;
-  label: string;
-  nodes: { label: string }[];
-}): { svg: string; y: number; bottomY: number } {
-  const heading = `<text ${textAttrs({
-    x: opts.x,
-    y: opts.y,
-    size: TYPE.label,
-    fill: COLORS.coral,
-    mono: true,
-    letterSpacing: "0.1em",
-  })}>${escapeXml(opts.label.toUpperCase())}</text>`;
+export const SYSTEM_HEIGHT = 760;
 
-  const lines = opts.nodes.slice(0, 4).map((node, i) => {
-    const col = i % 2;
-    const row = Math.floor(i / 2);
-    const nx = opts.x + col * (opts.w / 2);
-    const ny = opts.y + 32 + row * 28;
-    return `<text ${textAttrs({
-      x: nx,
-      y: ny,
-      size: TYPE.label,
-      fill: COLORS.ink,
-      mono: true,
-    })}>• ${escapeXml(node.label)}</text>`;
-  });
+const PAD = 32;
+const PANEL_X = 32;
+const PANEL_W = 816;
 
-  const rows = Math.ceil(Math.min(opts.nodes.length, 4) / 2);
-  const bottomY = opts.y + 32 + Math.max(1, rows) * 28;
-  return { svg: `${heading}${lines.join("")}`, y: opts.y, bottomY };
-}
+const TECH_CLUSTERS = [
+  {
+    id: "data",
+    heading: "DATA & INTELLIGENCE",
+    items: "Python · Pandas · Scikit-learn · XGBoost",
+  },
+  {
+    id: "product",
+    heading: "PRODUCT DEVELOPMENT",
+    items: "TypeScript · React · React Native · Next.js",
+  },
+  {
+    id: "infra",
+    heading: "INFRASTRUCTURE & WORKFLOW",
+    items: "PostgreSQL · Git",
+  },
+] as const;
 
 export function renderSystemCard(data: ProfileData): string {
-  const pad = LAYOUT.outerPad;
-  let y = 70;
+  assertInBounds("system-panel", PANEL_X + PANEL_W, 880, PANEL_X);
 
-  // Activity on top (full width when empty is compact; otherwise expands)
-  const activityX = pad;
-  const activityW = 880 - pad * 2;
+  let y = 78;
+  const defsParts: string[] = [];
+
+  // —— Activity (full width, compact when empty; max 3 groups) ——
+  const activityX = PANEL_X;
+  const activityW = PANEL_W;
   let activityInner = "";
   let activityH = 0;
 
   if (!data.activity.length) {
-    activityH = 78;
+    activityH = 82;
     activityInner = `
       <text ${textAttrs({
-        x: activityX + 16,
+        x: activityX + 20,
         y: y + 24,
         size: TYPE.label,
         fill: COLORS.inkFaint,
         mono: true,
         letterSpacing: "0.14em",
+        id: "system-activity-label",
       })}>SYSTEM ACTIVITY</text>
       <text ${textAttrs({
-        x: activityX + 16,
-        y: y + 48,
+        x: activityX + 20,
+        y: y + 50,
         size: TYPE.body,
         fill: COLORS.inkMuted,
         mono: true,
+        id: "system-activity-empty",
       })}>NO RECENT MEANINGFUL ACTIVITY</text>
       <text ${textAttrs({
-        x: activityX + 16,
-        y: y + 68,
+        x: activityX + 20,
+        y: y + 70,
         size: TYPE.label,
         fill: COLORS.inkFaint,
         mono: true,
-      })}>Waiting for configured project activity</text>
+        id: "system-activity-hint",
+      })}>Configured project activity will appear here.</text>
     `;
   } else {
-    let cursor = y + 40;
+    let cursor = y + 36;
     const rows: string[] = [
       `<text ${textAttrs({
-        x: activityX + 18,
-        y: y + 28,
+        x: activityX + 20,
+        y: y + 26,
         size: TYPE.label,
         fill: COLORS.inkFaint,
         mono: true,
         letterSpacing: "0.14em",
+        id: "system-activity-label",
       })}>SYSTEM ACTIVITY</text>`,
     ];
-    for (const group of data.activity.slice(0, 5)) {
+    for (const group of data.activity.slice(0, 3)) {
       rows.push(
         `<text ${textAttrs({
-          x: activityX + 18,
+          x: activityX + 20,
           y: cursor,
           size: TYPE.label,
           fill: COLORS.coral,
@@ -104,153 +106,167 @@ export function renderSystemCard(data: ProfileData): string {
         })}>&gt; ${escapeXml(group.projectLabel)}</text>`
       );
       cursor += 24;
-      group.items.forEach((item, idx) => {
-        const last = idx === group.items.length - 1;
+      for (const item of group.items.slice(0, 2)) {
+        const lines = wrapActivityLine(item.text, 64, 1);
         rows.push(
           `<text ${textAttrs({
-            x: activityX + 34,
+            x: activityX + 36,
             y: cursor,
             size: TYPE.label,
             fill: COLORS.inkMuted,
             mono: true,
-          })}>${escapeXml(truncate(item.text, 56))}${
-            last ? `  ·  ${escapeXml(group.relativeTime)}` : ""
-          }</text>`
+          })}>${escapeXml(lines[0] ?? truncate(item.text, 64))}</text>`
         );
         cursor += 22;
-      });
-      cursor += 8;
+      }
+      rows.push(
+        `<text ${textAttrs({
+          x: activityX + 36,
+          y: cursor,
+          size: TYPE.label,
+          fill: COLORS.inkFaint,
+          mono: true,
+        })}>${escapeXml(group.relativeTime)}</text>`
+      );
+      cursor += 28;
     }
     activityH = cursor - y + 12;
     activityInner = rows.join("");
   }
 
+  const activityClip = "clip-system-activity";
+  defsParts.push(clipRect(activityClip, activityX, y, activityW, activityH));
   const activityPanel = `
-    ${panelPath(activityX, y, activityW, activityH, 12)}
-    ${activityInner}
+    <g clip-path="url(#${activityClip})">
+      ${panelPath(activityX, y, activityW, activityH, 12)}
+      ${activityInner}
+    </g>
   `;
-  y += activityH + 18;
+  y += activityH + 20;
 
-  // Tech map — spatial clusters
+  // —— Technology (vertical clusters, one node icon) ——
   const techY = y;
-  const techX = pad;
-  const techW = activityW;
-  const cx = techX + techW / 2;
-  const cy = techY + 56;
+  const techHeaderH = 100;
+  const clusterH = 70;
+  const techH = techHeaderH + TECH_CLUSTERS.length * clusterH + 16;
+  const techClip = "clip-system-tech";
+  defsParts.push(clipRect(techClip, PANEL_X, techY, PANEL_W, techH));
 
-  const dataCluster = data.techMap.clusters.find((c) =>
-    c.id.includes("data")
-  ) ?? data.techMap.clusters[0]!;
-  const productCluster = data.techMap.clusters.find((c) =>
-    c.id.includes("product")
-  ) ?? data.techMap.clusters[1]!;
-  const infraCluster = data.techMap.clusters.find((c) =>
-    c.id.includes("infra")
-  ) ?? data.techMap.clusters[2]!;
-
-  const left = clusterBlock({
-    x: techX + 28,
-    y: techY + 118,
-    w: 300,
-    label: dataCluster.label,
-    nodes: dataCluster.nodes,
-  });
-  const right = clusterBlock({
-    x: techX + techW - 328,
-    y: techY + 118,
-    w: 300,
-    label: productCluster.label,
-    nodes: productCluster.nodes,
-  });
-  const bottom = clusterBlock({
-    x: cx - 150,
-    y: Math.max(left.bottomY, right.bottomY) + 36,
-    w: 300,
-    label: infraCluster.label,
-    nodes: infraCluster.nodes,
-  });
-  const techH = bottom.bottomY - techY + 28;
+  const cx = PANEL_X + PANEL_W / 2;
+  const clustersSvg = TECH_CLUSTERS.map((cluster, i) => {
+    const cy = techY + techHeaderH + i * clusterH;
+    return `
+      <text ${textAttrs({
+        x: PANEL_X + 24,
+        y: cy + 24,
+        size: TYPE.label,
+        fill: COLORS.coral,
+        mono: true,
+        letterSpacing: "0.1em",
+        id: `system-tech-${cluster.id}-heading`,
+      })}>${escapeXml(cluster.heading)}</text>
+      <text ${textAttrs({
+        x: PANEL_X + 24,
+        y: cy + 50,
+        size: TYPE.label,
+        fill: COLORS.ink,
+        mono: true,
+        id: `system-tech-${cluster.id}-items`,
+      })}>${escapeXml(cluster.items)}</text>
+    `;
+  }).join("");
 
   const techPanel = `
-    ${panelPath(techX, techY, techW, techH, 12)}
-    <text ${textAttrs({
-      x: cx,
-      y: techY + 36,
-      size: TYPE.label,
-      fill: COLORS.ink,
-      mono: true,
-      weight: 600,
-      anchor: "middle",
-      letterSpacing: "0.06em",
-    })}>${escapeXml(truncate(data.techMap.centerLabel, 36))}</text>
-    ${quaroxNodeSvg(cx, cy + 8, 0.7)}
-    <line x1="${cx - 20}" y1="${cy + 20}" x2="${techX + 120}" y2="${techY + 118}" stroke="${COLORS.coral}" stroke-opacity="0.35" stroke-width="1"/>
-    <line x1="${cx + 20}" y1="${cy + 20}" x2="${techX + techW - 120}" y2="${techY + 118}" stroke="${COLORS.coral}" stroke-opacity="0.35" stroke-width="1"/>
-    <line x1="${cx}" y1="${cy + 28}" x2="${cx}" y2="${bottom.y}" stroke="${COLORS.coral}" stroke-opacity="0.35" stroke-width="1"/>
-    ${left.svg}
-    ${right.svg}
-    ${bottom.svg}
+    <g clip-path="url(#${techClip})">
+      ${panelPath(PANEL_X, techY, PANEL_W, techH, 12)}
+      <text ${textAttrs({
+        x: cx,
+        y: techY + 28,
+        size: TYPE.label,
+        fill: COLORS.ink,
+        mono: true,
+        weight: 600,
+        anchor: "middle",
+        letterSpacing: "0.06em",
+        id: "system-tech-center",
+      })}>ENGINEERING × DATA × PRODUCT</text>
+      ${quaroxNodesImage(cx - 26, techY + 36, 52, "system-quarox-node")}
+      <line x1="${cx}" y1="${techY + 90}" x2="${cx}" y2="${techY + techHeaderH}" stroke="${COLORS.coral}" stroke-opacity="0.3" stroke-width="1"/>
+      ${clustersSvg}
+    </g>
   `;
-  y += techH + 16;
+  y += techH + 18;
 
-  // Contact strip — compact, flow-based height
-  const statement = renderWrappedText({
-    x: pad + 20,
-    y: y + 32,
-    text: data.contact.statement,
-    maxWidth: activityW - 48,
-    size: TYPE.body,
-    fill: COLORS.inkMuted,
-    maxLines: 2,
-    lineHeight: 28,
-  });
-  const openToY = statement.bottomY + 26;
-  const openTo = `
-    <text ${textAttrs({
-      x: pad + 20,
-      y: openToY,
-      size: TYPE.label,
-      fill: COLORS.inkMuted,
-      mono: true,
-    })}>&gt; open_to: meaningful problems</text>
-    <text ${textAttrs({
-      x: pad + 20,
-      y: openToY + 22,
-      size: TYPE.label,
-      fill: COLORS.inkMuted,
-      mono: true,
-    })}>  and thoughtful collaboration</text>
-  `;
-  const connectY = openToY + 48;
-  const contactH = connectY - y + 56;
+  // —— Contact ——
+  const contactY = y;
+  const contactH = 168;
+  const contactClip = "clip-system-contact";
+  defsParts.push(clipRect(contactClip, PANEL_X, contactY, PANEL_W, contactH));
+
   const contactPanel = `
-    ${panelPath(pad, y, activityW, contactH, 12)}
-    ${statement.svg}
-    ${openTo}
-    <text ${textAttrs({
-      x: pad + 20,
-      y: connectY,
-      size: TYPE.label,
-      fill: COLORS.inkMuted,
-      mono: true,
-    })}>&gt; connect: LinkedIn · Portfolio · Email</text>
-    <text ${textAttrs({
-      x: pad + 20,
-      y: connectY + 24,
-      size: TYPE.label,
-      fill: COLORS.ink,
-      mono: true,
-    })}>&gt; ${escapeXml(data.contact.prompt)}</text>
+    <g clip-path="url(#${contactClip})">
+      ${panelPath(PANEL_X, contactY, PANEL_W, contactH, 12)}
+      ${linesText({
+        x: PANEL_X + 24,
+        y: contactY + 32,
+        lines: [
+          "Good products begin with understanding",
+          "the system behind the problem.",
+        ],
+        size: TYPE.body,
+        lineHeight: 28,
+        fill: COLORS.inkMuted,
+        id: "system-contact-statement",
+      })}
+      <text ${textAttrs({
+        x: PANEL_X + 24,
+        y: contactY + 104,
+        size: TYPE.label,
+        fill: COLORS.inkMuted,
+        mono: true,
+        id: "system-contact-open-to",
+      })}>&gt; open_to: meaningful problems and thoughtful collaboration</text>
+      <text ${textAttrs({
+        x: PANEL_X + 24,
+        y: contactY + 126,
+        size: TYPE.label,
+        fill: COLORS.inkMuted,
+        mono: true,
+        id: "system-contact-connect",
+      })}>&gt; connect: LinkedIn · Portfolio · Email</text>
+      <text ${textAttrs({
+        x: PANEL_X + 24,
+        y: contactY + 148,
+        size: TYPE.label,
+        fill: COLORS.ink,
+        mono: true,
+        id: "system-contact-prompt",
+      })}>&gt; ${escapeXml(data.contact.prompt)}</text>
+    </g>
   `;
-  y += contactH + pad;
+  y += contactH + PAD;
 
-  const height = y;
+  const height = Math.max(SYSTEM_HEIGHT, y);
 
+  // Watermark omitted on System card — safer than a clipped mark.
   const body = `
     ${outerFrame(height)}
-    ${watermark(730, height - 48, 100)}
-    <text ${textAttrs({ x: pad, y: 38, size: TYPE.label, fill: COLORS.coral, mono: true, letterSpacing: "0.18em" })}>FEED · STACK · SIGNAL</text>
-    <text ${textAttrs({ x: pad, y: 64, size: TYPE.section, weight: 650 })}>System</text>
+    <text ${textAttrs({
+      x: PAD,
+      y: 40,
+      size: TYPE.label,
+      fill: COLORS.coral,
+      mono: true,
+      letterSpacing: "0.18em",
+      id: "system-eyebrow",
+    })}>FEED · STACK · SIGNAL</text>
+    <text ${textAttrs({
+      x: PAD,
+      y: 68,
+      size: TYPE.section,
+      weight: 650,
+      id: "system-heading",
+    })}>System</text>
     ${activityPanel}
     ${techPanel}
     ${contactPanel}
@@ -259,7 +275,8 @@ export function renderSystemCard(data: ProfileData): string {
   return svgRoot({
     height,
     title: "System activity, technology map, and contact",
-    desc: "Recent meaningful project activity, a technology map for engineering data and product work, and a contact terminal for Soykan Eren Keskin.",
+    desc: "Recent meaningful project activity, technology clusters, and contact terminal for Soykan Eren Keskin.",
+    defs: defsParts.join(""),
     body,
   });
 }
