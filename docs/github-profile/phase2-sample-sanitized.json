@@ -1,0 +1,31 @@
+{
+  "version": "profile-v2",
+  "generatedAt": "2026-08-01T23:56:58.303Z",
+  "identity": {
+    "name": "SOYKAN EREN KESKIN",
+    "role": "Industrial Engineer building data-driven solutions",
+    "statement": "Solving complex systems through data and design."
+  },
+  "eder": {
+    "projectName": "EDER",
+    "description": "Real estate intelligence powered by machine learning and local market data.",
+    "projectStatus": "published",
+    "scope": "Global model",
+    "globalR2": 0.6523243261980677,
+    "modelVersion": "ps-20260729T153727Z",
+    "snapshotUpdatedAt": "2026-07-29T15:38:25.685Z",
+    "latestMeaningfulUpdate": "2026-07-29T15:38:25.685Z",
+    "isActive": true,
+    "viewProjectHref": "/en/projects/kocaeli-real-estate",
+    "technicalOverviewHref": "/en/projects/kocaeli-real-estate",
+    "sourcePrivate": true
+  },
+  "activity": [],
+  "meta": {
+    "sources": {
+      "github": "ok",
+      "eder": "ok"
+    }
+  },
+  "_note": "Sanitized excerpt from live getProfileData(). Full payload also includes whatIBuild, projects, techMap, contact. No tokens, raw snapshots, or commit bodies. latestMeaningfulUpdate equals snapshotUpdatedAt because Eder repository list is empty. Activity empty: configured order-tracking-system returned no meaningful commits (or repo unavailable) without marking github as error."
+}

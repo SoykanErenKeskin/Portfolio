@@ -13,7 +13,9 @@
     "db:seed-capability-map": "npx tsx scripts/seed-capability-map.ts",
     "db:seed-tech-tools": "npx tsx scripts/seed-tech-tools.ts",
     "db:import": "npx tsx scripts/migrate-projects.ts",
-    "test:kocaeli-snapshot": "npx tsx scripts/verify-kocaeli-snapshot.ts"
+    "test:kocaeli-snapshot": "npx tsx scripts/verify-kocaeli-snapshot.ts",
+    "test:profile-activity": "npx tsx --test scripts/verify-profile-activity.ts",
+    "test:profile-svg": "npx tsx --test scripts/verify-profile-svg.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.99.3",
@@ -36,6 +38,7 @@
     "dotenv": "^17.3.1",
     "eslint": "^9",
     "eslint-config-next": "^15.1.0",
+    "playwright": "^1.62.1",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "tsx": "^4.21.0",

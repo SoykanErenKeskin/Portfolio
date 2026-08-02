@@ -15,6 +15,16 @@ const NAV_CARDS = [
     ),
   },
   {
+    href: "/admin/github-profile",
+    label: "GitHub Profile",
+    desc: "Preview the GitHub README experience",
+    icon: (
+      <svg className={iconClass} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+      </svg>
+    ),
+  },
+  {
     href: "/admin/faq",
     label: "FAQ",
     desc: "Manage frequently asked questions",
