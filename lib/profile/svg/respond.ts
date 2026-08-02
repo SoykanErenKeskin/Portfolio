@@ -7,7 +7,9 @@ import {
 
 const CACHE_HEADERS = {
   "Content-Type": "image/svg+xml; charset=utf-8",
-  "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+  // Short shared cache so Hostinger/CDN picks up visual releases quickly.
+  // README still cache-busts with ?v=profile-v*
+  "Cache-Control": "public, max-age=60, s-maxage=60, stale-while-revalidate=300",
   "X-Content-Type-Options": "nosniff",
 } as const;
 

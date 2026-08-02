@@ -10,6 +10,11 @@ const LOCALE_PREFIX = new RegExp(
 export default auth((req) => {
   const { pathname } = req.nextUrl;
 
+  // Temporary /dev tooling must never be a public surface
+  if (pathname === "/dev" || pathname.startsWith("/dev/")) {
+    return new NextResponse(null, { status: 404 });
+  }
+
   // Skip locale logic for admin and auth callback routes
   if (!pathname.startsWith("/admin") && !pathname.startsWith("/api/auth")) {
     const hasLocale = LOCALE_PREFIX.test(pathname);
